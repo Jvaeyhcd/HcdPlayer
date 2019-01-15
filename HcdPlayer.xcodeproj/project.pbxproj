@@ -23,6 +23,10 @@
 		B9AA905B21ED7AD800F3C70E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AA905A21ED7AD800F3C70E /* libiconv.tbd */; };
 		B9AA905D21ED7AE300F3C70E /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AA905C21ED7AE300F3C70E /* libbz2.tbd */; };
 		B9AA905F21ED7AED00F3C70E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AA905E21ED7AED00F3C70E /* libz.tbd */; };
+		B9AA906321ED7C0A00F3C70E /* HcdAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA906221ED7C0A00F3C70E /* HcdAudioManager.m */; };
+		B9AA906721ED7CF800F3C70E /* HcdMovieDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA906621ED7CF800F3C70E /* HcdMovieDecoder.m */; };
+		B9AA906A21ED7D7A00F3C70E /* HcdMovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA906921ED7D7A00F3C70E /* HcdMovieGLView.m */; };
+		B9AA906D21ED7E0F00F3C70E /* HcdMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA906C21ED7E0F00F3C70E /* HcdMovieViewController.m */; };
 		FFBCB2C6A040A2AA5AA1069B /* Pods_HcdPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -142,6 +146,15 @@
 		B9AA905A21ED7AD800F3C70E /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		B9AA905C21ED7AE300F3C70E /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		B9AA905E21ED7AED00F3C70E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		B9AA906121ED7C0A00F3C70E /* HcdAudioManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdAudioManager.h; sourceTree = "<group>"; };
+		B9AA906221ED7C0A00F3C70E /* HcdAudioManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdAudioManager.m; sourceTree = "<group>"; };
+		B9AA906421ED7CAA00F3C70E /* HcdLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdLogger.h; sourceTree = "<group>"; };
+		B9AA906521ED7CF800F3C70E /* HcdMovieDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdMovieDecoder.h; sourceTree = "<group>"; };
+		B9AA906621ED7CF800F3C70E /* HcdMovieDecoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdMovieDecoder.m; sourceTree = "<group>"; };
+		B9AA906821ED7D7A00F3C70E /* HcdMovieGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdMovieGLView.h; sourceTree = "<group>"; };
+		B9AA906921ED7D7A00F3C70E /* HcdMovieGLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdMovieGLView.m; sourceTree = "<group>"; };
+		B9AA906B21ED7E0F00F3C70E /* HcdMovieViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdMovieViewController.h; sourceTree = "<group>"; };
+		B9AA906C21ED7E0F00F3C70E /* HcdMovieViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdMovieViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +193,8 @@
 		B9AA8FC421ED785000F3C70E = {
 			isa = PBXGroup;
 			children = (
+				B9AA906021ED7BE800F3C70E /* hcdplayer */,
+				B9AA906E21ED7E7600F3C70E /* Resource */,
 				B9AA8FE621ED7AB400F3C70E /* FFmpeg-iOS */,
 				B9AA8FCF21ED785000F3C70E /* HcdPlayerExample */,
 				B9AA8FCE21ED785000F3C70E /* Products */,
@@ -390,6 +405,29 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		B9AA906021ED7BE800F3C70E /* hcdplayer */ = {
+			isa = PBXGroup;
+			children = (
+				B9AA906121ED7C0A00F3C70E /* HcdAudioManager.h */,
+				B9AA906221ED7C0A00F3C70E /* HcdAudioManager.m */,
+				B9AA906521ED7CF800F3C70E /* HcdMovieDecoder.h */,
+				B9AA906621ED7CF800F3C70E /* HcdMovieDecoder.m */,
+				B9AA906821ED7D7A00F3C70E /* HcdMovieGLView.h */,
+				B9AA906921ED7D7A00F3C70E /* HcdMovieGLView.m */,
+				B9AA906B21ED7E0F00F3C70E /* HcdMovieViewController.h */,
+				B9AA906C21ED7E0F00F3C70E /* HcdMovieViewController.m */,
+				B9AA906421ED7CAA00F3C70E /* HcdLogger.h */,
+			);
+			path = hcdplayer;
+			sourceTree = "<group>";
+		};
+		B9AA906E21ED7E7600F3C70E /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
 		FC28C05C1DFD0F571E15C0F1 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -526,9 +564,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9AA906321ED7C0A00F3C70E /* HcdAudioManager.m in Sources */,
+				B9AA906721ED7CF800F3C70E /* HcdMovieDecoder.m in Sources */,
 				B9AA8FD521ED785000F3C70E /* ViewController.m in Sources */,
 				B9AA8FE021ED785100F3C70E /* main.m in Sources */,
+				B9AA906A21ED7D7A00F3C70E /* HcdMovieGLView.m in Sources */,
 				B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */,
+				B9AA906D21ED7E0F00F3C70E /* HcdMovieViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
