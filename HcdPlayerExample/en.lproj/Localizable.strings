@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  HcdPlayer
+
+  Created by Salvador on 2019/1/19.
+  Copyright © 2019 Salvador. All rights reserved.
+*/
+"local"="Local";
+"network"="Network";
+"browser"="Browser";
+"setting"="Setting";
+"wifi_transfer"="WiFi Transfer";
+"done"="Done";

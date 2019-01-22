@@ -1,0 +1,39 @@
+//
+//  HcdPlayer-Prefix.pch
+//  HcdPlayer
+//
+//  Created by Salvador on 2019/1/15.
+//  Copyright © 2019 Salvador. All rights reserved.
+//
+
+#ifndef HcdPlayer_Prefix_pch
+#define HcdPlayer_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import "Masonry.h"
+#import "UIColor+Hcd.h"
+#import "UIViewController+Hcd.h"
+#import "BaseNavigationController.h"
+#import "HcdLocalized.h"
+
+#define kMainColor [UIColor colorWithRGBHex:0x303030]
+#define kMainBgColor [UIColor colorWithRGBHex:0xFFFFFF]
+#define kNavBgColor [UIColor colorWithRGBHex:0xFC622F]
+#define kBarBgColor [UIColor colorWithRGBHex:0xEEEEEE]
+#define kSplitLineBgColor [UIColor colorWithRGBHex:0xEEEEEE]
+#define kTabbarSelectedColor [UIColor colorWithRGBHex:0xFF7900]
+#define kSelectedCellBgColor [UIColor colorWithRGBHex:0xF9F9F9]
+
+#define kBarButtonItemTitleFont [UIFont systemFontOfSize:16]
+#define kBaseFont [UIFont systemFontOfSize:14]
+#define kBasePadding 16
+
+#define kScreenBounds [UIScreen mainScreen].bounds
+#define kScreenWidth kScreenBounds.size.width
+#define kScreenHeight kScreenBounds.size.height
+
+#define scaleFromiPhoneXDesign(x) floor(x * (kScreenWidth / 375))
+
+#endif /* HcdPlayer_Prefix_pch */
