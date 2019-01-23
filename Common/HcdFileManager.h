@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger, FileType) {
 
 - (BOOL)cutFile:(NSString *)path toPath:(NSString *)toPath;
 
-- (NSArray *)getAllFileByPath:(NSString *)path;
+- (NSMutableArray *)getAllFileByPath:(NSString *)path;
 
 - (float)sizeOfPath:(NSString *)path;
 

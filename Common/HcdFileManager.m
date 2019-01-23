@@ -86,8 +86,8 @@
     return res;
 }
 
-- (NSArray *)getAllFileByPath:(NSString *)path {
-    NSArray *array = [_fileManager contentsOfDirectoryAtPath:path error:nil];
+- (NSMutableArray *)getAllFileByPath:(NSString *)path {
+    NSMutableArray *array = [[NSMutableArray alloc] initWithArray:[_fileManager contentsOfDirectoryAtPath:path error:nil]];
     return array;
 }
 
@@ -174,6 +174,10 @@
                 fileType = FileType_vsd;
             } else if ([@[@"xls", @"xlsx"] containsObject:suffix]) {
                 fileType = FileType_xls;
+            } else if ([@[@"jpg", @"jpeg", @"png", @"bmp", @"svg", @"psd", @"ai", @"webp", @"wmf", @"pcx"] containsObject:suffix]) {
+                fileType = FileType_img;
+            } else if ([@[@"zip", @"rar", @"7z", @"jar", @"kz", @"zipx", @"zz", @"exe"] containsObject:suffix]) {
+                fileType = FileType_zip;
             }
         }
     }
@@ -254,6 +258,10 @@
     NSString *str = nil;
     
     NSInteger i = 0;
+    
+    if (size < 1000) {
+        str = [NSString stringWithFormat:@"%.2f%@", size, sizeArr[i]];
+    }
     
     while (size > 1000 && i < [sizeArr count]) {
         size = size / 1000;

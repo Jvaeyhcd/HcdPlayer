@@ -46,6 +46,7 @@
 		B9AA90B921F5F5B800F3C70E /* UIView+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90B821F5F5B800F3C70E /* UIView+Hcd.m */; };
 		B9AA90BB21F5F6D100F3C70E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AA90BA21F5F6D100F3C70E /* CoreGraphics.framework */; };
 		B9AA90BF21F73A8E00F3C70E /* UITableView+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90BE21F73A8E00F3C70E /* UITableView+Hcd.m */; };
+		B9AA90C221F7F7A400F3C70E /* FolderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90C121F7F7A400F3C70E /* FolderViewController.m */; };
 		FFBCB2C6A040A2AA5AA1069B /* Pods_HcdPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -212,6 +213,8 @@
 		B9AA90BA21F5F6D100F3C70E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B9AA90BD21F73A8E00F3C70E /* UITableView+Hcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITableView+Hcd.h"; sourceTree = "<group>"; };
 		B9AA90BE21F73A8E00F3C70E /* UITableView+Hcd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+Hcd.m"; sourceTree = "<group>"; };
+		B9AA90C021F7F7A300F3C70E /* FolderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FolderViewController.h; sourceTree = "<group>"; };
+		B9AA90C121F7F7A400F3C70E /* FolderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FolderViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -535,6 +538,8 @@
 				B9AA90A621F56B4200F3C70E /* WifiTransferViewController.m */,
 				B9AA90AE21F5AA6400F3C70E /* FinderViewController.h */,
 				B9AA90AF21F5AA6400F3C70E /* FinderViewController.m */,
+				B9AA90C021F7F7A300F3C70E /* FolderViewController.h */,
+				B9AA90C121F7F7A400F3C70E /* FolderViewController.m */,
 			);
 			path = Local;
 			sourceTree = "<group>";
@@ -697,13 +702,17 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FDFullscreenPopGesture/FDFullscreenPopGesture.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
+				"${BUILT_PRODUCTS_DIR}/HcdActionSheet/HcdActionSheet.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
 				"${BUILT_PRODUCTS_DIR}/NSLogger/NSLogger.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FDFullscreenPopGesture.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HcdActionSheet.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NSLogger.framework",
 			);
@@ -749,6 +758,7 @@
 				B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */,
 				B9AA907F21F2D1DD00F3C70E /* LocalMainViewController.m in Sources */,
 				B9AA8FE021ED785100F3C70E /* main.m in Sources */,
+				B9AA90C221F7F7A400F3C70E /* FolderViewController.m in Sources */,
 				B9AA90B021F5AA6400F3C70E /* FinderViewController.m in Sources */,
 				B9AA908521F2D20400F3C70E /* BrowserViewController.m in Sources */,
 				B9AA907821EDCB6100F3C70E /* BaseNavigationController.m in Sources */,
@@ -922,9 +932,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = jvaeyhcd.HcdPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = cc.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -949,9 +959,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = jvaeyhcd.HcdPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = cc.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

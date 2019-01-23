@@ -17,7 +17,7 @@
 }
 
 - (void)popViewController:(BOOL)animated {
-    [self.navigationController popViewController:animated];
+    [self.navigationController popViewControllerAnimated:animated];
 }
 
 - (void)showBarButtonItemWithStr:(NSString *)str position:(NSInteger)position {

@@ -18,7 +18,7 @@
 #import "BaseNavigationController.h"
 #import "HcdLocalized.h"
 
-#define kMainColor [UIColor colorWithRGBHex:0x303030]
+#define kMainColor [UIColor colorWithRGBHex:0xFC622F]
 #define kMainBgColor [UIColor colorWithRGBHex:0xFFFFFF]
 #define kNavBgColor [UIColor colorWithRGBHex:0xFC622F]
 #define kBarBgColor [UIColor colorWithRGBHex:0xEEEEEE]

@@ -55,7 +55,7 @@
     UINavigationController *nvc3 = [[BaseNavigationController alloc] initWithRootViewController:browserVc];
     UINavigationController *nvc4 = [[BaseNavigationController alloc] initWithRootViewController:settingVc];
     
-    [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc3, nvc4, nil]];
+    [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc4, nil]];
     
     [self.tabBar dropShadowWithOffset:CGSizeMake(0, -3) radius:10 color:[UIColor colorWithRGBHex:0xE0E0E0] opacity:0.8];
     

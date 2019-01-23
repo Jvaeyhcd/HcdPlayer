@@ -11,3 +11,14 @@
 "setting"="Setting";
 "wifi_transfer"="WiFi Transfer";
 "done"="Done";
+"more"="More";
+"delete"="Delete";
+"select"="Select";
+"sort"="Sort";
+"import"="Import";
+"new_folder"="New Folder";
+"cancel"="Cancel";
+"move"="Move";
+"rename"="Rename";
+"lock"="Lock";
+"unlock"="Unlock";
