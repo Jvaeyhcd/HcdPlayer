@@ -9,5 +9,5 @@ target 'HcdPlayer' do
     pod 'Masonry', '~> 1.1.0'
     pod 'GCDWebServer', '~> 3.0'
     pod 'FDFullscreenPopGesture', '~> 1.1'
-    pod 'HcdActionSheet', '~> 0.0.3'
-end 
+    pod 'HcdActionSheet', :path => '../HcdActionSheet'
+end

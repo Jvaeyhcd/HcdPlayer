@@ -138,6 +138,36 @@
 
 .main-box {
     height: 100%;
-    background: url(http://image.govlan.com/bg-login.png) top no-repeat;
+    background: url('../img/bg-login.png') top no-repeat;
     padding-top: 80px;
+}
+
+.hcd-footer {
+    color: #7980b2;
+}
+
+.hcd-h1 {
+    color: #EEEEEE;
+    border-bottom: 1px solid #7980b2;
+}
+
+.hcd-text {
+    color: #BBBBBB;
+}
+
+.hcd-input {
+    display: inline-block;
+    width: 100% !important;
+    height: 32px !important;
+    line-height: 1.5;
+    padding: 4px 7px;
+    font-size: 12px;
+    border: 1px solid #dcdee2;
+    border-radius: 4px;
+    color: #515a6e;
+    background-color: #fff;
+    background-image: none;
+    position: relative;
+    cursor: text;
+    transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
 }

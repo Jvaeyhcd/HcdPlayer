@@ -13,7 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSString (Hcd)
 
 - (CGFloat)widthWithConstainedWidth:(CGFloat)width font:(UIFont *)font;
-
+- (BOOL)isBlankString;
+- (NSString *)removeAllSpaceAndNewline;
+- (NSString *)removeBothSideSpaceAndNewline;
+- (NSString *)replaceMoreThan10SpaceTo10Space;
 @end
 
 NS_ASSUME_NONNULL_END

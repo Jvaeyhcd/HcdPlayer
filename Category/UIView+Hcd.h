@@ -14,6 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)dropShadowWithOffset:(CGSize)offset radius:(CGFloat)radius color:(UIColor *)color opacity:(CGFloat)opacity;
 
+- (void)setCornerOnBottom:(CGFloat)radius;
+- (void)setCornerOnTop:(CGFloat)radius;
+- (void)setCornerOnLeft:(CGFloat)radius;
+- (void)setCornerOnRight:(CGFloat)radius;
+
 @end
 
 NS_ASSUME_NONNULL_END

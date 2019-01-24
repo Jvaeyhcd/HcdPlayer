@@ -37,7 +37,7 @@
 - (BOOL)createDir:(NSString *)dir inDir:(NSString *)inDir {
     NSString *path = [NSString stringWithFormat:@"%@/%@", inDir, dir];
     BOOL isDir;
-    if ([_fileManager fileExistsAtPath:path isDirectory:&isDir]) {
+    if (![_fileManager fileExistsAtPath:path isDirectory:&isDir]) {
         BOOL res = [_fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
         return res;
     } else {

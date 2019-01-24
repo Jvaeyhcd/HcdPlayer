@@ -20,4 +20,44 @@
     self.clipsToBounds = NO;
 }
 
+- (void)setCornerOnTop:(CGFloat)radius {
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                     byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight)
+                                           cornerRadii:CGSizeMake(10.0f, 10.0f)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.layer.mask = maskLayer;
+}
+
+- (void)setCornerOnBottom:(CGFloat)radius {
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                                   byRoundingCorners:(UIRectCornerBottomLeft | UIRectCornerBottomRight)
+                                                         cornerRadii:CGSizeMake(10.0f, 10.0f)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.layer.mask = maskLayer;
+}
+
+- (void)setCornerOnLeft:(CGFloat)radius {
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                                   byRoundingCorners:(UIRectCornerBottomLeft | UIRectCornerTopLeft)
+                                                         cornerRadii:CGSizeMake(10.0f, 10.0f)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.layer.mask = maskLayer;
+}
+
+- (void)setCornerOnRight:(CGFloat)radius {
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                                   byRoundingCorners:(UIRectCornerTopRight | UIRectCornerBottomRight)
+                                                         cornerRadii:CGSizeMake(10.0f, 10.0f)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.layer.mask = maskLayer;
+}
+
 @end

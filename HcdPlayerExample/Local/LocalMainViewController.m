@@ -13,6 +13,7 @@
 #import "UITableView+Hcd.h"
 #import "FolderViewController.h"
 #import "HcdActionSheet.h"
+#import "HcdAlertInputView.h"
 
 typedef enum : NSUInteger {
     ActionTypeDelete,
@@ -25,6 +26,7 @@ typedef enum : NSUInteger {
     NSMutableArray      *_pathChidren;
     HcdActionSheet      *_navMoreActionSheet;
     HcdActionSheet      *_cellMoreActionSheet;
+    
 }
 
 @end
@@ -65,8 +67,23 @@ typedef enum : NSUInteger {
     if (!_navMoreActionSheet) {
         NSArray *otherButtonTitles = @[HcdLocalized(@"new_folder", nil), HcdLocalized(@"import", nil), HcdLocalized(@"select", nil), HcdLocalized(@"sort", nil)];
         _navMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
+        __weak LocalMainViewController *weakSelf = self;
         _navMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
-            
+            switch (index) {
+                    case 1: {
+                        // create new folder
+                        HcdAlertInputView *newFolderView = [[HcdAlertInputView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+                        newFolderView.tips = HcdLocalized(@"new_folder", nil);
+                        newFolderView.commitBlock = ^(NSString * _Nonnull content) {
+                            [weakSelf createFolder:content];
+                        };
+                        [newFolderView showReplyInView:[UIApplication sharedApplication].keyWindow];
+                        break;
+                    }
+                    
+                default:
+                    break;
+            }
         };
     }
     
@@ -137,6 +154,15 @@ typedef enum : NSUInteger {
     
     [[UIApplication sharedApplication].keyWindow addSubview:_cellMoreActionSheet];
     [_cellMoreActionSheet showHcdActionSheet];
+}
+
+#pragma mark - private function
+
+- (void)createFolder:(NSString *)name {
+    BOOL res = [[HcdFileManager defaultManager] createDir:name inDir:_currentPath];
+    if (res) {
+        [self reloadDatas];
+    }
 }
 
 #pragma mark - Table view data source
