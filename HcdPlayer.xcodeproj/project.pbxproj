@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */; };
 		B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD121ED785000F3C70E /* AppDelegate.m */; };
 		B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD421ED785000F3C70E /* MainViewController.m */; };
 		B9AA8FDA21ED785100F3C70E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9AA8FD921ED785100F3C70E /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 		B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461621F8B96F00682DD5 /* MoveViewController.m */; };
 		B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461921F9D1BD00682DD5 /* HcdAlertInputView.m */; };
 		B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */; };
+		B9BB462021FBF37100682DD5 /* SortViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461F21FBF37100682DD5 /* SortViewController.m */; };
 		FFBCB2C6A040A2AA5AA1069B /* Pods_HcdPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +59,8 @@
 		0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HcdPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		742CF5F37E96FB453579A47A /* Pods-HcdPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		B7312D76511DB2F0072839EE /* Pods-HcdPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		B99C189921FBFF4E002D4136 /* HcdValueTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdValueTableViewCell.h; sourceTree = "<group>"; };
+		B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdValueTableViewCell.m; sourceTree = "<group>"; };
 		B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HcdPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AA8FD021ED785000F3C70E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9AA8FD121ED785000F3C70E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -224,6 +228,8 @@
 		B9BB461921F9D1BD00682DD5 /* HcdAlertInputView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdAlertInputView.m; sourceTree = "<group>"; };
 		B9BB461B21F9D1DE00682DD5 /* UIPlaceHolderTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIPlaceHolderTextView.h; sourceTree = "<group>"; };
 		B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIPlaceHolderTextView.m; sourceTree = "<group>"; };
+		B9BB461E21FBF37100682DD5 /* SortViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SortViewController.h; sourceTree = "<group>"; };
+		B9BB461F21FBF37100682DD5 /* SortViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SortViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -545,6 +551,8 @@
 			children = (
 				B9AA90B421F5EE3700F3C70E /* FilesListTableViewCell.h */,
 				B9AA90B521F5EE3700F3C70E /* FilesListTableViewCell.m */,
+				B99C189921FBFF4E002D4136 /* HcdValueTableViewCell.h */,
+				B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */,
 				B9AA907D21F2D1DD00F3C70E /* LocalMainViewController.h */,
 				B9AA907E21F2D1DD00F3C70E /* LocalMainViewController.m */,
 				B9AA90A521F56B4200F3C70E /* WifiTransferViewController.h */,
@@ -555,6 +563,8 @@
 				B9AA90C121F7F7A400F3C70E /* FolderViewController.m */,
 				B9BB461521F8B96F00682DD5 /* MoveViewController.h */,
 				B9BB461621F8B96F00682DD5 /* MoveViewController.m */,
+				B9BB461E21FBF37100682DD5 /* SortViewController.h */,
+				B9BB461F21FBF37100682DD5 /* SortViewController.m */,
 			);
 			path = Local;
 			sourceTree = "<group>";
@@ -779,12 +789,14 @@
 				B9AA908521F2D20400F3C70E /* BrowserViewController.m in Sources */,
 				B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */,
 				B9AA907821EDCB6100F3C70E /* BaseNavigationController.m in Sources */,
+				B9BB462021FBF37100682DD5 /* SortViewController.m in Sources */,
 				B9AA908221F2D1F100F3C70E /* NetworkMainViewController.m in Sources */,
 				B9AA90B321F5B2C400F3C70E /* HcdFileManager.m in Sources */,
 				B9AA90A421F5631700F3C70E /* NSString+Hcd.m in Sources */,
 				B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */,
 				B9AA906A21ED7D7A00F3C70E /* HcdMovieGLView.m in Sources */,
 				B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */,
+				B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */,
 				B9AA906D21ED7E0F00F3C70E /* HcdMovieViewController.m in Sources */,
 				B9AA907421EDC04100F3C70E /* UIColor+Hcd.m in Sources */,
 				B9AA90AD21F5760F00F3C70E /* GCDWebUploader.m in Sources */,

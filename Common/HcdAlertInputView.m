@@ -126,7 +126,7 @@
     
     if (!_tipsLbl) {
         _tipsLbl = [[UILabel alloc]initWithFrame:CGRectMake(70, 0, kScreen_Width - 140, 50)];
-        _tipsLbl.font = [UIFont boldSystemFontOfSize:14];
+        _tipsLbl.font = [UIFont boldSystemFontOfSize:16];
         _tipsLbl.textAlignment = NSTextAlignmentCenter;
         _tipsLbl.textColor = [UIColor color333];
         [_dialogView addSubview:_tipsLbl];

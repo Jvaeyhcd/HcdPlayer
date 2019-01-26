@@ -25,6 +25,7 @@
 #define kSplitLineBgColor [UIColor colorWithRGBHex:0xEEEEEE]
 #define kTabbarSelectedColor [UIColor colorWithRGBHex:0xFF7900]
 #define kSelectedCellBgColor [UIColor colorWithRGBHex:0xF9F9F9]
+#define kCellHeaderBgColor [UIColor colorWithRGBHex:0xEFEFEF]
 
 #define kBarButtonItemTitleFont [UIFont systemFontOfSize:16]
 #define kBaseFont [UIFont systemFontOfSize:14]

@@ -14,6 +14,7 @@
 #import "FolderViewController.h"
 #import "HcdActionSheet.h"
 #import "HcdAlertInputView.h"
+#import "SortViewController.h"
 
 typedef enum : NSUInteger {
     ActionTypeDelete,
@@ -25,8 +26,9 @@ typedef enum : NSUInteger {
     NSString            *_currentPath;
     NSMutableArray      *_pathChidren;
     HcdActionSheet      *_navMoreActionSheet;
-    HcdActionSheet      *_cellMoreActionSheet;
-    
+    HcdActionSheet      *_fileCellMoreActionSheet;
+    HcdActionSheet      *_folderCellMoreActionSheet;
+    NSInteger           _selectedIndex;
 }
 
 @end
@@ -73,13 +75,28 @@ typedef enum : NSUInteger {
                     case 1: {
                         // create new folder
                         HcdAlertInputView *newFolderView = [[HcdAlertInputView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-                        newFolderView.tips = HcdLocalized(@"new_folder", nil);
+                        newFolderView.tips = HcdLocalized(@"rename", nil);
                         newFolderView.commitBlock = ^(NSString * _Nonnull content) {
                             [weakSelf createFolder:content];
                         };
                         [newFolderView showReplyInView:[UIApplication sharedApplication].keyWindow];
                         break;
                     }
+                    case 2: {
+                        break;
+                    }
+                    case 3: {
+                        break;
+                    }
+                    case 4: {
+                        SortViewController *vc = [[SortViewController alloc] init];
+                        BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
+                        [weakSelf presentViewController:nvc animated:YES completion:^{
+                            
+                        }];
+                        break;
+                    }
+                    
                     
                 default:
                     break;
@@ -87,11 +104,51 @@ typedef enum : NSUInteger {
         };
     }
     
-    if (!_cellMoreActionSheet) {
-        NSArray *otherButtonTitles = @[HcdLocalized(@"new_folder", nil), HcdLocalized(@"import", nil), HcdLocalized(@"select", nil), HcdLocalized(@"sort", nil)];
-        _cellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
-        _cellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
-            
+    if (!_fileCellMoreActionSheet) {
+        NSArray *otherButtonTitles = @[HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"delete", nil)];
+        _fileCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
+        
+        __weak LocalMainViewController *weakSelf = self;
+        _fileCellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+            switch (index) {
+                case 1:
+                    
+                    break;
+                
+                case 2: {
+                    [weakSelf showRenameAlterView];
+                    break;
+                }
+                case 3:
+                    break;
+                default:
+                    break;
+            }
+        };
+    }
+    
+    if (!_folderCellMoreActionSheet) {
+        NSArray *otherButtonTitles = @[HcdLocalized(@"lock", nil), HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"delete", nil)];
+        _folderCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
+        
+        __weak LocalMainViewController *weakSelf = self;
+        _folderCellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+            switch (index) {
+                case 1:
+                    
+                    break;
+                    
+                case 2:
+                    break;
+                case 3: {
+                    [weakSelf showRenameAlterView];
+                    break;
+                }
+                case 4:
+                    break;
+                default:
+                    break;
+            }
         };
     }
 }
@@ -128,32 +185,46 @@ typedef enum : NSUInteger {
 }
 
 - (void)showCellMoreActionSheet:(NSInteger)index {
+    
+    if (_selectedIndex != index) {
+        _selectedIndex = index;
+    }
+    
     if (index >= [_currentPath length]) {
         return;
     }
     
-    NSArray *otherButtonTitles = @[HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"delete", nil)];
-    
     NSString *path = [NSString stringWithFormat:@"%@/%@", _currentPath, [_pathChidren objectAtIndex:index]];
     FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
-    NSString *fileName = [path lastPathComponent];
     
     switch (fileType) {
         case FileType_file_dir:
-            otherButtonTitles = @[HcdLocalized(@"lock", nil), HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"delete", nil)];
+            
+            [[UIApplication sharedApplication].keyWindow addSubview:_folderCellMoreActionSheet];
+            [_folderCellMoreActionSheet showHcdActionSheet];
             break;
             
         default:
+            [[UIApplication sharedApplication].keyWindow addSubview:_fileCellMoreActionSheet];
+            [_fileCellMoreActionSheet showHcdActionSheet];
             break;
     }
     
-    _cellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:fileName];
-    _cellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
-        
-    };
     
-    [[UIApplication sharedApplication].keyWindow addSubview:_cellMoreActionSheet];
-    [_cellMoreActionSheet showHcdActionSheet];
+}
+
+- (void)showRenameAlterView {
+    
+    NSString *fileNmae = [_pathChidren objectAtIndex:_selectedIndex];
+    
+    HcdAlertInputView *newFolderView = [[HcdAlertInputView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+    newFolderView.tips = [NSString stringWithFormat:@"%@(%@)", HcdLocalized(@"rename", nil), fileNmae];
+    
+    __weak LocalMainViewController *weakSelf = self;
+    newFolderView.commitBlock = ^(NSString * _Nonnull content) {
+        [weakSelf renamePath:content];
+    };
+    [newFolderView showReplyInView:[UIApplication sharedApplication].keyWindow];
 }
 
 #pragma mark - private function
@@ -163,6 +234,37 @@ typedef enum : NSUInteger {
     if (res) {
         [self reloadDatas];
     }
+}
+
+- (void)renamePath:(NSString *)newName {
+    NSString *oldPath = [_pathChidren objectAtIndex:_selectedIndex];
+    [self renamePath:oldPath newPath:newName];
+}
+
+- (void)renamePath:(NSString *)path newPath:(NSString *)newPath {
+    
+    NSString *fullPath = [NSString stringWithFormat:@"%@/%@", _currentPath, path];
+    
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
+    NSString *type = [attributes fileType];
+    if ([type isEqualToString:NSFileTypeDirectory]) {
+        BOOL res = [[HcdFileManager defaultManager] renameFileName:path newName:newPath inPath:_currentPath];
+        if (res) {
+            [self reloadCellAtRow:_selectedIndex newName:newPath];
+        }
+    } else {
+        NSString *suffix = [fullPath pathExtension];
+        newPath = [NSString stringWithFormat:@"%@.%@", newPath, suffix];
+        BOOL res = [[HcdFileManager defaultManager] renameFileName:path newName:newPath inPath:_currentPath];
+        if (res) {
+            [self reloadCellAtRow:_selectedIndex newName:newPath];
+        }
+    }
+}
+
+- (void)reloadCellAtRow:(NSInteger)row newName:(NSString *)newName {
+    [_pathChidren replaceObjectAtIndex:row withObject:newName];
+    [_tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - Table view data source

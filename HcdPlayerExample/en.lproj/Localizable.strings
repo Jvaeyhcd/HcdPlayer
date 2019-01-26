@@ -22,3 +22,10 @@
 "rename"="Rename";
 "lock"="Lock";
 "unlock"="Unlock";
+"name"="Name";
+"extension"="Extension";
+"size"="Size";
+"date"="Date";
+"order"="Order";
+"ascending"="Ascending";
+"descending"="Descending";
