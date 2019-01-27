@@ -7,8 +7,11 @@
 //
 
 #import "SettingViewController.h"
+#import "HcdValueTableViewCell.h"
 
-@interface SettingViewController ()
+@interface SettingViewController () {
+    UITableView             *_tableView;
+}
 
 @end
 
@@ -18,6 +21,24 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"Setting";
+}
+
+- (void)initSubviews {
+    self.title = HcdLocalized(@"setting", nil);
+    self.view.backgroundColor = kMainBgColor;
+    [self createTableView];
+}
+
+- (void)createTableView {
+    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [_tableView registerClass:[HcdValueTableViewCell class] forCellReuseIdentifier:kCellIdValueCell];
+    _tableView.hidden = NO;
+    
+    [self.view addSubview:_tableView];
 }
 
 /*
