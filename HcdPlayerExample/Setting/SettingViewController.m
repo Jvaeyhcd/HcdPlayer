@@ -8,6 +8,35 @@
 
 #import "SettingViewController.h"
 #import "HcdValueTableViewCell.h"
+#import "UITableView+Hcd.h"
+
+#import "LanguageViewController.h"
+
+#define kHeaderHeight 40
+
+enum {
+    HcdSettingSectionGeneral,
+    HcdSettingSectionGesture,
+    HcdSettingSectionOther,
+    HcdSettingSectionCount
+};
+
+enum {
+    HcdSettingGeneralLanguage,
+    HcdSettingGeneralSort,
+    HcdSettingGeneralCount
+};
+
+enum {
+    HcdSettingGestureOne,
+    HcdSettingGestureTwo,
+    HcdSettingGestureCount
+};
+
+enum {
+    HcdSettingOtherAbout,
+    HcdSettingOtherCount
+};
 
 @interface SettingViewController () {
     UITableView             *_tableView;
@@ -21,12 +50,20 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"Setting";
+    [self initDatas];
+    [self initSubviews];
+}
+
+- (void)initDatas {
+    
 }
 
 - (void)initSubviews {
     self.title = HcdLocalized(@"setting", nil);
     self.view.backgroundColor = kMainBgColor;
-    [self createTableView];
+    if (!_tableView) {
+        [self createTableView];
+    }
 }
 
 - (void)createTableView {
@@ -39,6 +76,98 @@
     _tableView.hidden = NO;
     
     [self.view addSubview:_tableView];
+}
+
+#pragma mark - UItableView Delegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return HcdSettingSectionCount;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    switch (section) {
+        case HcdSettingSectionGeneral:
+            return HcdSettingGeneralCount;
+        case HcdSettingSectionGesture:
+            return HcdSettingGestureCount;
+        case HcdSettingSectionOther:
+            return HcdSettingOtherCount;
+        default:
+            return 0;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return kHeaderHeight;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kHeaderHeight)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, 0, kScreenWidth - 2 * kBasePadding, kHeaderHeight)];
+    label.font = [UIFont systemFontOfSize:14];
+    label.textColor = [UIColor color666];
+    view.backgroundColor = kCellHeaderBgColor;
+    [view addSubview:label];
+
+    NSString *header = @"";
+    switch (section) {
+        case HcdSettingSectionGeneral:
+            header = HcdLocalized(@"general", nil);
+            break;
+        case HcdSettingSectionGesture:
+            header = HcdLocalized(@"gesture", nil);
+            break;
+        case HcdSettingSectionOther:
+            header = HcdLocalized(@"other", nil);
+            break;
+        default:
+            break;
+    }
+    label.text = header;
+    
+    return view;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    HcdValueTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdValueCell forIndexPath:indexPath];
+    
+    NSString *title = @"";
+    if (indexPath.section == HcdSettingSectionGeneral) {
+        if (indexPath.row == HcdSettingGeneralLanguage) {
+            title = HcdLocalized(@"language", nil);
+        } else if (indexPath.row == HcdSettingGeneralSort) {
+            title = HcdLocalized(@"sort", nil);
+        }
+    } else if (indexPath.section == HcdSettingSectionGesture) {
+        if (indexPath.row == HcdSettingGestureOne) {
+            title = HcdLocalized(@"oneFingerGesture", nil);
+        } else if (indexPath.row == HcdSettingGestureTwo) {
+            title = HcdLocalized(@"twoFingerGesture", nil);
+        }
+    } else if (indexPath.section == HcdSettingSectionOther) {
+        if (indexPath.row == HcdSettingOtherAbout) {
+            title = HcdLocalized(@"about", nil);
+        }
+    }
+    cell.titleLlb.text = title;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    [tableView addLineforPlainCell:cell forRowAtIndexPath:indexPath withLeftSpace:kBasePadding];
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [HcdValueTableViewCell cellHeight];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == HcdSettingSectionGeneral) {
+        if (indexPath.row == HcdSettingGeneralLanguage) {
+            LanguageViewController *vc = [[LanguageViewController alloc] init];
+            vc.hidesBottomBarWhenPushed = YES;
+            [self pushViewController:vc animated:YES];
+        }
+    }
 }
 
 /*

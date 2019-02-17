@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */; };
+		B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */; };
 		B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD121ED785000F3C70E /* AppDelegate.m */; };
 		B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD421ED785000F3C70E /* MainViewController.m */; };
 		B9AA8FDA21ED785100F3C70E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9AA8FD921ED785100F3C70E /* Assets.xcassets */; };
@@ -61,6 +62,8 @@
 		B7312D76511DB2F0072839EE /* Pods-HcdPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		B99C189921FBFF4E002D4136 /* HcdValueTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdValueTableViewCell.h; sourceTree = "<group>"; };
 		B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdValueTableViewCell.m; sourceTree = "<group>"; };
+		B9A6F2EA22199EAF0027D017 /* LanguageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LanguageViewController.h; sourceTree = "<group>"; };
+		B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LanguageViewController.m; sourceTree = "<group>"; };
 		B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HcdPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AA8FD021ED785000F3C70E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9AA8FD121ED785000F3C70E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -592,6 +595,8 @@
 			children = (
 				B9AA908621F2D21300F3C70E /* SettingViewController.h */,
 				B9AA908721F2D21300F3C70E /* SettingViewController.m */,
+				B9A6F2EA22199EAF0027D017 /* LanguageViewController.h */,
+				B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -793,6 +798,7 @@
 				B9AA908221F2D1F100F3C70E /* NetworkMainViewController.m in Sources */,
 				B9AA90B321F5B2C400F3C70E /* HcdFileManager.m in Sources */,
 				B9AA90A421F5631700F3C70E /* NSString+Hcd.m in Sources */,
+				B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */,
 				B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */,
 				B9AA906A21ED7D7A00F3C70E /* HcdMovieGLView.m in Sources */,
 				B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */,
