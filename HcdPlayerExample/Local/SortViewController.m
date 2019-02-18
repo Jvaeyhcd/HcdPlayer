@@ -128,13 +128,13 @@ typedef NS_ENUM(NSInteger, OrderType){
     
     if (indexPath.section == SortInfoSectionSort) {
         if (indexPath.row == SortTypeName) {
-            cell.titleLlb.text = NSLocalizedString(@"name", nil);
+            cell.titleLbl.text = NSLocalizedString(@"name", nil);
         } else if (indexPath.row == SortTypeExtension) {
-            cell.titleLlb.text = NSLocalizedString(@"extension", nil);
+            cell.titleLbl.text = NSLocalizedString(@"extension", nil);
         } else if (indexPath.row == SortTypeSize) {
-            cell.titleLlb.text = NSLocalizedString(@"size", nil);
+            cell.titleLbl.text = NSLocalizedString(@"size", nil);
         } else if (indexPath.row == SortTypeDate) {
-            cell.titleLlb.text = NSLocalizedString(@"date", nil);
+            cell.titleLbl.text = NSLocalizedString(@"date", nil);
         }
         if (indexPath.row == _sortType) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -143,9 +143,9 @@ typedef NS_ENUM(NSInteger, OrderType){
         }
     } else if (indexPath.section == SortInfoSectionOrder) {
         if (indexPath.row == OrderTypeAscending) {
-            cell.titleLlb.text = NSLocalizedString(@"ascending", nil);
+            cell.titleLbl.text = NSLocalizedString(@"ascending", nil);
         } else if (indexPath.row == OrderTypeDescending) {
-            cell.titleLlb.text = NSLocalizedString(@"descending", nil);
+            cell.titleLbl.text = NSLocalizedString(@"descending", nil);
         }
         if (indexPath.row == _orderType) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;

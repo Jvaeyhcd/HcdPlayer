@@ -10,12 +10,7 @@
 #import "HcdValueTableViewCell.h"
 #import "UITableView+Hcd.h"
 
-enum {
-    HcdLanguageSystem,
-    HcdLanguageChineseSimple,
-    HcdLanguageEnglish,
-    HcdLanguageCount
-};
+#import "MainViewController.h"
 
 @interface LanguageViewController () {
     UITableView             *_tableView;
@@ -67,16 +62,21 @@ enum {
     
     NSString *title = @"";
     
-    if (indexPath.row == HcdLanguageSystem) {
-        title = HcdLocalized(@"default", nil);
+    if (indexPath.row == HcdLanguageChineseTraditional) {
+        title = HcdLocalized(@"chineseTraditional", nil);
     } else if (indexPath.row == HcdLanguageEnglish) {
         title = HcdLocalized(@"english", nil);
     } else if (indexPath.row == HcdLanguageChineseSimple) {
         title = HcdLocalized(@"chineseSimple", nil);
     }
     
-    cell.titleLlb.text = title;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    if (indexPath.row == [[HcdLocalized sharedInstance] currentLanguage]) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    
+    cell.titleLbl.text = title;
     [tableView addLineforPlainCell:cell forRowAtIndexPath:indexPath withLeftSpace:kBasePadding];
     return cell;
 }
@@ -87,14 +87,18 @@ enum {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == HcdLanguageSystem) {
-        [[HcdLocalized sharedInstance] systemLanguage];
+    if (indexPath.row == HcdLanguageChineseTraditional) {
+        [[HcdLocalized sharedInstance] setLanguage:@"zh-Hant"];
     } else if (indexPath.row == HcdLanguageEnglish) {
         [[HcdLocalized sharedInstance] setLanguage:@"en"];
     } else if (indexPath.row == HcdLanguageChineseSimple) {
         [[HcdLocalized sharedInstance] setLanguage:@"zh-Hans"];
     }
-    [self popViewController:YES];
+    
+    MainViewController *vc = [[MainViewController alloc] init];
+    vc.selectedIndex = 1;
+    
+    [UIApplication sharedApplication].keyWindow.rootViewController = vc;
 }
 
 #pragma mark - private

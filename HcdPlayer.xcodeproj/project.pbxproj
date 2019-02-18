@@ -64,6 +64,8 @@
 		B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdValueTableViewCell.m; sourceTree = "<group>"; };
 		B9A6F2EA22199EAF0027D017 /* LanguageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LanguageViewController.h; sourceTree = "<group>"; };
 		B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LanguageViewController.m; sourceTree = "<group>"; };
+		B9A6F2ED221A8FC30027D017 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B9A6F2EE221A8FC30027D017 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HcdPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AA8FD021ED785000F3C70E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9AA8FD121ED785000F3C70E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -683,6 +685,7 @@
 				en,
 				Base,
 				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = B9AA8FC421ED785000F3C70E;
 			productRefGroup = B9AA8FCE21ED785000F3C70E /* Products */;
@@ -817,6 +820,7 @@
 			children = (
 				B9AA909621F305CC00F3C70E /* en */,
 				B9AA909821F3065400F3C70E /* zh-Hans */,
+				B9A6F2EE221A8FC30027D017 /* zh-Hant */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -826,6 +830,7 @@
 			children = (
 				B9AA909C21F307AD00F3C70E /* en */,
 				B9AA909E21F307B400F3C70E /* zh-Hans */,
+				B9A6F2ED221A8FC30027D017 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

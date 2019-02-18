@@ -27,11 +27,18 @@
     self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.frame];
     self.selectedBackgroundView.backgroundColor = kSelectedCellBgColor;
     
-    if (!_titleLlb) {
-        _titleLlb = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, 0, kScreenWidth - 4 * kBasePadding, 50)];
-        _titleLlb.font = [UIFont systemFontOfSize:16];
-        _titleLlb.textColor = [UIColor color333];
-        [self addSubview:_titleLlb];
+    if (!_titleLbl) {
+        _titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, 0, kScreenWidth / 2 - kBasePadding, 50)];
+        _titleLbl.font = [UIFont systemFontOfSize:16];
+        _titleLbl.textColor = [UIColor color333];
+        [self addSubview:_titleLbl];
+    }
+    if (!_contentLbl) {
+        _contentLbl = [[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth / 2, 0, kScreenWidth / 2 - 2 * kBasePadding, 50)];
+        _contentLbl.font = [UIFont systemFontOfSize:16];
+        _contentLbl.textColor = [UIColor color999];
+        _contentLbl.textAlignment = NSTextAlignmentRight;
+        [self addSubview:_contentLbl];
     }
 }
 

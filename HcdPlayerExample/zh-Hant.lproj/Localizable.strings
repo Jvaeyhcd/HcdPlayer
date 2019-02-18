@@ -1,0 +1,50 @@
+/* 
+  Localizable.strings
+  HcdPlayer
+
+  Created by Salvador on 2019/1/19.
+  Copyright © 2019 Salvador. All rights reserved.
+*/
+"local"="本地";
+"network"="網絡";
+"browser"="瀏覽器";
+"setting"="設置";
+"wifi_transfer"="Wi-Fi文件傳輸";
+"done"="完成";
+"more"="更多";
+"delete"="刪除";
+"select"="選擇";
+"sort"="排序";
+"import"="導入";
+"new_folder"="新建文件夾";
+"cancel"="取消";
+"move"="移動";
+"rename"="重命名";
+"lock"="加鎖";
+"unlock"="解鎖";
+"name"="名稱";
+"extension"="擴展名";
+"size"="大小";
+"date"="時間";
+"order"="排序";
+"ascending"="升序";
+"descending"="降序";
+"general"="通用";
+"language"="語言";
+"gesture"="手勢";
+"oneFingerGesture"="單指手勢";
+"twoFingerGesture"="雙指手勢";
+"singleTap"="單擊";
+"doubleTap"="雙擊";
+"dragLeftRight"="左右拖動";
+"dragUpDownLeftSide"="屏幕左邊上下滑動";
+"dragUpDownRightSide"="屏幕右邊上下滑動";
+"other"="其他";
+"about"="關於";
+"version"="版本";
+"contactUs"="聯繫我們";
+"legalNotices"="法律聲明";
+"default"="默認";
+"english"="英語";
+"chineseSimple"="簡體中文";
+"chineseTraditional"="繁體中文";

@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface HcdValueTableViewCell : UITableViewCell
 + (CGFloat)cellHeight;
 
-@property (nonatomic, retain) UILabel *titleLlb;
+@property (nonatomic, retain) UILabel *titleLbl;
+@property (nonatomic, retain) UILabel *contentLbl;
 
 @end
 

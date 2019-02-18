@@ -19,7 +19,7 @@
 }
 
 - (void)initLanguage{
-    NSString *language=[self currentLanguage];
+    NSString *language=[self currentLanguageStr];
     if (language.length>0) {
         NSLog(@"自设置语言:%@",language);
     }else{
@@ -27,9 +27,30 @@
     }
 }
 
-- (NSString *)currentLanguage{
-    NSString *language=[[NSUserDefaults standardUserDefaults]objectForKey:AppLanguage];
-    return language;
+- (NSString *)currentLanguageStr{
+    NSString *languageCode=[[NSUserDefaults standardUserDefaults]objectForKey:AppLanguage];
+    if ([languageCode hasPrefix:@"zh-Hans"]) {
+        return HcdLocalized(@"chineseSimple", nil);
+    } else if ([languageCode hasPrefix:@"zh-Hant"]) {
+        return HcdLocalized(@"chineseTraditional", nil);
+    } else if ([languageCode hasPrefix:@"en"]) {
+        return HcdLocalized(@"english", nil);
+    } else {
+        return HcdLocalized(@"english", nil);
+    }
+}
+
+- (HcdLanguage)currentLanguage {
+    NSString *languageCode = [[NSUserDefaults standardUserDefaults]objectForKey:AppLanguage];
+    if ([languageCode hasPrefix:@"zh-Hans"]) {
+        return HcdLanguageChineseSimple;
+    } else if ([languageCode hasPrefix:@"zh-Hant"]) {
+        return HcdLanguageChineseTraditional;
+    } else if ([languageCode hasPrefix:@"en"]) {
+        return HcdLanguageEnglish;
+    } else {
+        return HcdLanguageEnglish;
+    }
 }
 
 - (void)setLanguage:(NSString *)language{

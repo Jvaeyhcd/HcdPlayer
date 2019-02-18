@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+typedef enum {
+    HcdLanguageChineseSimple,
+    HcdLanguageChineseTraditional,
+    HcdLanguageEnglish,
+    HcdLanguageCount
+} HcdLanguage;
+
 NS_ASSUME_NONNULL_BEGIN
 
 //语言切换
@@ -22,13 +29,15 @@ static NSString * const AppLanguage = @"appLanguage";
 - (void)initLanguage;
 
 //当前语言
-- (NSString *)currentLanguage;
+- (NSString *)currentLanguageStr;
 
 //设置要转换的语言
 - (void)setLanguage:(NSString *)language;
 
 //设置为系统语言
 - (void)systemLanguage;
+
+- (HcdLanguage)currentLanguage;
 
 @end
 

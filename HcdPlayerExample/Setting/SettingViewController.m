@@ -132,9 +132,11 @@ enum {
     HcdValueTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdValueCell forIndexPath:indexPath];
     
     NSString *title = @"";
+    NSString *content = @"";
     if (indexPath.section == HcdSettingSectionGeneral) {
         if (indexPath.row == HcdSettingGeneralLanguage) {
             title = HcdLocalized(@"language", nil);
+            content = [[HcdLocalized sharedInstance] currentLanguageStr];
         } else if (indexPath.row == HcdSettingGeneralSort) {
             title = HcdLocalized(@"sort", nil);
         }
@@ -149,7 +151,9 @@ enum {
             title = HcdLocalized(@"about", nil);
         }
     }
-    cell.titleLlb.text = title;
+    
+    cell.contentLbl.text = content;
+    cell.titleLbl.text = title;
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [tableView addLineforPlainCell:cell forRowAtIndexPath:indexPath withLeftSpace:kBasePadding];
     return cell;
