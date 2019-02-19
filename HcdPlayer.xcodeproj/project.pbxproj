@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */; };
 		B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */; };
+		B9A6F2F2221C41730027D017 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2F0221C41730027D017 /* UIScrollView+EmptyDataSet.m */; };
 		B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD121ED785000F3C70E /* AppDelegate.m */; };
 		B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD421ED785000F3C70E /* MainViewController.m */; };
 		B9AA8FDA21ED785100F3C70E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9AA8FD921ED785100F3C70E /* Assets.xcassets */; };
@@ -66,6 +67,8 @@
 		B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LanguageViewController.m; sourceTree = "<group>"; };
 		B9A6F2ED221A8FC30027D017 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B9A6F2EE221A8FC30027D017 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		B9A6F2F0221C41730027D017 /* UIScrollView+EmptyDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+EmptyDataSet.m"; sourceTree = "<group>"; };
+		B9A6F2F1221C41730027D017 /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
 		B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HcdPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AA8FD021ED785000F3C70E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9AA8FD121ED785000F3C70E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -270,6 +273,15 @@
 				0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B9A6F2EF221C41730027D017 /* DZNEmptyDataSet */ = {
+			isa = PBXGroup;
+			children = (
+				B9A6F2F1221C41730027D017 /* UIScrollView+EmptyDataSet.h */,
+				B9A6F2F0221C41730027D017 /* UIScrollView+EmptyDataSet.m */,
+			);
+			path = DZNEmptyDataSet;
 			sourceTree = "<group>";
 		};
 		B9AA8FC421ED785000F3C70E = {
@@ -606,6 +618,7 @@
 		B9AA908B21F3038700F3C70E /* Vender */ = {
 			isa = PBXGroup;
 			children = (
+				B9A6F2EF221C41730027D017 /* DZNEmptyDataSet */,
 				B9AA90A821F5760F00F3C70E /* GCDWebUploader */,
 				B9AA908C21F3038F00F3C70E /* HcdLocalized */,
 			);
@@ -779,6 +792,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9A6F2F2221C41730027D017 /* UIScrollView+EmptyDataSet.m in Sources */,
 				B9AA90B921F5F5B800F3C70E /* UIView+Hcd.m in Sources */,
 				B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */,
 				B9AA90B621F5EE3700F3C70E /* FilesListTableViewCell.m in Sources */,
