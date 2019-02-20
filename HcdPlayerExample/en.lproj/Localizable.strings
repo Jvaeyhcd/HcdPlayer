@@ -49,3 +49,4 @@
 "chineseSimple"="Chinese,Simple";
 "chineseTraditional"="Chinese,Traditional";
 "listEmptyTips"="There is no file";
+"wifiTransferTips"="Just enter IP address into your web browser (Safari, Chrome, etc) to upload new files";

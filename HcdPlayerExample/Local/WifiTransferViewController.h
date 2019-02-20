@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WifiTransferViewController : UIViewController<GCDWebUploaderDelegate>
+@interface WifiTransferViewController : UIViewController<GCDWebUploaderDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @end
 

@@ -49,3 +49,4 @@
 "chineseSimple"="简体中文";
 "chineseTraditional"="繁体中文";
 "listEmptyTips"="这儿什么也没有~";
+"wifiTransferTips"="在你的Safari、Chrome等浏览器中输入IP地址即可通过浏览器上传文件";
