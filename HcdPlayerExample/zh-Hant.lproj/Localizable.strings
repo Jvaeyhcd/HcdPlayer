@@ -50,3 +50,6 @@
 "chineseTraditional"="繁體中文";
 "listEmptyTips"="這兒什麼也沒有~";
 "wifiTransferTips"="在你的Safari、Chrome等瀏覽器中輸入IP地址即可通過瀏覽器上傳文件";
+"transferStatus"="已上傳文件";
+"noWiFi"="WiFi未連接";
+"close"="關閉";

@@ -30,7 +30,7 @@
     topImg.image = [UIImage imageNamed:@"hcdplayer.bundle/pic_wifi_transfer"];
     [self addSubview:topImg];
     
-    UILabel *tipsLbl = [[UILabel alloc] initWithFrame:CGRectMake((kScreenWidth - scaleFromiPhoneXDesign(280)) / 2, CGRectGetMaxY(topImg.frame) + kBasePadding, scaleFromiPhoneXDesign(280), scaleFromiPhoneXDesign(32))];
+    UILabel *tipsLbl = [[UILabel alloc] initWithFrame:CGRectMake((kScreenWidth - scaleFromiPhoneXDesign(300)) / 2, CGRectGetMaxY(topImg.frame) + kBasePadding, scaleFromiPhoneXDesign(300), 32)];
     tipsLbl.textColor = [UIColor color999];
     tipsLbl.textAlignment = NSTextAlignmentCenter;
     tipsLbl.numberOfLines = 2;
@@ -38,12 +38,12 @@
     tipsLbl.text = HcdLocalized(@"wifiTransferTips", nil);
     [self addSubview:tipsLbl];
     
-    _addressLbl = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, CGRectGetMaxY(tipsLbl.frame) + kBasePadding, kScreenWidth - 2 * kBasePadding, scaleFromiPhoneXDesign(20))];
+    _addressLbl = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, CGRectGetMaxY(tipsLbl.frame) + kBasePadding, kScreenWidth - 2 * kBasePadding, 20)];
     _addressLbl.font = [UIFont systemFontOfSize:18];
     _addressLbl.textColor = [UIColor color333];
     _addressLbl.textAlignment = NSTextAlignmentCenter;
     _addressLbl.numberOfLines = 1;
-    _addressLbl.text = @"http://192.168.31.136:8080";
+    _addressLbl.text = @"";
     [self addSubview:_addressLbl];
 }
 

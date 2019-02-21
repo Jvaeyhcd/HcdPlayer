@@ -15,6 +15,7 @@
 #import "HcdActionSheet.h"
 #import "HcdAlertInputView.h"
 #import "SortViewController.h"
+#import "MoveViewController.h"
 
 typedef enum : NSUInteger {
     ActionTypeDelete,
@@ -75,7 +76,7 @@ typedef enum : NSUInteger {
                     case 1: {
                         // create new folder
                         HcdAlertInputView *newFolderView = [[HcdAlertInputView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-                        newFolderView.tips = HcdLocalized(@"rename", nil);
+                        newFolderView.tips = HcdLocalized(@"new_folder", nil);
                         newFolderView.commitBlock = ^(NSString * _Nonnull content) {
                             [weakSelf createFolder:content];
                         };
@@ -112,9 +113,8 @@ typedef enum : NSUInteger {
         _fileCellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
             switch (index) {
                 case 1:
-                    
+                    [weakSelf showMoveViewController];
                     break;
-                
                 case 2: {
                     [weakSelf showRenameAlterView];
                     break;
@@ -230,6 +230,15 @@ typedef enum : NSUInteger {
 }
 
 #pragma mark - private function
+
+- (void)showMoveViewController {
+    MoveViewController *vc = [[MoveViewController alloc] init];
+    vc.currentPath = _currentPath;
+    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController: vc];
+    [self presentViewController:nav animated:YES completion:^{
+        
+    }];
+}
 
 - (void)createFolder:(NSString *)name {
     BOOL res = [[HcdFileManager defaultManager] createDir:name inDir:_currentPath];

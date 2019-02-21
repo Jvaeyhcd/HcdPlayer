@@ -17,6 +17,7 @@
 #import "UIViewController+Hcd.h"
 #import "BaseNavigationController.h"
 #import "HcdLocalized.h"
+#import "UIScrollView+EmptyDataSet.h"
 
 #define kMainColor [UIColor colorWithRGBHex:0xFC622F]
 #define kMainBgColor [UIColor colorWithRGBHex:0xFFFFFF]
@@ -30,6 +31,7 @@
 #define kBarButtonItemTitleFont [UIFont systemFontOfSize:16]
 #define kBaseFont [UIFont systemFontOfSize:14]
 #define kBasePadding 16
+#define kHeaderHeight 40
 
 #define kScreenBounds [UIScreen mainScreen].bounds
 #define kScreenWidth kScreenBounds.size.width

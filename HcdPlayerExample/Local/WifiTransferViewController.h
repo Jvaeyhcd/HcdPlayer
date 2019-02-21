@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GCDWebUploader.h"
+#import "Reachability.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

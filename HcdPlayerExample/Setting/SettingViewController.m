@@ -12,8 +12,6 @@
 
 #import "LanguageViewController.h"
 
-#define kHeaderHeight 40
-
 enum {
     HcdSettingSectionGeneral,
     HcdSettingSectionGesture,

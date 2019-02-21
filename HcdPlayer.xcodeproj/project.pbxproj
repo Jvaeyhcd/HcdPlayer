@@ -11,6 +11,8 @@
 		B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */; };
 		B9A6F2F2221C41730027D017 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2F0221C41730027D017 /* UIScrollView+EmptyDataSet.m */; };
 		B9A6F2F5221D982B0027D017 /* WiFiTransferTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2F4221D982B0027D017 /* WiFiTransferTableViewCell.m */; };
+		B9A6F2F9221E6D8F0027D017 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2F7221E6D8E0027D017 /* Reachability.m */; };
+		B9A6F2FB221E6D9F0027D017 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A6F2FA221E6D9F0027D017 /* SystemConfiguration.framework */; };
 		B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD121ED785000F3C70E /* AppDelegate.m */; };
 		B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD421ED785000F3C70E /* MainViewController.m */; };
 		B9AA8FDA21ED785100F3C70E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9AA8FD921ED785100F3C70E /* Assets.xcassets */; };
@@ -72,6 +74,9 @@
 		B9A6F2F1221C41730027D017 /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
 		B9A6F2F3221D982B0027D017 /* WiFiTransferTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WiFiTransferTableViewCell.h; sourceTree = "<group>"; };
 		B9A6F2F4221D982B0027D017 /* WiFiTransferTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WiFiTransferTableViewCell.m; sourceTree = "<group>"; };
+		B9A6F2F7221E6D8E0027D017 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		B9A6F2F8221E6D8F0027D017 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		B9A6F2FA221E6D9F0027D017 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HcdPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AA8FD021ED785000F3C70E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9AA8FD121ED785000F3C70E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -248,6 +253,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9A6F2FB221E6D9F0027D017 /* SystemConfiguration.framework in Frameworks */,
 				B9AA90BB21F5F6D100F3C70E /* CoreGraphics.framework in Frameworks */,
 				B9AA905F21ED7AED00F3C70E /* libz.tbd in Frameworks */,
 				B9AA905D21ED7AE300F3C70E /* libbz2.tbd in Frameworks */,
@@ -269,6 +275,7 @@
 		2D328B5F2BEDFD13C59C3EA7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B9A6F2FA221E6D9F0027D017 /* SystemConfiguration.framework */,
 				B9AA90BA21F5F6D100F3C70E /* CoreGraphics.framework */,
 				B9AA905E21ED7AED00F3C70E /* libz.tbd */,
 				B9AA905C21ED7AE300F3C70E /* libbz2.tbd */,
@@ -285,6 +292,15 @@
 				B9A6F2F0221C41730027D017 /* UIScrollView+EmptyDataSet.m */,
 			);
 			path = DZNEmptyDataSet;
+			sourceTree = "<group>";
+		};
+		B9A6F2F6221E6D730027D017 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				B9A6F2F8221E6D8F0027D017 /* Reachability.h */,
+				B9A6F2F7221E6D8E0027D017 /* Reachability.m */,
+			);
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 		B9AA8FC421ED785000F3C70E = {
@@ -623,6 +639,7 @@
 		B9AA908B21F3038700F3C70E /* Vender */ = {
 			isa = PBXGroup;
 			children = (
+				B9A6F2F6221E6D730027D017 /* Reachability */,
 				B9A6F2EF221C41730027D017 /* DZNEmptyDataSet */,
 				B9AA90A821F5760F00F3C70E /* GCDWebUploader */,
 				B9AA908C21F3038F00F3C70E /* HcdLocalized */,
@@ -822,6 +839,7 @@
 				B9AA90B321F5B2C400F3C70E /* HcdFileManager.m in Sources */,
 				B9AA90A421F5631700F3C70E /* NSString+Hcd.m in Sources */,
 				B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */,
+				B9A6F2F9221E6D8F0027D017 /* Reachability.m in Sources */,
 				B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */,
 				B9AA906A21ED7D7A00F3C70E /* HcdMovieGLView.m in Sources */,
 				B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */,

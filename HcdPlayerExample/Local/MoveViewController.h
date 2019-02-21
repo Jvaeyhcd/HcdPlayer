@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MoveViewController : UIViewController
 
+@property (nonatomic, weak) NSString *currentPath;
+
 @end
 
 NS_ASSUME_NONNULL_END
