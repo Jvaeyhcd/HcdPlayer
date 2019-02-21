@@ -91,6 +91,21 @@
     return array;
 }
 
+- (NSMutableArray *)getAllFolderByPath:(NSString *)path {
+    NSMutableArray *filePathList = [self getAllFileByPath:path];
+    NSMutableArray *folderPathList = [[NSMutableArray alloc] init];
+    
+    for (NSString *p in filePathList) {
+        NSString *subPath = [NSString stringWithFormat:@"%@/%@", path, p];
+        NSString *fileType = [[_fileManager attributesOfItemAtPath:subPath error:NULL] fileType];
+        if ([fileType isEqualToString:NSFileTypeDirectory]) {
+            [folderPathList addObject: subPath];
+        }
+    }
+    
+    return folderPathList;
+}
+
 - (float)sizeOfPath:(NSString *)path {
     if (![_fileManager fileExistsAtPath:path]) {
         return 0.0;

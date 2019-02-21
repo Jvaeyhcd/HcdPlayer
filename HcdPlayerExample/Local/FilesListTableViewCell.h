@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FilesListTableViewCell : UITableViewCell
 
 - (void)setFilePath:(NSString *)path;
+- (void)setFaterFolder:(NSString *)path;
 
 + (CGFloat)cellHeight;
 

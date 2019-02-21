@@ -7,15 +7,22 @@
 //
 
 #import "MoveViewController.h"
+#import "HcdFileManager.h"
+#import "UITableView+Hcd.h"
+#import "FilesListTableViewCell.h"
+#import "HcdAlertInputView.h"
 
 @interface MoveViewController () {
     BOOL                _isRoot;
     NSMutableArray      *_folderPathList;
+    UITableView         *_tableView;
 }
 
 @end
 
 @implementation MoveViewController
+@synthesize currentPath = _currentPath;
+@synthesize fileList = _fileList;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -34,6 +41,60 @@
     [self.view setBackgroundColor:kMainBgColor];
     [self showBarButtonItemWithStr:HcdLocalized(@"cancel", nil) position:LEFT];
     [self showBarButtonItemWithImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_add"] position:RIGHT];
+    if (!_tableView) {
+        [self createTableView];
+    }
+    
+    UIButton *okBtn = [[UIButton alloc] init];
+    okBtn.layer.cornerRadius = 4;
+    [okBtn setBackgroundColor:kMainColor];
+    okBtn.titleLabel.font = [UIFont systemFontOfSize:16];
+    [okBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [okBtn setTitle:HcdLocalized(@"move", nil) forState:UIControlStateNormal];
+    [okBtn addTarget:self action:@selector(moveFile) forControlEvents:UIControlEventTouchUpInside];
+    
+    CGFloat bottomHeight = scaleFromiPhoneXDesign(50);
+    if (iPhoneX) {
+        bottomHeight = scaleFromiPhoneXDesign(50) + kBasePadding + kTabbarSafeBottomMargin;
+        [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(0);
+            make.left.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+            make.bottom.mas_equalTo(-bottomHeight);
+        }];
+        
+        UIView *bottomView = [[UIView alloc] init];
+        bottomView.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:bottomView];
+        [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+            make.bottom.mas_equalTo(0);
+            make.height.mas_equalTo(bottomHeight);
+        }];
+        
+        [bottomView addSubview:okBtn];
+        [okBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(kBasePadding);
+            make.top.mas_equalTo(kBasePadding);
+            make.right.mas_equalTo(-kBasePadding);
+            make.height.mas_equalTo(scaleFromiPhoneXDesign(50));
+        }];
+    } else {
+        [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(0);
+            make.left.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+            make.bottom.mas_equalTo(-bottomHeight);
+        }];
+        [self.view addSubview:okBtn];
+        [okBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+            make.bottom.mas_equalTo(0);
+            make.height.mas_equalTo(bottomHeight);
+        }];
+    }
 }
 
 - (void)reloadDatas {
@@ -42,8 +103,24 @@
         self.title = @"Documents";
         _isRoot = YES;
     } else {
+        NSString *name = [_currentPath lastPathComponent];
+        self.title = name;
         _isRoot = NO;
     }
+    _folderPathList = [[HcdFileManager defaultManager] getAllFolderByPath:_currentPath];
+    [_tableView reloadData];
+}
+
+- (void)createTableView {
+    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    _tableView.emptyDataSetSource = self;
+    _tableView.emptyDataSetDelegate = self;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [_tableView registerClass:[FilesListTableViewCell class] forCellReuseIdentifier:kCellIdFilesList];
+    
+    [self.view addSubview:_tableView];
 }
 
 - (void)leftNavBarButtonClicked {
@@ -53,7 +130,98 @@
 }
 
 - (void)rightNavBarButtonClicked {
+    __weak MoveViewController *weakSelf = self;
+    HcdAlertInputView *newFolderView = [[HcdAlertInputView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+    newFolderView.tips = HcdLocalized(@"new_folder", nil);
+    newFolderView.commitBlock = ^(NSString * _Nonnull content) {
+        [weakSelf createFolder:content];
+    };
+    [newFolderView showReplyInView:[UIApplication sharedApplication].keyWindow];
+}
+
+#pragma mark - private
+
+- (void)createFolder:(NSString *)name {
+    BOOL res = [[HcdFileManager defaultManager] createDir:name inDir:_currentPath];
+    if (res) {
+        [self reloadDatas];
+    }
+}
+
+- (void)moveFile {
+    for (NSString *file in _fileList) {
+        NSString *fileName = [file lastPathComponent];
+        BOOL res = [[HcdFileManager defaultManager] cutFile:file toPath:[NSString stringWithFormat:@"%@/%@", _currentPath, fileName]];
+        if (res) {
+            NSLog(@"-------------------移动成功");
+        }
+    }
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (!_isRoot) {
+        return [_folderPathList count] + 1;
+    }
+    return [_folderPathList count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    FilesListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdFilesList forIndexPath:indexPath];
+    [tableView addLineforPlainCell:cell forRowAtIndexPath:indexPath withLeftSpace:kBasePadding];
     
+    if (!_isRoot) {
+        if (indexPath.row == 0) {
+            [cell setFaterFolder:_currentPath];
+        } else {
+            NSString *path = [_folderPathList objectAtIndex:indexPath.row - 1];
+            if (path) {
+                [cell setFilePath:path];
+            }
+        }
+        
+    } else {
+        NSString *path = [_folderPathList objectAtIndex:indexPath.row];
+        if (path) {
+            [cell setFilePath:path];
+        }
+    }
+    
+    
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [FilesListTableViewCell cellHeight];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if (!_isRoot) {
+        if (indexPath.row == 0) {
+            _currentPath = [_currentPath stringByDeletingLastPathComponent];
+        } else {
+            NSString *path = [_folderPathList objectAtIndex:indexPath.row - 1];
+            if (path) {
+                _currentPath = path;
+            }
+        }
+    } else {
+        NSString *path = [_folderPathList objectAtIndex:indexPath.row];
+        if (path) {
+            _currentPath = path;
+        }
+    }
+    [self reloadDatas];
 }
 
 /*

@@ -232,8 +232,12 @@ typedef enum : NSUInteger {
 #pragma mark - private function
 
 - (void)showMoveViewController {
+    
+    NSString *fileNmae = [_pathChidren objectAtIndex:_selectedIndex];
+    
     MoveViewController *vc = [[MoveViewController alloc] init];
     vc.currentPath = _currentPath;
+    vc.fileList = [[NSMutableArray alloc] initWithObjects:[NSString stringWithFormat:@"%@/%@", _currentPath, fileNmae], nil];
     BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController: vc];
     [self presentViewController:nav animated:YES completion:^{
         

@@ -89,6 +89,15 @@
     _descLbl.text = [descArr componentsJoinedByString:@" | "];
 }
 
+- (void)setFaterFolder:(NSString *)path {
+    NSString *name = [[path stringByDeletingLastPathComponent] lastPathComponent];
+    _fileTypeImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/barcode_result_page_type_file_dir_icon.png"];
+    _titleLbl.text = @"..";
+    if (name) {
+        _descLbl.text = name;
+    }
+}
+
 + (CGFloat)cellHeight {
     return scaleFromiPhoneXDesign(50) + kBasePadding * 2;
 }

@@ -48,6 +48,8 @@ typedef NS_ENUM(NSInteger, FileType) {
 
 - (NSMutableArray *)getAllFileByPath:(NSString *)path;
 
+- (NSMutableArray *)getAllFolderByPath:(NSString *)path;
+
 - (float)sizeOfPath:(NSString *)path;
 
 - (BOOL)renameFileName:(NSString *)oldName newName:(NSString *)newName inPath:(NSString *)path;
