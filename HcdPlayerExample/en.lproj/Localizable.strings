@@ -17,6 +17,7 @@
 "sort"="Sort";
 "import"="Import";
 "new_folder"="New Folder";
+"new_folder_placeholder"="Please input folder name";
 "cancel"="Cancel";
 "move"="Move";
 "rename"="Rename";
@@ -53,3 +54,6 @@
 "transferStatus"="Uploaded Files";
 "noWiFi"="WiFi not connected";
 "close"="Close";
+"ok"="Ok";
+"sureDelete"="Are you sure to delete this %@ file or folder？";
+"select_all"="Select all";

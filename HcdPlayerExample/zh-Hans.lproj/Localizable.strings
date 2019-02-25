@@ -17,6 +17,7 @@
 "sort"="排序";
 "import"="导入";
 "new_folder"="新建文件夹";
+"new_folder_placeholder"="请输入文件夹名称";
 "cancel"="取消";
 "move"="移动";
 "rename"="重命名";
@@ -53,3 +54,6 @@
 "transferStatus"="已上传文件";
 "noWiFi"="WiFi未连接";
 "close"="关闭";
+"ok"="確定";
+"sureDelete"="你确定要删除 %@ 该文件/文件夹吗？";
+"select_all"="全选";

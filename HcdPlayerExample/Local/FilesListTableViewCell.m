@@ -36,7 +36,7 @@
     
 //    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
+    self.multipleSelectionBackgroundView = [UIView new];
     self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.frame];
     self.selectedBackgroundView.backgroundColor = kSelectedCellBgColor;
     
@@ -44,7 +44,7 @@
         _fileTypeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(kBasePadding, kBasePadding, scaleFromiPhoneXDesign(50), scaleFromiPhoneXDesign(50))];
         _fileTypeImageView.backgroundColor = [UIColor colorWithRGBHex:0xFFFFFF];
         _fileTypeImageView.contentMode = UIViewContentModeScaleAspectFit;
-        [self addSubview:_fileTypeImageView];
+        [self.contentView addSubview:_fileTypeImageView];
     }
     
     if (!_titleLbl) {
@@ -54,7 +54,7 @@
         _titleLbl.textColor = [UIColor color333];
         _titleLbl.text = HcdLocalized(@"local", nil);
         _titleLbl.numberOfLines = 1;
-        [self addSubview:_titleLbl];
+        [self.contentView addSubview:_titleLbl];
     }
     
     
@@ -66,7 +66,7 @@
         _descLbl.textColor = [UIColor color666];
         _descLbl.text = HcdLocalized(@"local", nil);
         _descLbl.numberOfLines = 1;
-        [self addSubview:_descLbl];
+        [self.contentView addSubview:_descLbl];
     }
 }
 
@@ -100,6 +100,40 @@
 
 + (CGFloat)cellHeight {
     return scaleFromiPhoneXDesign(50) + kBasePadding * 2;
+}
+
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    for (UIControl *control in self.subviews) {
+        if ([control isKindOfClass:NSClassFromString(@"UITableViewCellEditControl")]) {
+            for (UIView *v in control.subviews) {
+                if ([v isKindOfClass:[UIImageView class]]) {
+                    UIImageView *img = (UIImageView *)v;
+                    if (!self.isSelected) {
+                        img.image = [UIImage imageNamed:@"hcdplayer.bundle/checkbox_circle"];
+                    }
+                }
+            }
+        }
+    }
+}
+
+- (void)layoutSubviews {
+    for (UIControl *control in self.subviews) {
+        if ([control isKindOfClass:NSClassFromString(@"UITableViewCellEditControl")]) {
+            for (UIView *v in control.subviews) {
+                if ([v isKindOfClass:[UIImageView class]]) {
+                    UIImageView *img = (UIImageView *)v;
+                    if (self.isSelected) {
+                        img.image = [UIImage imageNamed:@"hcdplayer.bundle/checkbox_circle_selected"];
+                    } else {
+                        img.image = [UIImage imageNamed:@"hcdplayer.bundle/checkbox_circle"];
+                    }
+                }
+            }
+        }
+    }
+    [super layoutSubviews];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
