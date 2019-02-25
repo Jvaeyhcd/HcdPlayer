@@ -32,11 +32,22 @@
 #define kBaseFont [UIFont systemFontOfSize:14]
 #define kBasePadding 16
 #define kHeaderHeight 40
+#define kScreenBottomPadding
 
 #define kScreenBounds [UIScreen mainScreen].bounds
 #define kScreenWidth kScreenBounds.size.width
 #define kScreenHeight kScreenBounds.size.height
 
 #define scaleFromiPhoneXDesign(x) floor(x * (kScreenWidth / 375))
+#define iPhoneX ((kScreenHeight == 812.f || kScreenHeight == 896.f) ? YES : NO)
+
+// 适配刘海屏状态栏高度
+#define kStatusBarHeight (iPhoneX ? 44.f : 20.f)
+// 适配iPhone X 导航栏高度
+#define kNavHeight (iPhoneX ? 88.f : 64.f)
+// 适配iPhone X Tabbar距离底部的距离
+#define kTabbarSafeBottomMargin (iPhoneX ? 34.f : 0.f)
+// 适配iPhone X Tabbar高度
+#define kTabbarHeight (iPhoneX ? (49.f+34.f) : 49.f)
 
 #endif /* HcdPlayer_Prefix_pch */

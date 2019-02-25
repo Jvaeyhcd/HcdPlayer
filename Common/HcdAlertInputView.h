@@ -15,7 +15,7 @@ typedef void(^CommitBlock)(NSString *content);
 
 @interface HcdAlertInputView : UIView
 
-@property (nonatomic, weak  ) NSString * placeHolder;
+@property (nonatomic, weak) NSString *placeHolder;
 @property (nonatomic, weak) NSString *tips;
 @property (nonatomic, strong) CommitBlock commitBlock;
 

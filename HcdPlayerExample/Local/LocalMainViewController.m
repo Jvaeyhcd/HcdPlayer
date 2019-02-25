@@ -27,8 +27,6 @@ typedef enum : NSUInteger {
 
 @interface LocalMainViewController () {
     NSString            *_currentPath;
-    NSMutableArray      *_pathChidren;
-    NSMutableArray      *_selectedArr;
     HcdActionSheet      *_navMoreActionSheet;
     HcdActionSheet      *_fileCellMoreActionSheet;
     HcdActionSheet      *_folderCellMoreActionSheet;
@@ -38,6 +36,8 @@ typedef enum : NSUInteger {
 }
 @property (nonatomic, strong) EditBottomView *bottomView;
 @property (nonatomic, strong) UITableView    *tableView;
+@property (nonatomic, strong) NSMutableArray *pathChidren;
+@property (nonatomic, strong) NSMutableArray *selectedArr;
 @end
 
 @implementation LocalMainViewController
@@ -58,9 +58,9 @@ typedef enum : NSUInteger {
     _isEdit = NO;
     _selectedAll = NO;
     _currentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    _pathChidren = [[NSMutableArray alloc]initWithArray:[[NSFileManager defaultManager] contentsOfDirectoryAtPath:_currentPath error:nil]];
-    _selectedArr = [[NSMutableArray alloc] init];
-    for (NSString *str in _pathChidren) {
+    self.pathChidren = [[NSMutableArray alloc]initWithArray:[[NSFileManager defaultManager] contentsOfDirectoryAtPath:_currentPath error:nil]];
+    self.selectedArr = [[NSMutableArray alloc] init];
+    for (NSString *str in self.pathChidren) {
         NSLog(@"%@", str);
         float size = [[HcdFileManager defaultManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", _currentPath, str]];
         NSLog(@"%lf", size);
@@ -69,15 +69,16 @@ typedef enum : NSUInteger {
 }
 
 - (void)loadDataWithSelected:(BOOL)selected {
-    _selectedArr = [[NSMutableArray alloc] init];
-//    for (NSInteger i = 0; i < [_pathChidren count]; i++) {
-//        [_selectedArr addObject:@(YES)];
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i inSection:0];
-//        [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionTop];
-//    }
-    [_pathChidren enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-    }];
+    [self.selectedArr removeAllObjects];
+    if (selected) {
+        [self.pathChidren enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }];
+        [self.selectedArr addObjectsFromArray:self.pathChidren];
+    } else {
+        [self.tableView reloadData];
+    }
+    
 }
 
 - (void)initSubViews {
@@ -180,7 +181,7 @@ typedef enum : NSUInteger {
 
 - (void)reloadDatas {
     _currentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    _pathChidren = [[NSMutableArray alloc] initWithArray:[[NSFileManager defaultManager] contentsOfDirectoryAtPath:_currentPath error:nil]];
+    self.pathChidren = [[NSMutableArray alloc] initWithArray:[[NSFileManager defaultManager] contentsOfDirectoryAtPath:_currentPath error:nil]];
     [self.tableView reloadData];
 }
 
@@ -234,6 +235,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)hideEditTableView {
+    _selectedAll = NO;
     [UIView animateWithDuration:0.5 animations:^{
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
@@ -244,6 +246,7 @@ typedef enum : NSUInteger {
         self.bottomView.frame = CGRectMake(0, self.view.bounds.size.height, kScreenWidth, kEditBottomViewHeight);
     } completion:^(BOOL finished) {
 //        [self.bottomView removeFromSuperview];
+        [self.bottomView.allBtn setSelected:NO];
     }];
 }
 
@@ -260,7 +263,7 @@ typedef enum : NSUInteger {
     [[UIApplication sharedApplication].keyWindow addSubview:_fileCellMoreActionSheet];
     [_fileCellMoreActionSheet showHcdActionSheet];
     
-//    NSString *path = [NSString stringWithFormat:@"%@/%@", _currentPath, [_pathChidren objectAtIndex:index]];
+//    NSString *path = [NSString stringWithFormat:@"%@/%@", _currentPath, [self.pathChidren objectAtIndex:index]];
 //    FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
 //
 //    switch (fileType) {
@@ -279,7 +282,7 @@ typedef enum : NSUInteger {
 
 - (void)showRenameAlterView {
     
-    NSString *fileName = [_pathChidren objectAtIndex:_selectedIndex];
+    NSString *fileName = [self.pathChidren objectAtIndex:_selectedIndex];
     
     HcdAlertInputView *newFolderView = [[HcdAlertInputView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
     newFolderView.tips = [NSString stringWithFormat:@"%@(%@)", HcdLocalized(@"rename", nil), fileName];
@@ -297,18 +300,75 @@ typedef enum : NSUInteger {
     if (!_bottomView) {
         _bottomView = [[EditBottomView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, kScreenWidth, kEditBottomViewHeight)];
         _bottomView.backgroundColor = [UIColor whiteColor];
-        [_bottomView.allBtn addTarget:self action:@selector(selectAllEdit:) forControlEvents:UIControlEventTouchUpInside];
+        [_bottomView.allBtn addTarget:self action:@selector(selectAllEdit) forControlEvents:UIControlEventTouchUpInside];
+        [_bottomView.moveBtn addTarget:self action:@selector(moveSelectedPath) forControlEvents:UIControlEventTouchUpInside];
     }
     return _bottomView;
 }
 
 #pragma mark - private function
 
-- (void)selectAllEdit:(UIButton *)btn {
+- (void)selectAllEdit {
     _selectedAll = !_selectedAll;
     [self.bottomView.allBtn setSelected:_selectedAll];
     [self loadDataWithSelected:_selectedAll];
+}
+
+- (void)moveSelectedPath {
+    NSMutableArray *fileList = [[NSMutableArray alloc] init];
+    for (NSString *path in self.selectedArr) {
+        NSString *fullPath = [NSString stringWithFormat:@"%@/%@", _currentPath, path];
+        [fileList addObject:fullPath];
+    }
+    
+    MoveViewController *vc = [[MoveViewController alloc] init];
+    vc.currentPath = _currentPath;
+    vc.fileList = fileList;
+    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController: vc];
+    [self presentViewController:nav animated:YES completion:^{
+        
+    }];
+}
+
+- (void)updateEditSelectedCell:(NSUInteger)index {
     [self.tableView reloadData];
+    BOOL add = YES;
+    NSString *fileName = [self.pathChidren objectAtIndex:index];
+    for (NSString *file in self.selectedArr) {
+        if ([file isEqualToString:fileName]) {
+            add = NO;
+            break;
+        }
+    }
+    if (add) {
+        [self.selectedArr addObject:fileName];
+    } else {
+        [self.selectedArr removeObject:fileName];
+    }
+    if ([self.selectedArr count] == [self.pathChidren count]) {
+        _selectedAll = YES;
+    } else {
+        _selectedAll = NO;
+    }
+    [self.bottomView.allBtn setSelected:_selectedAll];
+    [self.selectedArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSInteger index = [self getSelectedCellIndex:self.selectedArr[idx]];
+        if (index >=0 && index < [self.pathChidren count]) {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
+    }];
+}
+
+- (NSInteger)getSelectedCellIndex:(NSString *)fileName {
+    NSInteger index = -1;
+    for (NSInteger i = 0; i < [self.pathChidren count]; i++) {
+        NSString *file = [self.pathChidren objectAtIndex:i];
+        if ([fileName isEqualToString:file]) {
+            index = i;
+            break;
+        }
+    }
+    return index;
 }
 
 - (void)setTableViewEdit: (BOOL)edit {
@@ -326,7 +386,7 @@ typedef enum : NSUInteger {
 
 - (void)showMoveViewController {
     
-    NSString *fileNmae = [_pathChidren objectAtIndex:_selectedIndex];
+    NSString *fileNmae = [self.pathChidren objectAtIndex:_selectedIndex];
     
     MoveViewController *vc = [[MoveViewController alloc] init];
     vc.currentPath = _currentPath;
@@ -338,7 +398,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)showDeleteActionSheet {
-    NSString *fileNmae = [_pathChidren objectAtIndex:_selectedIndex];
+    NSString *fileNmae = [self.pathChidren objectAtIndex:_selectedIndex];
     
     HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:[NSString stringWithFormat:HcdLocalized(@"sureDelete", nil), fileNmae]];
     
@@ -357,12 +417,12 @@ typedef enum : NSUInteger {
 }
 
 - (void)deleteFileIndex {
-    NSString * fileName = [_pathChidren objectAtIndex:_selectedIndex];
+    NSString * fileName = [self.pathChidren objectAtIndex:_selectedIndex];
     if (fileName) {
         NSString *filePath = [NSString stringWithFormat:@"%@/%@", _currentPath, fileName];
         BOOL res = [[HcdFileManager defaultManager] deleteFileByPath:filePath];
         if (res) {
-            [_pathChidren removeObjectAtIndex:_selectedIndex];
+            [self.pathChidren removeObjectAtIndex:_selectedIndex];
             [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:_selectedIndex inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
         } else {
 
@@ -378,7 +438,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)renamePath:(NSString *)newName {
-    NSString *oldPath = [_pathChidren objectAtIndex:_selectedIndex];
+    NSString *oldPath = [self.pathChidren objectAtIndex:_selectedIndex];
     [self renamePath:oldPath newPath:newName];
 }
 
@@ -404,7 +464,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)reloadCellAtRow:(NSInteger)row newName:(NSString *)newName {
-    [_pathChidren replaceObjectAtIndex:row withObject:newName];
+    [self.pathChidren replaceObjectAtIndex:row withObject:newName];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
@@ -415,14 +475,14 @@ typedef enum : NSUInteger {
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_pathChidren count];
+    return [self.pathChidren count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FilesListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdFilesList forIndexPath:indexPath];
     [tableView addLineforPlainCell:cell forRowAtIndexPath:indexPath withLeftSpace:kBasePadding];
     
-    NSString *path = [_pathChidren objectAtIndex:indexPath.row];
+    NSString *path = [self.pathChidren objectAtIndex:indexPath.row];
     if (path) {
         [cell setFilePath:[NSString stringWithFormat:@"%@/%@", _currentPath, path]];
     }
@@ -437,10 +497,10 @@ typedef enum : NSUInteger {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (tableView.isEditing) {
-        
+        [self updateEditSelectedCell:indexPath.row];
     } else {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        NSString *path = [_pathChidren objectAtIndex:indexPath.row];
+        NSString *path = [self.pathChidren objectAtIndex:indexPath.row];
         if (path) {
             path = [NSString stringWithFormat:@"%@/%@", _currentPath, path];
         }
@@ -460,6 +520,12 @@ typedef enum : NSUInteger {
         }
     }
     
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView.isEditing) {
+        [self updateEditSelectedCell:indexPath.row];
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

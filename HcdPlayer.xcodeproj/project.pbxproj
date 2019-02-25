@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */; };
+		B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A1DC252224091800F4C9C2 /* EditBottomView.m */; };
 		B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */; };
 		B9A6F2F2221C41730027D017 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2F0221C41730027D017 /* UIScrollView+EmptyDataSet.m */; };
 		B9A6F2F5221D982B0027D017 /* WiFiTransferTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2F4221D982B0027D017 /* WiFiTransferTableViewCell.m */; };
@@ -66,6 +67,8 @@
 		B7312D76511DB2F0072839EE /* Pods-HcdPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		B99C189921FBFF4E002D4136 /* HcdValueTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdValueTableViewCell.h; sourceTree = "<group>"; };
 		B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdValueTableViewCell.m; sourceTree = "<group>"; };
+		B9A1DC242224091800F4C9C2 /* EditBottomView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditBottomView.h; sourceTree = "<group>"; };
+		B9A1DC252224091800F4C9C2 /* EditBottomView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditBottomView.m; sourceTree = "<group>"; };
 		B9A6F2EA22199EAF0027D017 /* LanguageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LanguageViewController.h; sourceTree = "<group>"; };
 		B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LanguageViewController.m; sourceTree = "<group>"; };
 		B9A6F2ED221A8FC30027D017 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -578,6 +581,8 @@
 				B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */,
 				B9BB461821F9D1BD00682DD5 /* HcdAlertInputView.h */,
 				B9BB461921F9D1BD00682DD5 /* HcdAlertInputView.m */,
+				B9A1DC242224091800F4C9C2 /* EditBottomView.h */,
+				B9A1DC252224091800F4C9C2 /* EditBottomView.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -833,6 +838,7 @@
 				B9AA90B021F5AA6400F3C70E /* FinderViewController.m in Sources */,
 				B9AA908521F2D20400F3C70E /* BrowserViewController.m in Sources */,
 				B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */,
+				B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */,
 				B9AA907821EDCB6100F3C70E /* BaseNavigationController.m in Sources */,
 				B9BB462021FBF37100682DD5 /* SortViewController.m in Sources */,
 				B9AA908221F2D1F100F3C70E /* NetworkMainViewController.m in Sources */,
