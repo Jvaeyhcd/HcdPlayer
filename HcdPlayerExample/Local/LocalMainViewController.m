@@ -25,7 +25,7 @@ typedef enum : NSUInteger {
     ActionTypeMore
 } ActionType;
 
-@interface LocalMainViewController () {
+@interface LocalMainViewController ()<UIDocumentPickerDelegate> {
     NSString            *_currentPath;
     HcdActionSheet      *_navMoreActionSheet;
     HcdActionSheet      *_fileCellMoreActionSheet;
@@ -38,6 +38,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) UITableView    *tableView;
 @property (nonatomic, strong) NSMutableArray *pathChidren;
 @property (nonatomic, strong) NSMutableArray *selectedArr;
+@property (nonatomic, strong) HcdActionSheet *importActionSheet;
 @end
 
 @implementation LocalMainViewController
@@ -51,7 +52,11 @@ typedef enum : NSUInteger {
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [self reloadDatas];
+    if (!_isEdit) {
+        [self reloadDatas];
+    } else {
+        [self reloadSelectedEditCell];
+    }
 }
 
 - (void)initData {
@@ -106,6 +111,7 @@ typedef enum : NSUInteger {
                         break;
                     }
                     case 2: {
+                        [weakSelf showImportActionSheet];
                         break;
                     }
                     case 3: {
@@ -236,6 +242,7 @@ typedef enum : NSUInteger {
 
 - (void)hideEditTableView {
     _selectedAll = NO;
+    [self.selectedArr removeAllObjects];
     [UIView animateWithDuration:0.5 animations:^{
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
@@ -302,8 +309,29 @@ typedef enum : NSUInteger {
         _bottomView.backgroundColor = [UIColor whiteColor];
         [_bottomView.allBtn addTarget:self action:@selector(selectAllEdit) forControlEvents:UIControlEventTouchUpInside];
         [_bottomView.moveBtn addTarget:self action:@selector(moveSelectedPath) forControlEvents:UIControlEventTouchUpInside];
+        [_bottomView.deleteBtn addTarget:self action:@selector(showDeleteMultipleSelectActionSheet) forControlEvents:UIControlEventTouchUpInside];
     }
     return _bottomView;
+}
+
+- (HcdActionSheet *)importActionSheet {
+    if (!_importActionSheet) {
+        _importActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"icloud", nil), HcdLocalized(@"photos", nil)] attachTitle:HcdLocalized(@"import_tips", nil)];
+        __weak LocalMainViewController *weakSelf = self;
+        _importActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+            switch (index) {
+                case 1:
+                    [weakSelf showiCloudDocumentPicker];
+                    break;
+                case 2:
+                    [weakSelf showImagePicker];
+                    break;
+                default:
+                    break;
+            }
+        };
+    }
+    return _importActionSheet;
 }
 
 #pragma mark - private function
@@ -359,6 +387,18 @@ typedef enum : NSUInteger {
     }];
 }
 
+- (void)reloadSelectedEditCell {
+    _currentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    self.pathChidren = [[NSMutableArray alloc] initWithArray:[[NSFileManager defaultManager] contentsOfDirectoryAtPath:_currentPath error:nil]];
+    [self.tableView reloadData];
+    [self.selectedArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSInteger index = [self getSelectedCellIndex:self.selectedArr[idx]];
+        if (index >=0 && index < [self.pathChidren count]) {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
+    }];
+}
+
 - (NSInteger)getSelectedCellIndex:(NSString *)fileName {
     NSInteger index = -1;
     for (NSInteger i = 0; i < [self.pathChidren count]; i++) {
@@ -397,6 +437,7 @@ typedef enum : NSUInteger {
     }];
 }
 
+// 显示删除按钮
 - (void)showDeleteActionSheet {
     NSString *fileNmae = [self.pathChidren objectAtIndex:_selectedIndex];
     
@@ -428,6 +469,60 @@ typedef enum : NSUInteger {
 
         }
     }
+}
+
+- (void)showDeleteMultipleSelectActionSheet {
+    
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:HcdLocalized(@"sure_delete_selected", nil)];
+    
+    __weak LocalMainViewController *weakSelf = self;
+    deleteSheet.selectButtonAtIndex = ^(NSInteger index) {
+        switch (index) {
+            case 1:
+                [weakSelf deleteSelectedCell];
+                break;
+            default:
+                break;
+        }
+    };
+    [[UIApplication sharedApplication].keyWindow addSubview:deleteSheet];
+    [deleteSheet showHcdActionSheet];
+}
+
+- (void)deleteSelectedCell {
+    NSMutableArray *deleteIndexList = [[NSMutableArray alloc] init];
+    NSMutableArray *selectArr = [[NSMutableArray alloc] initWithArray:self.selectedArr];
+    NSMutableArray *successArr = [[NSMutableArray alloc] init];
+    for (NSString *fileName in selectArr) {
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@", _currentPath, fileName];
+        BOOL res = [[HcdFileManager defaultManager] deleteFileByPath:filePath];
+        if (res) {
+            NSInteger index = [self getSelectedCellIndex:fileName];
+            [successArr addObject:fileName];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+            [deleteIndexList addObject:indexPath];
+        }
+    }
+    for (NSString *fileName in successArr) {
+        [self.selectedArr removeObject:fileName];
+        [self.pathChidren removeObject:fileName];
+    }
+    [self.tableView deleteRowsAtIndexPaths:deleteIndexList withRowAnimation:UITableViewRowAnimationFade];
+}
+
+- (void)showImportActionSheet {
+    [[UIApplication sharedApplication].keyWindow addSubview:self.importActionSheet];
+    [self.importActionSheet showHcdActionSheet];
+}
+
+- (void)showiCloudDocumentPicker {
+    UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.avi", @"public.3gpp", @"public.mpeg-4"] inMode:UIDocumentPickerModeOpen];
+    picker.delegate = self;
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+- (void)showImagePicker {
+//    UIImagePickerController *picker = [[UIImagePickerController alloc] ]
 }
 
 - (void)createFolder:(NSString *)name {
@@ -578,6 +673,20 @@ typedef enum : NSUInteger {
         default:
             break;
     }
+}
+
+#pragma mark - UIDocumentPickerDelegate
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url {
+    
+}
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
+    
+}
+
+- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
+    
 }
 
 #pragma mark - DZNEmptyDataSetSource, DZNEmptyDataSetDelegate

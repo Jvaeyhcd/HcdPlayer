@@ -55,5 +55,9 @@
 "noWiFi"="WiFi未連接";
 "close"="關閉";
 "ok"="確定";
-"sureDelete"="你確定要刪除 %@ 該文件/文件夾吗？";
+"sureDelete"="你確定要刪除 %@ 該文件/文件夾嗎？";
 "select_all"="全選";
+"sure_delete_selected"="您確定要刪除選中的內容嗎？";
+"import_tips"="請選擇導入方式";
+"photos"="相冊";
+"icloud"="iCloud";

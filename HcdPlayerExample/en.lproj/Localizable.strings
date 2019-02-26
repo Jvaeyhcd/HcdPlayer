@@ -55,5 +55,9 @@
 "noWiFi"="WiFi not connected";
 "close"="Close";
 "ok"="Ok";
-"sureDelete"="Are you sure to delete this %@ file or folder？";
+"sureDelete"="Are you sure to delete this %@ file or folder?";
 "select_all"="Select all";
+"sure_delete_selected"="Are you sure to delete the selected item(s)?";
+"import_tips"="Please select import way";
+"photos"="Photos";
+"icloud"="iCloud";
