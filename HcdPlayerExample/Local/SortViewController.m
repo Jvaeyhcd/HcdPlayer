@@ -9,28 +9,9 @@
 #import "SortViewController.h"
 #import "HcdValueTableViewCell.h"
 #import "UITableView+Hcd.h"
+#import "HcdFileSortManager.h"
 
 #define kHeaderHeight 40
-
-enum {
-    SortInfoSectionSort,
-    SortInfoSectionOrder,
-    SortInfoSectionCount,
-};
-
-typedef NS_ENUM(NSInteger, SortType) {
-    SortTypeName,
-    SortTypeExtension,
-    SortTypeSize,
-    SortTypeDate,
-    SortTypeCount,
-};
-
-typedef NS_ENUM(NSInteger, OrderType){
-    OrderTypeAscending,
-    OrderTypeDescending,
-    OrderTypeCount,
-};
 
 @interface SortViewController () {
     UITableView         *_tableView;
@@ -50,8 +31,8 @@ typedef NS_ENUM(NSInteger, OrderType){
 }
 
 - (void)initData {
-    _orderType = OrderTypeAscending;
-    _sortType = SortTypeName;
+    _orderType = [HcdFileSortManager sharedInstance].orderType;
+    _sortType = [HcdFileSortManager sharedInstance].sortType;
 }
 
 - (void)initSubviews {
@@ -62,6 +43,7 @@ typedef NS_ENUM(NSInteger, OrderType){
 }
 
 - (void)rightNavBarButtonClicked {
+    [[HcdFileSortManager sharedInstance] setSortType:_sortType orderType:_orderType];
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
@@ -129,8 +111,6 @@ typedef NS_ENUM(NSInteger, OrderType){
     if (indexPath.section == SortInfoSectionSort) {
         if (indexPath.row == SortTypeName) {
             cell.titleLbl.text = NSLocalizedString(@"name", nil);
-        } else if (indexPath.row == SortTypeExtension) {
-            cell.titleLbl.text = NSLocalizedString(@"extension", nil);
         } else if (indexPath.row == SortTypeSize) {
             cell.titleLbl.text = NSLocalizedString(@"size", nil);
         } else if (indexPath.row == SortTypeDate) {

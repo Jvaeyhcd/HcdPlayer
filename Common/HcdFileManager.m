@@ -287,4 +287,15 @@
     return str;
 }
 
+- (NSDictionary *)getFileInfoByPath:(NSString *)path {
+    if ([_fileManager fileExistsAtPath:path]) {
+        return [_fileManager attributesOfItemAtPath:path error:nil];
+    }
+    return nil;
+}
+
+- (BOOL)fileExists:(NSString *)path {
+    return [_fileManager fileExistsAtPath:path];
+}
+
 @end

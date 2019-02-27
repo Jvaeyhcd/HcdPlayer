@@ -75,6 +75,13 @@
     NSString *suffix = [path pathExtension];
     
     NSMutableArray *descArr = [[NSMutableArray alloc] init];
+    
+    NSDictionary *fileInfo = [[HcdFileManager defaultManager] getFileInfoByPath:path];
+    NSDate *date = [fileInfo fileCreationDate];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd"];
+    [descArr addObject:[formatter stringFromDate:date]];
+    
     FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
     if (fileType != FileType_unkonwn && fileType != FileType_file_dir) {
         [descArr addObject:suffix];

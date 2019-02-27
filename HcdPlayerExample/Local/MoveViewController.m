@@ -46,7 +46,6 @@
     }
     
     UIButton *okBtn = [[UIButton alloc] init];
-    okBtn.layer.cornerRadius = 4;
     [okBtn setBackgroundColor:kMainColor];
     okBtn.titleLabel.font = [UIFont systemFontOfSize:16];
     [okBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -55,6 +54,7 @@
     
     CGFloat bottomHeight = scaleFromiPhoneXDesign(50);
     if (iPhoneX) {
+        okBtn.layer.cornerRadius = 4;
         bottomHeight = scaleFromiPhoneXDesign(50) + kBasePadding + kTabbarSafeBottomMargin;
         [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
@@ -81,6 +81,7 @@
             make.height.mas_equalTo(scaleFromiPhoneXDesign(50));
         }];
     } else {
+        okBtn.layer.cornerRadius = 0;
         [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
             make.left.mas_equalTo(0);

@@ -9,6 +9,7 @@
 #import "SettingViewController.h"
 #import "HcdValueTableViewCell.h"
 #import "UITableView+Hcd.h"
+#import "SortViewController.h"
 
 #import "LanguageViewController.h"
 
@@ -168,6 +169,12 @@ enum {
             LanguageViewController *vc = [[LanguageViewController alloc] init];
             vc.hidesBottomBarWhenPushed = YES;
             [self pushViewController:vc animated:YES];
+        } else if (indexPath.row == HcdSettingGeneralSort) {
+            SortViewController *vc = [[SortViewController alloc] init];
+            BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
+            [self presentViewController:nvc animated:YES completion:^{
+                
+            }];
         }
     }
 }

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F3222627AA00881CD4 /* HcdDocument.m */; };
+		B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F6222627F600881CD4 /* iCloudManager.m */; };
+		B96CF6FB222649EB00881CD4 /* HcdImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */; };
+		B96CF6FE22265BE200881CD4 /* HcdFileSortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */; };
 		B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */; };
 		B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A1DC252224091800F4C9C2 /* EditBottomView.m */; };
 		B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */; };
@@ -65,6 +69,15 @@
 		0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HcdPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		742CF5F37E96FB453579A47A /* Pods-HcdPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		B7312D76511DB2F0072839EE /* Pods-HcdPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		B96CF6F2222627AA00881CD4 /* HcdDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdDocument.h; sourceTree = "<group>"; };
+		B96CF6F3222627AA00881CD4 /* HcdDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdDocument.m; sourceTree = "<group>"; };
+		B96CF6F5222627F600881CD4 /* iCloudManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudManager.h; sourceTree = "<group>"; };
+		B96CF6F6222627F600881CD4 /* iCloudManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iCloudManager.m; sourceTree = "<group>"; };
+		B96CF6F8222630B200881CD4 /* HcdPlayer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = HcdPlayer.entitlements; path = HcdPlayer/HcdPlayer.entitlements; sourceTree = "<group>"; };
+		B96CF6F9222649EB00881CD4 /* HcdImagePickerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdImagePickerViewController.h; sourceTree = "<group>"; };
+		B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdImagePickerViewController.m; sourceTree = "<group>"; };
+		B96CF6FC22265BE200881CD4 /* HcdFileSortManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdFileSortManager.h; sourceTree = "<group>"; };
+		B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdFileSortManager.m; sourceTree = "<group>"; };
 		B99C189921FBFF4E002D4136 /* HcdValueTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdValueTableViewCell.h; sourceTree = "<group>"; };
 		B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdValueTableViewCell.m; sourceTree = "<group>"; };
 		B9A1DC242224091800F4C9C2 /* EditBottomView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditBottomView.h; sourceTree = "<group>"; };
@@ -309,6 +322,7 @@
 		B9AA8FC421ED785000F3C70E = {
 			isa = PBXGroup;
 			children = (
+				B96CF6F8222630B200881CD4 /* HcdPlayer.entitlements */,
 				B9AA908B21F3038700F3C70E /* Vender */,
 				B9AA907521EDCB1000F3C70E /* Common */,
 				B9AA907121EDC03300F3C70E /* Category */,
@@ -583,6 +597,14 @@
 				B9BB461921F9D1BD00682DD5 /* HcdAlertInputView.m */,
 				B9A1DC242224091800F4C9C2 /* EditBottomView.h */,
 				B9A1DC252224091800F4C9C2 /* EditBottomView.m */,
+				B96CF6F2222627AA00881CD4 /* HcdDocument.h */,
+				B96CF6F3222627AA00881CD4 /* HcdDocument.m */,
+				B96CF6F5222627F600881CD4 /* iCloudManager.h */,
+				B96CF6F6222627F600881CD4 /* iCloudManager.m */,
+				B96CF6F9222649EB00881CD4 /* HcdImagePickerViewController.h */,
+				B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */,
+				B96CF6FC22265BE200881CD4 /* HcdFileSortManager.h */,
+				B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -714,6 +736,11 @@
 				TargetAttributes = {
 					B9AA8FCC21ED785000F3C70E = {
 						CreatedOnToolsVersion = 10.1;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -832,10 +859,12 @@
 				B9AA908821F2D21300F3C70E /* SettingViewController.m in Sources */,
 				B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */,
 				B9AA907F21F2D1DD00F3C70E /* LocalMainViewController.m in Sources */,
+				B96CF6FB222649EB00881CD4 /* HcdImagePickerViewController.m in Sources */,
 				B9A6F2F5221D982B0027D017 /* WiFiTransferTableViewCell.m in Sources */,
 				B9AA8FE021ED785100F3C70E /* main.m in Sources */,
 				B9AA90C221F7F7A400F3C70E /* FolderViewController.m in Sources */,
 				B9AA90B021F5AA6400F3C70E /* FinderViewController.m in Sources */,
+				B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */,
 				B9AA908521F2D20400F3C70E /* BrowserViewController.m in Sources */,
 				B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */,
 				B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */,
@@ -843,10 +872,12 @@
 				B9BB462021FBF37100682DD5 /* SortViewController.m in Sources */,
 				B9AA908221F2D1F100F3C70E /* NetworkMainViewController.m in Sources */,
 				B9AA90B321F5B2C400F3C70E /* HcdFileManager.m in Sources */,
+				B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */,
 				B9AA90A421F5631700F3C70E /* NSString+Hcd.m in Sources */,
 				B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */,
 				B9A6F2F9221E6D8F0027D017 /* Reachability.m in Sources */,
 				B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */,
+				B96CF6FE22265BE200881CD4 /* HcdFileSortManager.m in Sources */,
 				B9AA906A21ED7D7A00F3C70E /* HcdMovieGLView.m in Sources */,
 				B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */,
 				B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */,
@@ -1002,6 +1033,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WZUD9UNF4W;
 				ENABLE_BITCODE = NO;
@@ -1029,6 +1061,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WZUD9UNF4W;
 				ENABLE_BITCODE = NO;

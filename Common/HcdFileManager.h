@@ -60,6 +60,10 @@ typedef NS_ENUM(NSInteger, FileType) {
 
 - (NSString *)getFileSizeStrByPath:(NSString *)path;
 
+- (NSDictionary *)getFileInfoByPath:(NSString *)path;
+
+- (BOOL)fileExists:(NSString *)path;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -6,6 +6,7 @@
 //  Copyright © 2019 Salvador. All rights reserved.
 //
 
+#import <MobileCoreServices/MobileCoreServices.h>
 #import "LocalMainViewController.h"
 #import "WifiTransferViewController.h"
 #import "HcdFileManager.h"
@@ -17,6 +18,9 @@
 #import "SortViewController.h"
 #import "MoveViewController.h"
 #import "EditBottomView.h"
+#import "iCloudManager.h"
+#import "HcdImagePickerViewController.h"
+#import "HcdFileSortManager.h"
 
 #define kEditBottomViewHeight 50
 
@@ -25,11 +29,8 @@ typedef enum : NSUInteger {
     ActionTypeMore
 } ActionType;
 
-@interface LocalMainViewController ()<UIDocumentPickerDelegate> {
+@interface LocalMainViewController ()<UIDocumentPickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
     NSString            *_currentPath;
-    HcdActionSheet      *_navMoreActionSheet;
-    HcdActionSheet      *_fileCellMoreActionSheet;
-    HcdActionSheet      *_folderCellMoreActionSheet;
     NSInteger           _selectedIndex;
     BOOL                _isEdit;
     BOOL                _selectedAll;
@@ -39,6 +40,9 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) NSMutableArray *pathChidren;
 @property (nonatomic, strong) NSMutableArray *selectedArr;
 @property (nonatomic, strong) HcdActionSheet *importActionSheet;
+@property (nonatomic, strong) HcdActionSheet *navMoreActionSheet;
+@property (nonatomic, strong) HcdActionSheet *fileCellMoreActionSheet;
+@property (nonatomic, strong) HcdActionSheet *folderCellMoreActionSheet;
 @end
 
 @implementation LocalMainViewController
@@ -64,6 +68,7 @@ typedef enum : NSUInteger {
     _selectedAll = NO;
     _currentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     self.pathChidren = [[NSMutableArray alloc]initWithArray:[[NSFileManager defaultManager] contentsOfDirectoryAtPath:_currentPath error:nil]];
+    self.pathChidren = [[HcdFileSortManager sharedInstance] sortArray:self.pathChidren inPath:_currentPath];
     self.selectedArr = [[NSMutableArray alloc] init];
     for (NSString *str in self.pathChidren) {
         NSLog(@"%@", str);
@@ -92,102 +97,12 @@ typedef enum : NSUInteger {
     [self showBarButtonItemWithImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_wifi"] position:LEFT];
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.bottomView];
-    
-    if (!_navMoreActionSheet) {
-        NSArray *otherButtonTitles = @[HcdLocalized(@"new_folder", nil), HcdLocalized(@"import", nil), HcdLocalized(@"select", nil), HcdLocalized(@"sort", nil)];
-        _navMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
-        __weak LocalMainViewController *weakSelf = self;
-        _navMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
-            switch (index) {
-                    case 1: {
-                        // create new folder
-                        HcdAlertInputView *newFolderView = [[HcdAlertInputView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-                        newFolderView.tips = HcdLocalized(@"new_folder", nil);
-                        newFolderView.placeHolder = HcdLocalized(@"new_folder_placeholder", nil);
-                        newFolderView.commitBlock = ^(NSString * _Nonnull content) {
-                            [weakSelf createFolder:content];
-                        };
-                        [newFolderView showReplyInView:[UIApplication sharedApplication].keyWindow];
-                        break;
-                    }
-                    case 2: {
-                        [weakSelf showImportActionSheet];
-                        break;
-                    }
-                    case 3: {
-                        [weakSelf setTableViewEdit:YES];
-                        break;
-                    }
-                    case 4: {
-                        SortViewController *vc = [[SortViewController alloc] init];
-                        BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
-                        [weakSelf presentViewController:nvc animated:YES completion:^{
-                            
-                        }];
-                        break;
-                    }
-                    
-                    
-                default:
-                    break;
-            }
-        };
-    }
-    
-    if (!_fileCellMoreActionSheet) {
-        NSArray *otherButtonTitles = @[HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"delete", nil)];
-        _fileCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
-        
-        __weak LocalMainViewController *weakSelf = self;
-        _fileCellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
-            switch (index) {
-                case 1:
-                    [weakSelf showMoveViewController];
-                    break;
-                case 2: {
-                    [weakSelf showRenameAlterView];
-                    break;
-                }
-                case 3:
-                    [weakSelf showDeleteActionSheet];
-                    break;
-                default:
-                    break;
-            }
-        };
-    }
-    
-    if (!_folderCellMoreActionSheet) {
-        NSArray *otherButtonTitles = @[HcdLocalized(@"lock", nil), HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"delete", nil)];
-        _folderCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
-        
-        __weak LocalMainViewController *weakSelf = self;
-        _folderCellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
-            switch (index) {
-                case 1:
-                    
-                    break;
-                    
-                case 2:
-                    [weakSelf showMoveViewController];
-                    break;
-                case 3: {
-                    [weakSelf showRenameAlterView];
-                    break;
-                }
-                case 4:
-                    [weakSelf showDeleteActionSheet];
-                    break;
-                default:
-                    break;
-            }
-        };
-    }
 }
 
 - (void)reloadDatas {
     _currentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     self.pathChidren = [[NSMutableArray alloc] initWithArray:[[NSFileManager defaultManager] contentsOfDirectoryAtPath:_currentPath error:nil]];
+    self.pathChidren = [[HcdFileSortManager sharedInstance] sortArray:self.pathChidren inPath:_currentPath];
     [self.tableView reloadData];
 }
 
@@ -220,10 +135,8 @@ typedef enum : NSUInteger {
         [self.tableView setEditing:_isEdit animated:YES];
         [self hideEditTableView];
     } else {
-        if (_navMoreActionSheet) {
-            [[UIApplication sharedApplication].keyWindow addSubview:_navMoreActionSheet];
-            [_navMoreActionSheet showHcdActionSheet];
-        }
+        [[UIApplication sharedApplication].keyWindow addSubview:self.navMoreActionSheet];
+        [self.navMoreActionSheet showHcdActionSheet];
     }
 }
 
@@ -267,8 +180,8 @@ typedef enum : NSUInteger {
         return;
     }
     
-    [[UIApplication sharedApplication].keyWindow addSubview:_fileCellMoreActionSheet];
-    [_fileCellMoreActionSheet showHcdActionSheet];
+    [[UIApplication sharedApplication].keyWindow addSubview:self.fileCellMoreActionSheet];
+    [self.fileCellMoreActionSheet showHcdActionSheet];
     
 //    NSString *path = [NSString stringWithFormat:@"%@/%@", _currentPath, [self.pathChidren objectAtIndex:index]];
 //    FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
@@ -332,6 +245,106 @@ typedef enum : NSUInteger {
         };
     }
     return _importActionSheet;
+}
+
+-(HcdActionSheet *)navMoreActionSheet {
+    if (!_navMoreActionSheet) {
+        NSArray *otherButtonTitles = @[HcdLocalized(@"new_folder", nil), HcdLocalized(@"import", nil), HcdLocalized(@"select", nil), HcdLocalized(@"sort", nil)];
+        _navMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
+        __weak LocalMainViewController *weakSelf = self;
+        _navMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+            switch (index) {
+                case 1: {
+                    // create new folder
+                    HcdAlertInputView *newFolderView = [[HcdAlertInputView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+                    newFolderView.tips = HcdLocalized(@"new_folder", nil);
+                    newFolderView.placeHolder = HcdLocalized(@"new_folder_placeholder", nil);
+                    newFolderView.commitBlock = ^(NSString * _Nonnull content) {
+                        [weakSelf createFolder:content];
+                    };
+                    [newFolderView showReplyInView:[UIApplication sharedApplication].keyWindow];
+                    break;
+                }
+                case 2: {
+                    [weakSelf showiCloudDocumentPicker];
+                    break;
+                }
+                case 3: {
+                    [weakSelf setTableViewEdit:YES];
+                    break;
+                }
+                case 4: {
+                    SortViewController *vc = [[SortViewController alloc] init];
+                    BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
+                    [weakSelf presentViewController:nvc animated:YES completion:^{
+                        
+                    }];
+                    break;
+                }
+                    
+                    
+                default:
+                    break;
+            }
+        };
+    }
+    return _navMoreActionSheet;
+}
+
+-(HcdActionSheet *)fileCellMoreActionSheet {
+    if (!_fileCellMoreActionSheet) {
+        NSArray *otherButtonTitles = @[HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"delete", nil)];
+        _fileCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
+        
+        __weak LocalMainViewController *weakSelf = self;
+        _fileCellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+            switch (index) {
+                case 1:
+                    [weakSelf showMoveViewController];
+                    break;
+                case 2: {
+                    [weakSelf showRenameAlterView];
+                    break;
+                }
+                case 3:
+                    [weakSelf showDeleteActionSheet];
+                    break;
+                default:
+                    break;
+            }
+        };
+    }
+    return _fileCellMoreActionSheet;
+}
+
+- (HcdActionSheet *)folderCellMoreActionSheet {
+    if (!_folderCellMoreActionSheet) {
+        NSArray *otherButtonTitles = @[HcdLocalized(@"lock", nil), HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"delete", nil)];
+        _folderCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
+        
+        __weak LocalMainViewController *weakSelf = self;
+        _folderCellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+            switch (index) {
+                case 1:
+                    
+                    break;
+                    
+                case 2:
+                    [weakSelf showMoveViewController];
+                    break;
+                case 3: {
+                    [weakSelf showRenameAlterView];
+                    break;
+                }
+                case 4:
+                    [weakSelf showDeleteActionSheet];
+                    break;
+                default:
+                    break;
+            }
+        };
+    }
+    return _folderCellMoreActionSheet;
 }
 
 #pragma mark - private function
@@ -516,13 +529,20 @@ typedef enum : NSUInteger {
 }
 
 - (void)showiCloudDocumentPicker {
+    [UINavigationBar appearance].tintColor = kMainColor;
     UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.avi", @"public.3gpp", @"public.mpeg-4"] inMode:UIDocumentPickerModeOpen];
     picker.delegate = self;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
 - (void)showImagePicker {
+    [UINavigationBar appearance].tintColor = [UIColor whiteColor];
 //    UIImagePickerController *picker = [[UIImagePickerController alloc] ]
+    HcdImagePickerViewController *picker = [[HcdImagePickerViewController alloc] init];
+    picker.delegate = self;
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.mediaTypes = [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie, nil];
+    [self.navigationController presentViewController:picker animated:YES completion:nil];
 }
 
 - (void)createFolder:(NSString *)name {
@@ -678,14 +698,47 @@ typedef enum : NSUInteger {
 #pragma mark - UIDocumentPickerDelegate
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url {
-    
+    [self saveFileByURL:url];
 }
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
-    
+    if (urls && [urls count] > 0) {
+        for (NSURL *url in urls) {
+            [self saveFileByURL:url];
+        }
+    }
 }
 
 - (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
+    
+}
+
+- (void)saveFileByURL:(NSURL *)url {
+    NSString *path = [url absoluteString];
+    NSString *fileName = [path lastPathComponent];
+    NSString *currentPath = _currentPath;
+    
+    NSString *fullPath = [NSString stringWithFormat:@"%@/%@", currentPath, fileName];
+    if (![[HcdFileManager defaultManager] fileExists:fullPath]) {
+        __weak LocalMainViewController *weakSelf = self;
+        [iCloudManager downloadWithDocumentURL:url callBack:^(id  _Nonnull obj) {
+            NSData *data = obj;
+            [data writeToFile:fullPath atomically:YES];
+            [weakSelf reloadDatas];
+        }];
+    } else {
+        // 文件已经存在
+        NSLog(@"文件已经存在");
+    }
+}
+
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *)info {
     
 }
 
