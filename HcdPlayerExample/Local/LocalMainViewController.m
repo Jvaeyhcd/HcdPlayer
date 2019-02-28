@@ -20,6 +20,7 @@
 #import "EditBottomView.h"
 #import "iCloudManager.h"
 #import "HcdImagePickerViewController.h"
+#import "HcdMovieViewController.h"
 #import "HcdFileSortManager.h"
 
 #define kEditBottomViewHeight 50
@@ -122,10 +123,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)leftNavBarButtonClicked {
-    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:[WifiTransferViewController new]];
-    [self presentViewController:nav animated:YES completion:^{
-        
-    }];
+    [self showWiFiTransferViewController];
 }
 
 - (void)rightNavBarButtonClicked {
@@ -229,7 +227,7 @@ typedef enum : NSUInteger {
 
 - (HcdActionSheet *)importActionSheet {
     if (!_importActionSheet) {
-        _importActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"icloud", nil), HcdLocalized(@"photos", nil)] attachTitle:HcdLocalized(@"import_tips", nil)];
+        _importActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"icloud", nil), HcdLocalized(@"wifi_transfer", nil)] attachTitle:HcdLocalized(@"import_tips", nil)];
         __weak LocalMainViewController *weakSelf = self;
         _importActionSheet.selectButtonAtIndex = ^(NSInteger index) {
             switch (index) {
@@ -237,7 +235,8 @@ typedef enum : NSUInteger {
                     [weakSelf showiCloudDocumentPicker];
                     break;
                 case 2:
-                    [weakSelf showImagePicker];
+//                    [weakSelf showImagePicker];
+                    [weakSelf showWiFiTransferViewController];
                     break;
                 default:
                     break;
@@ -266,7 +265,8 @@ typedef enum : NSUInteger {
                     break;
                 }
                 case 2: {
-                    [weakSelf showiCloudDocumentPicker];
+                    [weakSelf showImportActionSheet];
+//                    [weakSelf showiCloudDocumentPicker];
                     break;
                 }
                 case 3: {
@@ -478,6 +478,7 @@ typedef enum : NSUInteger {
         if (res) {
             [self.pathChidren removeObjectAtIndex:_selectedIndex];
             [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:_selectedIndex inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView reloadData];
         } else {
 
         }
@@ -521,6 +522,7 @@ typedef enum : NSUInteger {
         [self.pathChidren removeObject:fileName];
     }
     [self.tableView deleteRowsAtIndexPaths:deleteIndexList withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadData];
 }
 
 - (void)showImportActionSheet {
@@ -533,6 +535,13 @@ typedef enum : NSUInteger {
     UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.avi", @"public.3gpp", @"public.mpeg-4"] inMode:UIDocumentPickerModeOpen];
     picker.delegate = self;
     [self presentViewController:picker animated:YES completion:nil];
+}
+
+- (void)showWiFiTransferViewController {
+    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:[WifiTransferViewController new]];
+    [self presentViewController:nav animated:YES completion:^{
+        
+    }];
 }
 
 - (void)showImagePicker {
@@ -628,6 +637,17 @@ typedef enum : NSUInteger {
                 vc.title = [path lastPathComponent];
                 [self pushViewController:vc animated:YES];
                 break;
+            }
+            case FileType_vedio: {
+                NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+                if ([path.pathExtension isEqualToString:@"wmv"]) {
+                    parameters[HcdMovieParameterMinBufferedDuration] = @(5.0);
+                }
+                if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+                    parameters[HcdMovieParameterDisableDeinterlacing] = @(YES);
+                }
+                HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
+                [self presentViewController:movieVc animated:YES completion:nil];
             }
                 
             default:
@@ -755,6 +775,11 @@ typedef enum : NSUInteger {
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:16], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
     return [[NSAttributedString alloc]initWithString:HcdLocalized(@"listEmptyTips", nil) attributes:attributes];
+}
+
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
+    return [[NSAttributedString alloc]initWithString:HcdLocalized(@"import_file_tips", nil) attributes:attributes];
 }
 
 /*

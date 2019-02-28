@@ -50,6 +50,7 @@
 "chineseSimple"="Chinese,Simple";
 "chineseTraditional"="Chinese,Traditional";
 "listEmptyTips"="There is no file";
+"import_file_tips"="Please import files from iCloud or WiFi transfer";
 "wifiTransferTips"="Just enter IP address into your web browser (Safari, Chrome, etc) to upload new files";
 "transferStatus"="Uploaded Files";
 "noWiFi"="WiFi not connected";

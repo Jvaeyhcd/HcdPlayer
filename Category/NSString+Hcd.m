@@ -16,6 +16,11 @@
     return boundingBox.size.width;
 }
 
+- (CGSize)sizeWithConstainedSize:(CGSize)size font:(UIFont *)font {
+    CGRect boundingBox = [self boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: font} context:nil];
+    return boundingBox.size;
+}
+
 - (BOOL)isBlankString {
     if (self == nil) {
         return YES;

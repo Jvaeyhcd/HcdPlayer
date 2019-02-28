@@ -110,11 +110,11 @@
     
     if (indexPath.section == SortInfoSectionSort) {
         if (indexPath.row == SortTypeName) {
-            cell.titleLbl.text = NSLocalizedString(@"name", nil);
+            cell.titleLbl.text = HcdLocalized(@"name", nil);
         } else if (indexPath.row == SortTypeSize) {
-            cell.titleLbl.text = NSLocalizedString(@"size", nil);
+            cell.titleLbl.text = HcdLocalized(@"size", nil);
         } else if (indexPath.row == SortTypeDate) {
-            cell.titleLbl.text = NSLocalizedString(@"date", nil);
+            cell.titleLbl.text = HcdLocalized(@"date", nil);
         }
         if (indexPath.row == _sortType) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -123,9 +123,9 @@
         }
     } else if (indexPath.section == SortInfoSectionOrder) {
         if (indexPath.row == OrderTypeAscending) {
-            cell.titleLbl.text = NSLocalizedString(@"ascending", nil);
+            cell.titleLbl.text = HcdLocalized(@"ascending", nil);
         } else if (indexPath.row == OrderTypeDescending) {
-            cell.titleLbl.text = NSLocalizedString(@"descending", nil);
+            cell.titleLbl.text = HcdLocalized(@"descending", nil);
         }
         if (indexPath.row == _orderType) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;

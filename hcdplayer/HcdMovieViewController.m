@@ -9,6 +9,7 @@
 #import "HcdMovieViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <QuartzCore/QuartzCore.h>
+#import "NSString+Hcd.h"
 #import "HcdMovieDecoder.h"
 #import "HcdAudioManager.h"
 #import "HcdMovieGLView.h"
@@ -32,9 +33,12 @@ static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
     m = m % 60;
     
     NSMutableString *format = [(isLeft && seconds >= 0.5 ? @"-" : @"") mutableCopy];
-    if (h != 0) [format appendFormat:@"%d:%0.2d", h, m];
-    else        [format appendFormat:@"%d", m];
-    [format appendFormat:@":%0.2d", s];
+    if (h != 0) {
+        [format appendFormat:@"%ld:%0.2ld", (long)h, (long)m];
+    } else {
+        [format appendFormat:@"%ld", (long)m];
+    }
+    [format appendFormat:@":%0.2ld", (long)s];
     
     return format;
 }
@@ -82,7 +86,6 @@ static NSMutableDictionary * gHistory;
     NSTimeInterval      _tickCorrectionPosition;
     NSUInteger          _tickCounter;
     BOOL                _fullscreen;
-    BOOL                _hiddenHUD;
     BOOL                _fitMode;
     BOOL                _infoMode;
     BOOL                _restoreIdleTimer;
@@ -90,9 +93,6 @@ static NSMutableDictionary * gHistory;
     
     HcdMovieGLView       *_glView;
     UIImageView         *_imageView;
-    UIView              *_topHUD;
-    UIToolbar           *_topBar;
-    UIToolbar           *_bottomBar;
     UISlider            *_progressSlider;
     
     UIBarButtonItem     *_playBtn;
@@ -106,7 +106,6 @@ static NSMutableDictionary * gHistory;
     UILabel             *_progressLabel;
     UILabel             *_leftLabel;
     UIButton            *_infoButton;
-    UITableView         *_tableView;
     UIActivityIndicatorView *_activityIndicatorView;
     UILabel             *_subtitlesLabel;
     
@@ -133,7 +132,13 @@ static NSMutableDictionary * gHistory;
 
 @property (readwrite) BOOL playing;
 @property (readwrite) BOOL decoding;
-@property (readwrite, strong) HcdArtworkFrame *artworkFrame;
+
+@property (readwrite, assign) BOOL                  hiddenHUD;
+@property (readwrite, strong) HcdArtworkFrame       *artworkFrame;
+@property (nonatomic, strong) UIView                *topHUD;
+@property (nonatomic, strong) UIToolbar             *topBar;
+@property (nonatomic, strong) UIToolbar             *bottomBar;
+@property (nonatomic, strong) UITableView           *tableView;
 @end
 
 @implementation HcdMovieViewController
@@ -218,7 +223,7 @@ static NSMutableDictionary * gHistory;
 - (void)loadView
 {
     // LoggerStream(1, @"loadView");
-    CGRect bounds = [[UIScreen mainScreen] applicationFrame];
+    CGRect bounds = [[UIScreen mainScreen] bounds];
     
     self.view = [[UIView alloc] initWithFrame:bounds];
     self.view.backgroundColor = [UIColor blackColor];
@@ -376,23 +381,14 @@ static NSMutableDictionary * gHistory;
             LoggerStream(0, @"didReceiveMemoryWarning, disable buffering and continue playing");
             
         } else {
-            
             // force ffmpeg to free allocated memory
             [_decoder closeFile];
-            [_decoder openFile:nil error:nil];
-            
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
-                                        message:NSLocalizedString(@"Out of memory", nil)
-                                       delegate:nil
-                              cancelButtonTitle:NSLocalizedString(@"Close", nil)
-                              otherButtonTitles:nil] show];
         }
         
     } else {
         
         [self freeBufferedFrames];
         [_decoder closeFile];
-        [_decoder openFile:nil error:nil];
     }
 }
 
@@ -501,8 +497,8 @@ static NSMutableDictionary * gHistory;
         
         const CGPoint vt = [sender velocityInView:self.view];
         const CGPoint pt = [sender translationInView:self.view];
-        const CGFloat sp = MAX(0.1, log10(fabsf(vt.x)) - 1.0);
-        const CGFloat sc = fabsf(pt.x) * 0.33 * sp;
+        const CGFloat sp = MAX(0.1, log10(fabs(vt.x)) - 1.0);
+        const CGFloat sc = fabs(pt.x) * 0.33 * sp;
         if (sc > 10) {
             
             const CGFloat ff = pt.x > 0 ? 1.0 : -1.0;
@@ -935,7 +931,9 @@ static NSMutableDictionary * gHistory;
     } else {
         
         [audioManager pause];
-        audioManager.outputBlock = nil;
+        audioManager.outputBlock = ^(float * _Nonnull data, UInt32 numFrames, UInt32 numChannels) {
+            
+        };
     }
 }
 
@@ -1224,9 +1222,7 @@ static NSMutableDictionary * gHistory;
             if (![_subtitlesLabel.text isEqualToString:ms]) {
                 
                 CGSize viewSize = self.view.bounds.size;
-                CGSize size = [ms sizeWithFont:_subtitlesLabel.font
-                             constrainedToSize:CGSizeMake(viewSize.width, viewSize.height * 0.5)
-                                 lineBreakMode:NSLineBreakByTruncatingTail];
+                CGSize size = [ms sizeWithConstainedSize:viewSize font:_subtitlesLabel.font];
                 _subtitlesLabel.text = ms;
                 _subtitlesLabel.frame = CGRectMake(0, viewSize.height - size.height - 10,
                                                    viewSize.width, size.height);
@@ -1310,7 +1306,7 @@ static NSMutableDictionary * gHistory;
     
 #ifdef DEBUG
     const NSTimeInterval timeSinceStart = [NSDate timeIntervalSinceReferenceDate] - _debugStartTime;
-    NSString *subinfo = _decoder.validSubtitles ? [NSString stringWithFormat: @" %d",_subtitles.count] : @"";
+    NSString *subinfo = _decoder.validSubtitles ? [NSString stringWithFormat: @" %lu",(unsigned long)_subtitles.count] : @"";
     
     NSString *audioStatus;
     
@@ -1326,9 +1322,9 @@ static NSMutableDictionary * gHistory;
     else if (_debugAudioStatus == 3) audioStatus = @"\n(audio silence)";
     else audioStatus = @"";
     
-    _messageLabel.text = [NSString stringWithFormat:@"%d %d%@ %c - %@ %@ %@\n%@",
-                          _videoFrames.count,
-                          _audioFrames.count,
+    _messageLabel.text = [NSString stringWithFormat:@"%lu %lu %@ %c - %@ %@ %@\n%@",
+                          (unsigned long)_videoFrames.count,
+                          (unsigned long)_audioFrames.count,
                           subinfo,
                           self.decoding ? 'D' : ' ',
                           formatTimeInterval(timeSinceStart, NO),
@@ -1346,15 +1342,16 @@ static NSMutableDictionary * gHistory;
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:_hiddenHUD];
     
+    __weak HcdMovieViewController *weakSelf = self;
     [UIView animateWithDuration:0.2
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
                      animations:^{
                          
-                         CGFloat alpha = _hiddenHUD ? 0 : 1;
-                         _topBar.alpha = alpha;
-                         _topHUD.alpha = alpha;
-                         _bottomBar.alpha = alpha;
+                         CGFloat alpha = weakSelf.hiddenHUD ? 0 : 1;
+                         weakSelf.topBar.alpha = alpha;
+                         weakSelf.topHUD.alpha = alpha;
+                         weakSelf.bottomBar.alpha = alpha;
                      }
                      completion:nil];
     
@@ -1480,7 +1477,7 @@ static NSMutableDictionary * gHistory;
                                 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
                              animations:^{
                                  
-                                 _tableView.frame = CGRectMake(0,Y,size.width,size.height - Y);
+                                 self.tableView.frame = CGRectMake(0,Y,size.width,size.height - Y);
                              }
                              completion:nil];
         } else {
@@ -1497,13 +1494,13 @@ static NSMutableDictionary * gHistory;
                                 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
                              animations:^{
                                  
-                                 _tableView.frame = CGRectMake(0,size.height,size.width,size.height - Y);
+                                 self.tableView.frame = CGRectMake(0,size.height,size.width,size.height - Y);
                                  
                              }
                              completion:^(BOOL f){
                                  
                                  if (f) {
-                                     _tableView.hidden = YES;
+                                     self.tableView.hidden = YES;
                                  }
                              }];
         } else {
