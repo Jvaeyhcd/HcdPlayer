@@ -183,7 +183,7 @@
                 fileType = FileType_txt;
             } else if ([@[@"vcf"] containsObject:suffix]) {
                 fileType = FileType_vcf;
-            } else if ([@[@"mp4", @"avi", @"mov", @"asf", @"wmv", @"3gp", @"rmvb", @"webm"] containsObject:suffix]) {
+            } else if ([@[@"mp4", @"avi", @"mov", @"asf", @"wmv", @"mkv", @"3gp", @"rmvb", @"webm"] containsObject:suffix]) {
                 fileType = FileType_vedio;
             } else if ([@[@"vsd"] containsObject:suffix]) {
                 fileType = FileType_vsd;
