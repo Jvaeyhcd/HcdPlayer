@@ -91,7 +91,7 @@ static NSMutableDictionary * gHistory;
     BOOL                _restoreIdleTimer;
     BOOL                _interrupted;
     
-    HcdMovieGLView       *_glView;
+    HcdMovieGLView      *_glView;
     UIImageView         *_imageView;
     
     UIBarButtonItem     *_playBtn;
@@ -144,6 +144,8 @@ static NSMutableDictionary * gHistory;
 @property (nonatomic, strong) UIButton            *fullButton;
 @property (nonatomic, strong) UIButton            *airPlayButton;
 
+@property (readwrite, assign) UIInterfaceOrientation currentOrientation;
+
 @end
 
 @implementation HcdMovieViewController
@@ -154,7 +156,13 @@ static NSMutableDictionary * gHistory;
         gHistory = [NSMutableDictionary dictionary];
 }
 
-- (BOOL)prefersStatusBarHidden { return YES; }
+- (BOOL)prefersStatusBarHidden {
+    return NO;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
 
 // 播放器控制器的初始化方法
 + (id) movieViewControllerWithContentPath: (NSString *) path
@@ -347,29 +355,21 @@ static NSMutableDictionary * gHistory;
 
 - (void) viewDidAppear:(BOOL)animated
 {
-    // LoggerStream(1, @"viewDidAppear");
-    
     [super viewDidAppear:animated];
     
-    if (self.presentingViewController)
-        [self fullscreenMode:YES];
-    
-    if (_infoMode)
+    if (_infoMode) {
         [self showInfoView:NO animated:NO];
+    }
     
     _savedIdleTimer = [[UIApplication sharedApplication] isIdleTimerDisabled];
     
     [self showHUD: YES];
     
     if (_decoder) {
-        
         [self restorePlay];
-        
     } else {
-        
         [_activityIndicatorView startAnimating];
     }
-    
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationWillResignActive:)
@@ -396,9 +396,6 @@ static NSMutableDictionary * gHistory;
                         forKey:_decoder.path];
     }
     
-    if (_fullscreen)
-        [self fullscreenMode:NO];
-    
     [[UIApplication sharedApplication] setIdleTimerDisabled:_savedIdleTimer];
     
     [_activityIndicatorView stopAnimating];
@@ -408,13 +405,11 @@ static NSMutableDictionary * gHistory;
     LoggerStream(1, @"viewWillDisappear %@", self);
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+- (BOOL)shouldAutorotate {
+    return (self.currentOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-- (void) applicationWillResignActive: (NSNotification *)notification
-{
+- (void) applicationWillResignActive: (NSNotification *)notification {
     [self showHUD:YES];
     [self pause];
     
@@ -1455,17 +1450,6 @@ static NSMutableDictionary * gHistory;
                      }
                      completion:nil];
     
-}
-
-- (void) fullscreenMode: (BOOL) on
-{
-    _fullscreen = on;
-    UIApplication *app = [UIApplication sharedApplication];
-    [app setStatusBarHidden:on withAnimation:UIStatusBarAnimationNone];
-    // if (!self.presentingViewController) {
-    //[self.navigationController setNavigationBarHidden:on animated:YES];
-    //[self.tabBarController setTabBarHidden:on animated:YES];
-    // }
 }
 
 - (void) setMoviePositionFromDecoder
