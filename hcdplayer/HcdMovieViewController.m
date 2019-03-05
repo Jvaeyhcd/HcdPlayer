@@ -14,6 +14,7 @@
 #import "HcdAudioManager.h"
 #import "HcdMovieGLView.h"
 #import "HcdLogger.h"
+#import "AppDelegate.h"
 
 NSString * const HcdMovieParameterMinBufferedDuration = @"HcdMovieParameterMinBufferedDuration";
 NSString * const HcdMovieParameterMaxBufferedDuration = @"HcdMovieParameterMaxBufferedDuration";
@@ -145,15 +146,17 @@ static NSMutableDictionary * gHistory;
 @property (nonatomic, strong) UIButton            *airPlayButton;
 
 @property (readwrite, assign) UIInterfaceOrientation currentOrientation;
+@property (nonatomic, assign) BOOL           isFullScreen;
+@property (nonatomic, assign) BOOL           canFullScreen;
 
 @end
 
 @implementation HcdMovieViewController
 
-+ (void)initialize
-{
-    if (!gHistory)
++ (void)initialize {
+    if (!gHistory) {
         gHistory = [NSMutableDictionary dictionary];
+    }
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -166,8 +169,7 @@ static NSMutableDictionary * gHistory;
 
 // 播放器控制器的初始化方法
 + (id) movieViewControllerWithContentPath: (NSString *) path
-                               parameters: (NSDictionary *) parameters
-{
+                               parameters: (NSDictionary *) parameters {
     // 音频管理类的初始化 单例
     id<HcdAudioManager> audioManager = [HcdAudioManager audioManager];
     [audioManager activateAudioSession];
@@ -175,13 +177,12 @@ static NSMutableDictionary * gHistory;
 }
 
 - (id) initWithContentPath: (NSString *) path
-                parameters: (NSDictionary *) parameters
-{
+                parameters: (NSDictionary *) parameters {
     NSAssert(path.length > 0, @"empty path");
     
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        
+        [self initData];
         _moviePosition = 0;
         //        self.wantsFullScreenLayout = YES;
         
@@ -217,19 +218,15 @@ static NSMutableDictionary * gHistory;
     return self;
 }
 
-- (void) dealloc
-{
+- (void) dealloc {
     [self pause];
     
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
     if (_dispatchQueue) {
         // Not needed as of ARC.
         //        dispatch_release(_dispatchQueue);
         _dispatchQueue = NULL;
     }
-    
     LoggerStream(1, @"%@ dealloc", self);
 }
 
@@ -325,36 +322,33 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     
     if (self.playing) {
-        
+
         [self pause];
         [self freeBufferedFrames];
         
         if (_maxBufferedDuration > 0) {
-            
             _minBufferedDuration = _maxBufferedDuration = 0;
             [self play];
-            
             LoggerStream(0, @"didReceiveMemoryWarning, disable buffering and continue playing");
-            
         } else {
             // force ffmpeg to free allocated memory
             [_decoder closeFile];
         }
-        
     } else {
-        
         [self freeBufferedFrames];
         [_decoder closeFile];
     }
 }
 
-- (void) viewDidAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
+    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).isAllowAutorotate = YES;
+}
+
+- (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     if (_infoMode) {
@@ -377,8 +371,8 @@ static NSMutableDictionary * gHistory;
                                                object:[UIApplication sharedApplication]];
 }
 
-- (void) viewWillDisappear:(BOOL)animated
-{
+- (void) viewWillDisappear:(BOOL)animated {
+    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).isAllowAutorotate = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super viewWillDisappear:animated];
@@ -403,10 +397,6 @@ static NSMutableDictionary * gHistory;
     _interrupted = YES;
     
     LoggerStream(1, @"viewWillDisappear %@", self);
-}
-
-- (BOOL)shouldAutorotate {
-    return (self.currentOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 - (void) applicationWillResignActive: (NSNotification *)notification {
@@ -508,8 +498,9 @@ static NSMutableDictionary * gHistory;
     if (!_fullButton) {
         _fullButton = [[UIButton alloc] init];
         _fullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
+        _fullButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [_fullButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_fullscreen"] forState:UIControlStateNormal];
-//        [_fullButton addTarget:self action:@selector(playDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+        [_fullButton addTarget:self action:@selector(fullDidTouch:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _fullButton;
 }
@@ -680,12 +671,16 @@ static NSMutableDictionary * gHistory;
     [self showInfoView: !_infoMode animated:YES];
 }
 
-- (void) playDidTouch: (id) sender
-{
-    if (self.playing)
+- (void)playDidTouch:(id)sender{
+    if (self.playing) {
         [self pause];
-    else
+    } else {
         [self play];
+    }
+}
+
+- (void)fullDidTouch:(id)sender {
+    [self fullScreen];
 }
 
 - (void) forwardDidTouch: (id) sender
@@ -705,11 +700,45 @@ static NSMutableDictionary * gHistory;
     [self setMoviePosition:slider.value * _decoder.duration];
 }
 
+#pragma mark - 全屏旋转处理
+
+- (void)toOrientation:(UIInterfaceOrientation)orientation {
+    if (_currentOrientation == orientation) {
+        return;
+    }
+    _currentOrientation = orientation;
+    [UIView animateWithDuration:0.5 animations:^{
+        [[UIDevice currentDevice] setValue: @(orientation) forKey:@"orientation"];
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
 #pragma mark - private
 
+- (void)initData {
+    _isFullScreen = NO;
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    switch (orientation) {
+        case UIDeviceOrientationPortrait:
+            _currentOrientation = UIInterfaceOrientationPortrait;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            _currentOrientation = UIInterfaceOrientationLandscapeLeft;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            _currentOrientation = UIInterfaceOrientationLandscapeRight;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            _currentOrientation = UIInterfaceOrientationPortraitUpsideDown;
+            break;
+        default:
+            break;
+    }
+}
+
 - (void) setMovieDecoder: (HcdMovieDecoder *) decoder
-               withError: (NSError *) error
-{
+               withError: (NSError *) error {
     LoggerStream(2, @"setMovieDecoder");
     
     if (!error && decoder) {
@@ -1629,6 +1658,16 @@ static NSMutableDictionary * gHistory;
     //if (!_decoder)
     //    return NO;
     return _interrupted;
+}
+
+- (void)fullScreen {
+    if (_isFullScreen) {
+        _isFullScreen = NO;
+        [self toOrientation:UIInterfaceOrientationPortrait];
+    } else {
+        _isFullScreen = YES;
+        [self toOrientation:UIInterfaceOrientationLandscapeRight];
+    }
 }
 
 #pragma mark - Table view data source

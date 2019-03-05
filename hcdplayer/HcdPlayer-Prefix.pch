@@ -15,6 +15,7 @@
 #import "Masonry.h"
 #import "UIColor+Hcd.h"
 #import "UIViewController+Hcd.h"
+#import "BaseViewController.h"
 #import "BaseNavigationController.h"
 #import "HcdLocalized.h"
 #import "UIScrollView+EmptyDataSet.h"

@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SortViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
+@interface SortViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource>
 
 @end
 

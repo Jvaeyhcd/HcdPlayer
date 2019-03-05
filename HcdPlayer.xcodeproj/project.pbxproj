@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B902F411222EB79E0049A626 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B902F410222EB79E0049A626 /* BaseViewController.m */; };
 		B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F3222627AA00881CD4 /* HcdDocument.m */; };
 		B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F6222627F600881CD4 /* iCloudManager.m */; };
 		B96CF6FB222649EB00881CD4 /* HcdImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */; };
@@ -69,6 +70,8 @@
 		0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HcdPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		742CF5F37E96FB453579A47A /* Pods-HcdPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		B7312D76511DB2F0072839EE /* Pods-HcdPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		B902F40F222EB79E0049A626 /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		B902F410222EB79E0049A626 /* BaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		B96CF6F2222627AA00881CD4 /* HcdDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdDocument.h; sourceTree = "<group>"; };
 		B96CF6F3222627AA00881CD4 /* HcdDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdDocument.m; sourceTree = "<group>"; };
 		B96CF6F5222627F600881CD4 /* iCloudManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudManager.h; sourceTree = "<group>"; };
@@ -589,6 +592,8 @@
 			children = (
 				B9AA907621EDCB6100F3C70E /* BaseNavigationController.h */,
 				B9AA907721EDCB6100F3C70E /* BaseNavigationController.m */,
+				B902F40F222EB79E0049A626 /* BaseViewController.h */,
+				B902F410222EB79E0049A626 /* BaseViewController.m */,
 				B9AA90B121F5B2C400F3C70E /* HcdFileManager.h */,
 				B9AA90B221F5B2C400F3C70E /* HcdFileManager.m */,
 				B9BB461B21F9D1DE00682DD5 /* UIPlaceHolderTextView.h */,
@@ -868,6 +873,7 @@
 				B9AA908521F2D20400F3C70E /* BrowserViewController.m in Sources */,
 				B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */,
 				B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */,
+				B902F411222EB79E0049A626 /* BaseViewController.m in Sources */,
 				B9AA907821EDCB6100F3C70E /* BaseNavigationController.m in Sources */,
 				B9BB462021FBF37100682DD5 /* SortViewController.m in Sources */,
 				B9AA908221F2D1F100F3C70E /* NetworkMainViewController.m in Sources */,

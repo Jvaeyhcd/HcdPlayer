@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LanguageViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
+@interface LanguageViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource>
 
 @end
 

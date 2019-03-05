@@ -16,7 +16,7 @@ extern NSString * const HcdMovieParameterMinBufferedDuration;    // Float
 extern NSString * const HcdMovieParameterMaxBufferedDuration;    // Float
 extern NSString * const HcdMovieParameterDisableDeinterlacing;   // BOOL
 
-@interface HcdMovieViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface HcdMovieViewController : BaseViewController<UITableViewDataSource, UITableViewDelegate>
 
 + (id) movieViewControllerWithContentPath: (NSString *) path
                                parameters: (NSDictionary *) parameters;

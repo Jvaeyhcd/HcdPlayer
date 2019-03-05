@@ -1,8 +1,8 @@
 //
-//  NetworkMainViewController.h
+//  BaseViewController.h
 //  HcdPlayer
 //
-//  Created by Salvador on 2019/1/19.
+//  Created by Salvador on 2019/3/5.
 //  Copyright © 2019 Salvador. All rights reserved.
 //
 
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NetworkMainViewController : BaseViewController
+@interface BaseViewController : UIViewController
 
 @end
 
