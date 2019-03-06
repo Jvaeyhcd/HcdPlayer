@@ -121,6 +121,9 @@ static NSMutableDictionary * gHistory;
     BOOL                _savedIdleTimer;
     
     NSDictionary        *_parameters;
+    
+    CGFloat             _tabbarSafeBottomMargin;
+    CGFloat             _statusBarHeight;
 }
 
 @property (readwrite) BOOL playing;
@@ -143,6 +146,7 @@ static NSMutableDictionary * gHistory;
 @property (nonatomic, strong) UIButton            *playButton;
 @property (nonatomic, strong) UIButton            *pauseButton;
 @property (nonatomic, strong) UIButton            *fullButton;
+@property (nonatomic, strong) UIButton            *exitFullButton;
 @property (nonatomic, strong) UIButton            *airPlayButton;
 
 @property (readwrite, assign) UIInterfaceOrientation currentOrientation;
@@ -410,7 +414,7 @@ static NSMutableDictionary * gHistory;
 
 - (UILabel *)progressLabel {
     if (!_progressLabel) {
-        _progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(46, 0, 50, 50)];
+        _progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 0, 46, 50)];
         _progressLabel.backgroundColor = [UIColor clearColor];
         _progressLabel.textColor = [UIColor whiteColor];
         _progressLabel.opaque = NO;
@@ -424,7 +428,7 @@ static NSMutableDictionary * gHistory;
 
 - (UILabel *)leftLabel {
     if (!_leftLabel) {
-        _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth-92, 0, 60, 50)];
+        _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth - 100 + 4, 0, 46, 50)];
         _leftLabel.backgroundColor = [UIColor clearColor];
         _leftLabel.textColor = [UIColor whiteColor];
         _leftLabel.opaque = NO;
@@ -440,7 +444,7 @@ static NSMutableDictionary * gHistory;
 - (UIButton *)doneButton {
     if (!_doneButton) {
         _doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _doneButton.frame = CGRectMake(0, kStatusBarHeight, 50, 50);
+        _doneButton.frame = CGRectMake(0, _statusBarHeight, 50, 50);
         [_doneButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_close"] forState:UIControlStateNormal];
         _doneButton.backgroundColor = [UIColor clearColor];
         [_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -454,7 +458,7 @@ static NSMutableDictionary * gHistory;
     if (!_infoButton) {
         _infoButton = [[UIButton alloc]init];
         [_infoButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_info_outline"] forState:UIControlStateNormal];
-        _infoButton.frame = CGRectMake(kScreenWidth-50, kStatusBarHeight, 50, 50);
+        _infoButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
         _infoButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [_infoButton addTarget:self action:@selector(infoDidTouch:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -465,7 +469,7 @@ static NSMutableDictionary * gHistory;
     if (!_airPlayButton) {
         _airPlayButton = [[UIButton alloc]init];
         [_airPlayButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_air_play"] forState:UIControlStateNormal];
-        _airPlayButton.frame = CGRectMake(kScreenWidth-50, kStatusBarHeight, 50, 50);
+        _airPlayButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
         _airPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [_airPlayButton addTarget:self action:@selector(infoDidTouch:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -505,10 +509,21 @@ static NSMutableDictionary * gHistory;
     return _fullButton;
 }
 
+- (UIButton *)exitFullButton {
+    if (!_exitFullButton) {
+        _exitFullButton = [[UIButton alloc] init];
+        _exitFullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
+        _exitFullButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [_exitFullButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_fullscreen_exit"] forState:UIControlStateNormal];
+        [_exitFullButton addTarget:self action:@selector(exitFullDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _exitFullButton;
+}
+
 - (UIView *)topHUD {
     if (!_topHUD) {
         _topHUD    = [[UIView alloc] initWithFrame:CGRectMake(0,0,0,0)];
-        _topHUD.frame = CGRectMake(0, 0, kScreenWidth, kStatusBarHeight + 50);
+        _topHUD.frame = CGRectMake(0, 0, kScreenWidth, _statusBarHeight + 50);
         _topHUD.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
         _topHUD.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     }
@@ -518,7 +533,7 @@ static NSMutableDictionary * gHistory;
 - (UISlider *)progressSlider {
     if (!_progressSlider) {
         _progressSlider = [[UISlider alloc] init];
-        _progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 197, 50);
+        _progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
         _progressSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _progressSlider.minimumTrackTintColor = kMainColor;
         _progressSlider.maximumTrackTintColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
@@ -532,7 +547,7 @@ static NSMutableDictionary * gHistory;
 
 - (UIView *)bottomView {
     if (!_bottomView) {
-        CGFloat height = kTabbarSafeBottomMargin + 50;
+        CGFloat height = _tabbarSafeBottomMargin + 50;
         _bottomView = [[UIView alloc] init];
         _bottomView.frame = CGRectMake(0, kScreenHeight - height, kScreenWidth, height);
         _bottomView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
@@ -658,16 +673,16 @@ static NSMutableDictionary * gHistory;
 
 #pragma mark - actions
 
-- (void) doneDidTouch: (id) sender
-{
-    if (self.presentingViewController || !self.navigationController)
+- (void)doneDidTouch:(id)sender {
+    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).isAllowAutorotate = NO;
+    if (self.presentingViewController || !self.navigationController) {
         [self dismissViewControllerAnimated:YES completion:nil];
-    else
+    } else {
         [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
-- (void) infoDidTouch: (id) sender
-{
+- (void)infoDidTouch:(id)sender {
     [self showInfoView: !_infoMode animated:YES];
 }
 
@@ -680,6 +695,10 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)fullDidTouch:(id)sender {
+    [self fullScreen];
+}
+
+- (void)exitFullDidTouch:(id)sender {
     [self fullScreen];
 }
 
@@ -707,6 +726,7 @@ static NSMutableDictionary * gHistory;
         return;
     }
     _currentOrientation = orientation;
+    [self updatePlayerView:_currentOrientation];
     [UIView animateWithDuration:0.5 animations:^{
         [[UIDevice currentDevice] setValue: @(orientation) forKey:@"orientation"];
     } completion:^(BOOL finished) {
@@ -714,9 +734,57 @@ static NSMutableDictionary * gHistory;
     }];
 }
 
+- (void)updatePlayerView:(UIInterfaceOrientation)orientation {
+    if (orientation == UIInterfaceOrientationPortrait) {
+        self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, _statusBarHeight + 50);
+        self.bottomView.frame = CGRectMake(0, kScreenHeight - (_tabbarSafeBottomMargin + 50), kScreenWidth, _tabbarSafeBottomMargin + 50);
+        self.doneButton.frame = CGRectMake(0, _statusBarHeight, 50, 50);
+        self.airPlayButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
+        self.pauseButton.frame = CGRectMake(0, 0, 50, 50);
+        self.playButton.frame = CGRectMake(0, 0, 50, 50);
+        self.fullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
+        self.exitFullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
+        self.progressLabel.frame = CGRectMake(50, 0, 46, 50);
+        self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 46, 50);
+        self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
+        
+        [self.exitFullButton removeFromSuperview];
+        [self.bottomView addSubview:self.fullButton];
+
+    } else if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
+        
+        self.bottomView.frame = CGRectMake(0, kScreenHeight - 60, kScreenWidth, 60);
+        if (iPhoneX) {
+            self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, 50);
+            self.doneButton.frame = CGRectMake(_statusBarHeight, 0, 50, 50);
+            self.airPlayButton.frame = CGRectMake(kScreenWidth - 50 - _statusBarHeight, 0, 50, 50);
+            self.pauseButton.frame = CGRectMake(_statusBarHeight, 0, 50, 50);
+            self.playButton.frame = CGRectMake(_statusBarHeight, 0, 50, 50);
+            self.exitFullButton.frame = CGRectMake(kScreenWidth - 50 - _statusBarHeight, 0, 50, 50);
+            self.progressLabel.frame = CGRectMake(50 + _statusBarHeight, 0, 46, 50);
+            self.leftLabel.frame = CGRectMake(kScreenWidth - 100 - _statusBarHeight + 4, 0, 46, 50);
+            self.progressSlider.frame = CGRectMake(100 + _statusBarHeight, 0, kScreenWidth - 200 - 2 * _statusBarHeight, 50);
+        } else {
+            self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, _statusBarHeight + 50);
+            self.doneButton.frame = CGRectMake(0, _statusBarHeight, 50, 50);
+            self.airPlayButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
+            self.pauseButton.frame = CGRectMake(0, 0, 50, 50);
+            self.playButton.frame = CGRectMake(0, 0, 50, 50);
+            self.exitFullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
+            self.progressLabel.frame = CGRectMake(50, 0, 46, 50);
+            self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 46, 50);
+            self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
+        }
+        [self.fullButton removeFromSuperview];
+        [self.bottomView addSubview:self.exitFullButton];
+    }
+}
+
 #pragma mark - private
 
 - (void)initData {
+    _statusBarHeight = kStatusBarHeight;
+    _tabbarSafeBottomMargin = kTabbarSafeBottomMargin;
     _isFullScreen = NO;
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     switch (orientation) {
@@ -1104,8 +1172,7 @@ static NSMutableDictionary * gHistory;
     return self.playing && _bufferedDuration < _maxBufferedDuration;
 }
 
-- (BOOL) decodeFrames
-{
+- (BOOL) decodeFrames {
     //NSAssert(dispatch_get_current_queue() == _dispatchQueue, @"bugcheck");
     
     NSArray *frames = nil;
@@ -1122,8 +1189,7 @@ static NSMutableDictionary * gHistory;
     return NO;
 }
 
-- (void) asyncDecodeFrames
-{
+- (void) asyncDecodeFrames {
     if (self.decoding)
         return;
     
@@ -1413,8 +1479,7 @@ static NSMutableDictionary * gHistory;
     [self updateBottomToolView];
 }
 
-- (void) updateHUD
-{
+- (void)updateHUD {
     if (_disableUpdateHUD)
         return;
     
@@ -1436,7 +1501,7 @@ static NSMutableDictionary * gHistory;
     
     if (_debugAudioStatus) {
         
-        if (NSOrderedAscending == [_debugAudioStatusTS compare: [NSDate dateWithTimeIntervalSinceNow:-0.5]]) {
+         if (NSOrderedAscending == [_debugAudioStatusTS compare: [NSDate dateWithTimeIntervalSinceNow:-0.5]]) {
             _debugAudioStatus = 0;
         }
     }
@@ -1459,8 +1524,7 @@ static NSMutableDictionary * gHistory;
 #endif
 }
 
-- (void) showHUD: (BOOL) show
-{
+- (void)showHUD: (BOOL)show {
     _hiddenHUD = !show;
     _panGestureRecognizer.enabled = _hiddenHUD;
     
@@ -1481,24 +1545,20 @@ static NSMutableDictionary * gHistory;
     
 }
 
-- (void) setMoviePositionFromDecoder
-{
+- (void)setMoviePositionFromDecoder {
     _moviePosition = _decoder.position;
 }
 
-- (void) setDecoderPosition: (CGFloat) position
-{
+- (void)setDecoderPosition:(CGFloat)position {
     _decoder.position = position;
 }
 
-- (void) enableUpdateHUD
-{
+- (void)enableUpdateHUD {
     _disableUpdateHUD = NO;
 }
 
-- (void) updatePosition: (CGFloat) position
-               playMode: (BOOL) playMode
-{
+- (void)updatePosition: (CGFloat)position
+              playMode: (BOOL)playMode {
     [self freeBufferedFrames];
     
     position = MIN(_decoder.duration - 1, MAX(0, position));
