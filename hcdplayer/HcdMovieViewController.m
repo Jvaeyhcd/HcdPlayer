@@ -148,6 +148,8 @@ static NSMutableDictionary * gHistory;
 @property (nonatomic, strong) UIButton            *fullButton;
 @property (nonatomic, strong) UIButton            *exitFullButton;
 @property (nonatomic, strong) UIButton            *airPlayButton;
+@property (nonatomic, strong) UIButton            *lockButton;
+@property (nonatomic, strong) UIButton            *unlockButton;
 
 @property (readwrite, assign) UIInterfaceOrientation currentOrientation;
 @property (nonatomic, assign) BOOL           isFullScreen;
@@ -373,6 +375,7 @@ static NSMutableDictionary * gHistory;
                                              selector:@selector(applicationWillResignActive:)
                                                  name:UIApplicationWillResignActiveNotification
                                                object:[UIApplication sharedApplication]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleStatusBarOrientationChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -520,6 +523,28 @@ static NSMutableDictionary * gHistory;
     return _exitFullButton;
 }
 
+- (UIButton *)lockButton {
+    if (!_lockButton) {
+        _lockButton = [[UIButton alloc] init];
+        _lockButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
+        _lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [_lockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_lock"] forState:UIControlStateNormal];
+        [_lockButton addTarget:self action:@selector(exitFullDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _lockButton;
+}
+
+- (UIButton *)unlockButton {
+    if (!_unlockButton) {
+        _unlockButton = [[UIButton alloc] init];
+        _unlockButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
+        _unlockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [_unlockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_unlock"] forState:UIControlStateNormal];
+        [_unlockButton addTarget:self action:@selector(exitFullDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _unlockButton;
+}
+
 - (UIView *)topHUD {
     if (!_topHUD) {
         _topHUD    = [[UIView alloc] initWithFrame:CGRectMake(0,0,0,0)];
@@ -587,8 +612,7 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void) handlePan: (UIPanGestureRecognizer *) sender
-{
+- (void)handlePan: (UIPanGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateEnded) {
         
         const CGPoint vt = [sender velocityInView:self.view];
@@ -606,19 +630,18 @@ static NSMutableDictionary * gHistory;
 
 #pragma mark - public
 
--(void) play
-{
-    if (self.playing)
-        return;
-    
-    if (!_decoder.validVideo &&
-        !_decoder.validAudio) {
-        
+-(void)play {
+    if (self.playing) {
         return;
     }
     
-    if (_interrupted)
+    if (!_decoder.validVideo && !_decoder.validAudio) {
         return;
+    }
+    
+    if (_interrupted) {
+        return;
+    }
     
     self.playing = YES;
     _interrupted = NO;
@@ -721,6 +744,12 @@ static NSMutableDictionary * gHistory;
 
 #pragma mark - 全屏旋转处理
 
+//界面方向改变的处理
+- (void)handleStatusBarOrientationChange: (NSNotification *)notification{
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    [self updatePlayerView:interfaceOrientation];
+}
+
 - (void)toOrientation:(UIInterfaceOrientation)orientation {
     if (_currentOrientation == orientation) {
         return;
@@ -753,8 +782,8 @@ static NSMutableDictionary * gHistory;
 
     } else if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
         
-        self.bottomView.frame = CGRectMake(0, kScreenHeight - 60, kScreenWidth, 60);
         if (iPhoneX) {
+            self.bottomView.frame = CGRectMake(0, kScreenHeight - 60, kScreenWidth, 60);
             self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, 50);
             self.doneButton.frame = CGRectMake(_statusBarHeight, 0, 50, 50);
             self.airPlayButton.frame = CGRectMake(kScreenWidth - 50 - _statusBarHeight, 0, 50, 50);
@@ -765,6 +794,7 @@ static NSMutableDictionary * gHistory;
             self.leftLabel.frame = CGRectMake(kScreenWidth - 100 - _statusBarHeight + 4, 0, 46, 50);
             self.progressSlider.frame = CGRectMake(100 + _statusBarHeight, 0, kScreenWidth - 200 - 2 * _statusBarHeight, 50);
         } else {
+            self.bottomView.frame = CGRectMake(0, kScreenHeight - 50, kScreenWidth, 50);
             self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, _statusBarHeight + 50);
             self.doneButton.frame = CGRectMake(0, _statusBarHeight, 50, 50);
             self.airPlayButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
