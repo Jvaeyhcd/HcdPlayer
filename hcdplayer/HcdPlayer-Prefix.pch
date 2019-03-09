@@ -40,7 +40,7 @@
 #define kScreenHeight kScreenBounds.size.height
 
 #define scaleFromiPhoneXDesign(x) floor(x * (kScreenWidth / 375))
-#define iPhoneX ((kScreenHeight == 812.f || kScreenHeight == 896.f) ? YES : NO)
+#define iPhoneX ((kScreenHeight == 812.f || kScreenWidth == 812.f || kScreenWidth == 896.f || kScreenHeight == 896.f) ? YES : NO)
 
 // 适配刘海屏状态栏高度
 #define kStatusBarHeight (iPhoneX ? 44.f : 20.f)

@@ -431,7 +431,7 @@ static NSMutableDictionary * gHistory;
 
 - (UILabel *)leftLabel {
     if (!_leftLabel) {
-        _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth - 100 + 4, 0, 46, 50)];
+        _leftLabel = [[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth - 100 + 4, 0, 50, 50)];
         _leftLabel.backgroundColor = [UIColor clearColor];
         _leftLabel.textColor = [UIColor whiteColor];
         _leftLabel.opaque = NO;
@@ -613,6 +613,12 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)handlePan: (UIPanGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        
+    }
+    if (sender.state == UIGestureRecognizerStateChanged) {
+        
+    }
     if (sender.state == UIGestureRecognizerStateEnded) {
         
         const CGPoint vt = [sender velocityInView:self.view];
@@ -774,7 +780,7 @@ static NSMutableDictionary * gHistory;
         self.fullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
         self.exitFullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
         self.progressLabel.frame = CGRectMake(50, 0, 46, 50);
-        self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 46, 50);
+        self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 50, 50);
         self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
         
         [self.exitFullButton removeFromSuperview];
@@ -791,7 +797,7 @@ static NSMutableDictionary * gHistory;
             self.playButton.frame = CGRectMake(_statusBarHeight, 0, 50, 50);
             self.exitFullButton.frame = CGRectMake(kScreenWidth - 50 - _statusBarHeight, 0, 50, 50);
             self.progressLabel.frame = CGRectMake(50 + _statusBarHeight, 0, 46, 50);
-            self.leftLabel.frame = CGRectMake(kScreenWidth - 100 - _statusBarHeight + 4, 0, 46, 50);
+            self.leftLabel.frame = CGRectMake(kScreenWidth - 100 - _statusBarHeight + 4, 0, 50, 50);
             self.progressSlider.frame = CGRectMake(100 + _statusBarHeight, 0, kScreenWidth - 200 - 2 * _statusBarHeight, 50);
         } else {
             self.bottomView.frame = CGRectMake(0, kScreenHeight - 50, kScreenWidth, 50);
@@ -802,7 +808,7 @@ static NSMutableDictionary * gHistory;
             self.playButton.frame = CGRectMake(0, 0, 50, 50);
             self.exitFullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
             self.progressLabel.frame = CGRectMake(50, 0, 46, 50);
-            self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 46, 50);
+            self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 50, 50);
             self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
         }
         [self.fullButton removeFromSuperview];
@@ -1000,8 +1006,7 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void) setupUserInteraction
-{
+- (void) setupUserInteraction {
     UIView * view = [self frameView];
     view.userInteractionEnabled = YES;
     
@@ -1016,21 +1021,19 @@ static NSMutableDictionary * gHistory;
     [view addGestureRecognizer:_doubleTapGestureRecognizer];
     [view addGestureRecognizer:_tapGestureRecognizer];
     
-    //    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-    //    _panGestureRecognizer.enabled = NO;
-    //
-    //    [view addGestureRecognizer:_panGestureRecognizer];
+    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    _panGestureRecognizer.enabled = YES;
+
+    [view addGestureRecognizer:_panGestureRecognizer];
 }
 
-- (UIView *) frameView
-{
+- (UIView *) frameView {
     return _glView ? _glView : _imageView;
 }
 
 - (void) audioCallbackFillData: (float *) outData
                      numFrames: (UInt32) numFrames
-                   numChannels: (UInt32) numChannels
-{
+                   numChannels: (UInt32) numChannels {
     //fillSignalF(outData,numFrames,numChannels);
     //return;
     
