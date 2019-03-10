@@ -63,6 +63,7 @@
 		B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461921F9D1BD00682DD5 /* HcdAlertInputView.m */; };
 		B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */; };
 		B9BB462021FBF37100682DD5 /* SortViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461F21FBF37100682DD5 /* SortViewController.m */; };
+		B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */; };
 		FFBCB2C6A040A2AA5AA1069B /* Pods_HcdPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -265,6 +266,8 @@
 		B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIPlaceHolderTextView.m; sourceTree = "<group>"; };
 		B9BB461E21FBF37100682DD5 /* SortViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SortViewController.h; sourceTree = "<group>"; };
 		B9BB461F21FBF37100682DD5 /* SortViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SortViewController.m; sourceTree = "<group>"; };
+		B9FCE2D6223520B900E2B9E4 /* HcdPlayerDraggingProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdPlayerDraggingProgressView.h; sourceTree = "<group>"; };
+		B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdPlayerDraggingProgressView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -558,6 +561,8 @@
 				B9AA906C21ED7E0F00F3C70E /* HcdMovieViewController.m */,
 				B9AA906421ED7CAA00F3C70E /* HcdLogger.h */,
 				B9AA907021EDBF6900F3C70E /* HcdPlayer-Prefix.pch */,
+				B9FCE2D6223520B900E2B9E4 /* HcdPlayerDraggingProgressView.h */,
+				B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */,
 			);
 			path = hcdplayer;
 			sourceTree = "<group>";
@@ -852,6 +857,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9A6F2F2221C41730027D017 /* UIScrollView+EmptyDataSet.m in Sources */,
+				B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */,
 				B9AA90B921F5F5B800F3C70E /* UIView+Hcd.m in Sources */,
 				B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */,
 				B9AA90B621F5EE3700F3C70E /* FilesListTableViewCell.m in Sources */,

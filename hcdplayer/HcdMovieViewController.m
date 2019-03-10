@@ -15,6 +15,9 @@
 #import "HcdMovieGLView.h"
 #import "HcdLogger.h"
 #import "AppDelegate.h"
+#import "HcdPlayerDraggingProgressView.h"
+
+#define kLeastMoveDistance 15.0
 
 NSString * const HcdMovieParameterMinBufferedDuration = @"HcdMovieParameterMinBufferedDuration";
 NSString * const HcdMovieParameterMaxBufferedDuration = @"HcdMovieParameterMaxBufferedDuration";
@@ -62,6 +65,13 @@ enum {
     HcdMovieInfoGeneralBitrate,
     HcdMovieInfoGeneralCount,
 };
+
+typedef enum : NSUInteger {
+    HCDPlayerControlTypeNone,
+    HCDPlayerControlTypeProgress,
+    HCDPlayerControlTypeVoice,
+    HCDPlayerControlTypeLight,
+} HCDPlayerControlType;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -124,6 +134,19 @@ static NSMutableDictionary * gHistory;
     
     CGFloat             _tabbarSafeBottomMargin;
     CGFloat             _statusBarHeight;
+    
+    //用来判断手势是否移动过
+    BOOL _hasMoved;
+    //判断是否已经判断出手势划的方向
+    BOOL _controlJudge;
+    //触摸开始触碰到的点
+    CGPoint _touchBeginPoint;
+    //记录触摸开始时的视频播放的时间
+    float _touchBeginValue;
+    //记录触摸开始亮度
+    float _touchBeginLightValue;
+    //记录触摸开始的音量
+    float _touchBeginVoiceValue;
 }
 
 @property (readwrite) BOOL playing;
@@ -150,6 +173,9 @@ static NSMutableDictionary * gHistory;
 @property (nonatomic, strong) UIButton            *airPlayButton;
 @property (nonatomic, strong) UIButton            *lockButton;
 @property (nonatomic, strong) UIButton            *unlockButton;
+
+@property (nonatomic, assign) HCDPlayerControlType controlType;       //当前手势是在控制进度、声音还是亮度
+@property (nonatomic, strong) HcdPlayerDraggingProgressView *draggingProgressView;
 
 @property (readwrite, assign) UIInterfaceOrientation currentOrientation;
 @property (nonatomic, assign) BOOL           isFullScreen;
@@ -283,6 +309,14 @@ static NSMutableDictionary * gHistory;
     [self.bottomView addSubview:self.leftLabel];
 //    [self.bottomView addSubview:self.infoButton];
     [self.bottomView addSubview:self.fullButton];
+    
+    [self.view addSubview:self.draggingProgressView];
+    [self.draggingProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.view);
+        CGFloat width = 150;
+        CGFloat height = width * 8 / 15;
+        make.size.mas_offset(CGSizeMake(ceil(width), ceil(height)));
+    }];
     
     // bottom hud
     
@@ -589,6 +623,16 @@ static NSMutableDictionary * gHistory;
     return _activityIndicatorView;
 }
 
+@synthesize draggingProgressView = _draggingProgressView;
+- (HcdPlayerDraggingProgressView *)draggingProgressView {
+    if (!_draggingProgressView) {
+        _draggingProgressView = [HcdPlayerDraggingProgressView new];
+        _draggingProgressView.hidden = YES;
+        _draggingProgressView.layer.cornerRadius = 8;
+    }
+    return _draggingProgressView;
+}
+
 #pragma mark - gesture recognizer
 
 - (void) handleTap: (UITapGestureRecognizer *) sender
@@ -612,26 +656,90 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void)handlePan: (UIPanGestureRecognizer *)sender {
-    if (sender.state == UIGestureRecognizerStateBegan) {
-        
+- (void)handlePan: (UIPanGestureRecognizer *)recognizer {
+    CGPoint touchPoint = [recognizer locationInView:self.view];
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        _hasMoved = NO;
+        _controlJudge = NO;
+        _touchBeginValue = self.progressSlider.value;
+        _touchBeginPoint = touchPoint;
     }
-    if (sender.state == UIGestureRecognizerStateChanged) {
+    if (recognizer.state == UIGestureRecognizerStateChanged) {
+        if (fabs(touchPoint.x - _touchBeginPoint.x) < kLeastMoveDistance && fabs(touchPoint.y - _touchBeginPoint.y) < kLeastMoveDistance) {
+            return;
+        }
+        _hasMoved = YES;
         
-    }
-    if (sender.state == UIGestureRecognizerStateEnded) {
-        
-        const CGPoint vt = [sender velocityInView:self.view];
-        const CGPoint pt = [sender translationInView:self.view];
-        const CGFloat sp = MAX(0.1, log10(fabs(vt.x)) - 1.0);
-        const CGFloat sc = fabs(pt.x) * 0.33 * sp;
-        if (sc > 10) {
+        // 如果还没有判断出是什么手势就进行判断
+        if (!_controlJudge) {
+            // 根据滑动角度的tan值来进行判断
+            float tan = fabs(touchPoint.y - _touchBeginPoint.y) / fabs(touchPoint.x - _touchBeginPoint.x);
             
-            const CGFloat ff = pt.x > 0 ? 1.0 : -1.0;
-            [self setMoviePosition: _moviePosition + ff * MIN(sc, 600.0)];
+            // 当滑动角度小于30度的时候, 进度手势
+            if (tan < 1 / sqrt(3)) {
+                _controlType = HCDPlayerControlTypeProgress;
+                _controlJudge = YES;
+            } else if (tan > sqrt(3)) {
+                if (_touchBeginPoint.x < self.view.frame.size.width / 2) {
+                    _controlType = HCDPlayerControlTypeLight;
+                } else {
+                    _controlType = HCDPlayerControlTypeVoice;
+                }
+                _controlJudge = YES;
+            } else {
+                _controlType = HCDPlayerControlTypeNone;
+                return;
+            }
+        }
+        if (_controlType == HCDPlayerControlTypeProgress) {
+            float value = [self moveProgressControlWithTempPoint:touchPoint];
+            [self timeValueChangingWithValue:value];
+        }
+    }
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        
+//        const CGPoint vt = [recognizer velocityInView:self.view];
+//        const CGPoint pt = [recognizer translationInView:self.view];
+//        const CGFloat sp = MAX(0.1, log10(fabs(vt.x)) - 1.0);
+//        const CGFloat sc = fabs(pt.x) * 0.33 * sp;
+//        if (sc > 10) {
+//
+//            const CGFloat ff = pt.x > 0 ? 1.0 : -1.0;
+//            [self setMoviePosition: _moviePosition + ff * MIN(sc, 600.0)];
+//        }
+        _controlJudge = NO;
+        if (_hasMoved) {
+            if (_controlType == HCDPlayerControlTypeProgress) {
+                self.draggingProgressView.hidden = YES;
+                float value = [self moveProgressControlWithTempPoint:touchPoint];
+                [self setMoviePosition:value];
+            }
         }
         //LoggerStream(2, @"pan %.2f %.2f %.2f sec", pt.x, vt.x, sc);
     }
+}
+
+- (float)moveProgressControlWithTempPoint:(CGPoint)tempPoint {
+    float tempValue = _touchBeginValue + 90 * ((tempPoint.x - _touchBeginPoint.x) / kScreenWidth);
+    if (tempValue > _decoder.duration) {
+        tempValue = _decoder.duration;
+    }else if (tempValue < 0){
+        tempValue = 0.0f;
+    }
+    return tempValue;
+}
+
+-(void)timeValueChangingWithValue:(float)value{
+    if (value > _touchBeginValue) {
+        self.draggingProgressView.directionImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_fast"];
+    } else if (value < _touchBeginValue) {
+        self.draggingProgressView.directionImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_forward"];
+    }
+    self.draggingProgressView.hidden = NO;
+    CGFloat duration = _decoder.duration;
+    self.draggingProgressView.durationTimeLabel.text = formatTimeInterval(duration, NO);
+    self.draggingProgressView.shiftTimeLabel.text = formatTimeInterval(value, NO);
 }
 
 #pragma mark - public
@@ -1559,7 +1667,7 @@ static NSMutableDictionary * gHistory;
 
 - (void)showHUD: (BOOL)show {
     _hiddenHUD = !show;
-    _panGestureRecognizer.enabled = _hiddenHUD;
+//    _panGestureRecognizer.enabled = _hiddenHUD;
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:_hiddenHUD];
     
