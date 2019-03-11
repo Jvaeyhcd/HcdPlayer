@@ -173,6 +173,7 @@ static NSMutableDictionary * gHistory;
 @property (nonatomic, strong) UIButton            *airPlayButton;
 @property (nonatomic, strong) UIButton            *lockButton;
 @property (nonatomic, strong) UIButton            *unlockButton;
+@property (nonatomic, strong) UIButton            *replayButton;
 
 @property (nonatomic, assign) HCDPlayerControlType controlType;       //当前手势是在控制进度、声音还是亮度
 @property (nonatomic, strong) HcdPlayerDraggingProgressView *draggingProgressView;
@@ -579,6 +580,25 @@ static NSMutableDictionary * gHistory;
     return _unlockButton;
 }
 
+- (UIButton *)replayButton {
+    if (!_replayButton) {
+        _replayButton = [[UIButton alloc] init];
+        _replayButton.frame = CGRectMake((kScreenWidth - 60) / 2, (kScreenHeight - 60) / 2, 60, 60);
+        [_replayButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_replay"] forState:UIControlStateNormal];
+        [_replayButton setTitle:HcdLocalized(@"replay", nil) forState:UIControlStateNormal];
+        _replayButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        
+        CGSize imageSize = _replayButton.imageView.frame.size;
+        CGSize titleSize = _replayButton.titleLabel.frame.size;
+        
+        _replayButton.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, -imageSize.height - 5, 0);
+        _replayButton.imageEdgeInsets = UIEdgeInsetsMake(-titleSize.height - 5, 0, 0, -titleSize.width);
+        
+        [_replayButton addTarget:self action:@selector(replayDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _replayButton;
+}
+
 - (UIView *)topHUD {
     if (!_topHUD) {
         _topHUD    = [[UIView alloc] initWithFrame:CGRectMake(0,0,0,0)];
@@ -662,7 +682,7 @@ static NSMutableDictionary * gHistory;
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         _hasMoved = NO;
         _controlJudge = NO;
-        _touchBeginValue = self.progressSlider.value;
+        _touchBeginValue = _moviePosition;
         _touchBeginPoint = touchPoint;
     }
     if (recognizer.state == UIGestureRecognizerStateChanged) {
@@ -781,8 +801,7 @@ static NSMutableDictionary * gHistory;
     LoggerStream(1, @"play movie");
 }
 
-- (void) pause
-{
+- (void)pause {
     if (!self.playing)
         return;
     
@@ -793,8 +812,7 @@ static NSMutableDictionary * gHistory;
     LoggerStream(1, @"pause movie");
 }
 
-- (void) setMoviePosition: (CGFloat) position
-{
+- (void) setMoviePosition: (CGFloat) position {
     BOOL playMode = self.playing;
     
     self.playing = NO;
@@ -839,18 +857,19 @@ static NSMutableDictionary * gHistory;
     [self fullScreen];
 }
 
-- (void) forwardDidTouch: (id) sender
-{
+- (void)replayDidTouch:(id)sender {
+    [self restorePlay];
+}
+
+- (void)forwardDidTouch: (id)sender{
     [self setMoviePosition: _moviePosition + 10];
 }
 
-- (void) rewindDidTouch: (id) sender
-{
+- (void)rewindDidTouch: (id)sender{
     [self setMoviePosition: _moviePosition - 10];
 }
 
-- (void) progressDidChange: (id) sender
-{
+- (void)progressDidChange: (id)sender{
     NSAssert(_decoder.duration != MAXFLOAT, @"bugcheck");
     UISlider *slider = sender;
     [self setMoviePosition:slider.value * _decoder.duration];
@@ -893,6 +912,7 @@ static NSMutableDictionary * gHistory;
         
         [self.exitFullButton removeFromSuperview];
         [self.bottomView addSubview:self.fullButton];
+        _fullscreen = YES;
 
     } else if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
         
@@ -921,6 +941,7 @@ static NSMutableDictionary * gHistory;
         }
         [self.fullButton removeFromSuperview];
         [self.bottomView addSubview:self.exitFullButton];
+        _fullscreen = NO;
     }
 }
 
@@ -1029,13 +1050,13 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void) restorePlay
-{
+- (void)restorePlay {
     NSNumber *n = [gHistory valueForKey:_decoder.path];
-    if (n)
+    if (n) {
         [self updatePosition:n.floatValue playMode:YES];
-    else
+    } else {
         [self play];
+    }
 }
 
 - (void) setupPresentView
@@ -1238,8 +1259,7 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void) enableAudio: (BOOL) on
-{
+- (void) enableAudio: (BOOL) on {
     id<HcdAudioManager> audioManager = [HcdAudioManager audioManager];
     
     if (on && _decoder.validAudio) {
@@ -1377,8 +1397,7 @@ static NSMutableDictionary * gHistory;
     });
 }
 
-- (void) tick
-{
+- (void)tick {
     if (_buffered && ((_bufferedDuration > _minBufferedDuration) || _decoder.isEOF)) {
         
         _tickCorrectionTime = 0;
@@ -1432,8 +1451,7 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (CGFloat) tickCorrection
-{
+- (CGFloat)tickCorrection {
     if (_buffered)
         return 0;
     
@@ -1463,8 +1481,7 @@ static NSMutableDictionary * gHistory;
     return correction;
 }
 
-- (CGFloat) presentFrame
-{
+- (CGFloat)presentFrame {
     CGFloat interval = 0;
     
     if (_decoder.validVideo) {
@@ -1506,14 +1523,10 @@ static NSMutableDictionary * gHistory;
     return interval;
 }
 
-- (CGFloat) presentVideoFrame: (HcdVideoFrame *) frame
-{
+- (CGFloat) presentVideoFrame: (HcdVideoFrame *) frame {
     if (_glView) {
-        
         [_glView render:frame];
-        
     } else {
-        
         HcdVideoFrameRGB *rgbFrame = (HcdVideoFrameRGB *)frame;
         _imageView.image = [rgbFrame asImage];
     }
@@ -1523,8 +1536,7 @@ static NSMutableDictionary * gHistory;
     return frame.duration;
 }
 
-- (void) presentSubtitles
-{
+- (void) presentSubtitles {
     NSArray *actual, *outdated;
     
     if ([self subtitleForPosition:_moviePosition
@@ -1621,6 +1633,8 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)updateHUD {
+    NSLog(@"updateHUD");
+    
     if (_disableUpdateHUD)
         return;
     
