@@ -1495,11 +1495,13 @@ static NSMutableDictionary * gHistory;
                 frame = _videoFrames[0];
                 [_videoFrames removeObjectAtIndex:0];
                 _bufferedDuration -= frame.duration;
+                NSLog(@"_bufferedDuration=%lf", _bufferedDuration);
             }
         }
         
-        if (frame)
+        if (frame) {
             interval = [self presentVideoFrame:frame];
+        }
         
     } else if (_decoder.validAudio) {
         
@@ -1532,11 +1534,13 @@ static NSMutableDictionary * gHistory;
     }
     
     _moviePosition = frame.position;
+    NSLog(@"_moviePosition=%lf", _moviePosition);
     
     return frame.duration;
 }
 
-- (void) presentSubtitles {
+- (void) presentSubtitles
+{
     NSArray *actual, *outdated;
     
     if ([self subtitleForPosition:_moviePosition
