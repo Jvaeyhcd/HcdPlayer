@@ -82,7 +82,7 @@ typedef enum {
 @property (readonly, nonatomic, strong) NSString *text;
 @end
 
-typedef BOOL(^HcdMovieDecoderInterruptCallback)();
+typedef BOOL(^HcdMovieDecoderInterruptCallback)(void);
 
 @interface HcdMovieDecoder : NSObject
 

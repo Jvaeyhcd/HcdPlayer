@@ -151,6 +151,7 @@ static NSMutableDictionary * gHistory;
 
 @property (readwrite) BOOL playing;
 @property (readwrite) BOOL decoding;
+@property (readwrite) BOOL playFinished;
 
 @property (readwrite, assign) BOOL                  hiddenHUD;
 @property (readwrite, strong) HcdArtworkFrame       *artworkFrame;
@@ -296,6 +297,7 @@ static NSMutableDictionary * gHistory;
     
     [self.view addSubview:self.topHUD];
     [self.view addSubview:self.bottomView];
+    [self.view addSubview:self.replayButton];
     
     // top hud
     //    [_doneButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
@@ -425,11 +427,12 @@ static NSMutableDictionary * gHistory;
         
         [self pause];
         
-        if (_moviePosition == 0 || _decoder.isEOF)
+        if (_moviePosition == 0 || _decoder.isEOF) {
             [gHistory removeObjectForKey:_decoder.path];
-        else if (!_decoder.isNetwork)
+        } else if (!_decoder.isNetwork) {
             [gHistory setValue:[NSNumber numberWithFloat:_moviePosition]
                         forKey:_decoder.path];
+        }
     }
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:_savedIdleTimer];
@@ -591,8 +594,9 @@ static NSMutableDictionary * gHistory;
         CGSize imageSize = _replayButton.imageView.frame.size;
         CGSize titleSize = _replayButton.titleLabel.frame.size;
         
-        _replayButton.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, -imageSize.height - 5, 0);
-        _replayButton.imageEdgeInsets = UIEdgeInsetsMake(-titleSize.height - 5, 0, 0, -titleSize.width);
+        _replayButton.titleEdgeInsets = UIEdgeInsetsMake(imageSize.height + 5, -imageSize.width, 0, 0);
+        _replayButton.imageEdgeInsets = UIEdgeInsetsMake(0, titleSize.width / 2, titleSize.height + 5, -titleSize.width / 2);
+        _replayButton.hidden = YES;
         
         [_replayButton addTarget:self action:@selector(replayDidTouch:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -643,7 +647,6 @@ static NSMutableDictionary * gHistory;
     return _activityIndicatorView;
 }
 
-@synthesize draggingProgressView = _draggingProgressView;
 - (HcdPlayerDraggingProgressView *)draggingProgressView {
     if (!_draggingProgressView) {
         _draggingProgressView = [HcdPlayerDraggingProgressView new];
@@ -655,8 +658,7 @@ static NSMutableDictionary * gHistory;
 
 #pragma mark - gesture recognizer
 
-- (void) handleTap: (UITapGestureRecognizer *) sender
-{
+- (void)handleTap: (UITapGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateEnded) {
         
         if (sender == _tapGestureRecognizer) {
@@ -667,10 +669,11 @@ static NSMutableDictionary * gHistory;
             
             UIView *frameView = [self frameView];
             
-            if (frameView.contentMode == UIViewContentModeScaleAspectFit)
+            if (frameView.contentMode == UIViewContentModeScaleAspectFit) {
                 frameView.contentMode = UIViewContentModeScaleAspectFill;
-            else
+            } else {
                 frameView.contentMode = UIViewContentModeScaleAspectFit;
+            }
             
         }
     }
@@ -778,6 +781,7 @@ static NSMutableDictionary * gHistory;
     }
     
     self.playing = YES;
+    self.playFinished = NO;
     _interrupted = NO;
     _disableUpdateHUD = NO;
     _tickCorrectionTime = 0;
@@ -845,7 +849,11 @@ static NSMutableDictionary * gHistory;
     if (self.playing) {
         [self pause];
     } else {
-        [self play];
+        if (self.playFinished) {
+            [self replay];
+        } else {
+            [self play];
+        }
     }
 }
 
@@ -858,7 +866,7 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)replayDidTouch:(id)sender {
-    [self restorePlay];
+    [self replay];
 }
 
 - (void)forwardDidTouch: (id)sender{
@@ -910,6 +918,8 @@ static NSMutableDictionary * gHistory;
         self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 50, 50);
         self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
         
+        self.replayButton.frame = CGRectMake((kScreenWidth - 60) / 2, (kScreenHeight - 60) / 2, 60, 60);
+        
         [self.exitFullButton removeFromSuperview];
         [self.bottomView addSubview:self.fullButton];
         _fullscreen = YES;
@@ -939,6 +949,9 @@ static NSMutableDictionary * gHistory;
             self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 50, 50);
             self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
         }
+        
+        self.replayButton.frame = CGRectMake((kScreenWidth - 60) / 2, (kScreenHeight - 60) / 2, 60, 60);
+        
         [self.fullButton removeFromSuperview];
         [self.bottomView addSubview:self.exitFullButton];
         _fullscreen = NO;
@@ -1026,7 +1039,7 @@ static NSMutableDictionary * gHistory;
             
             [self setupPresentView];
             
-            _progressLabel.hidden   = NO;
+            self.progressLabel.hidden   = NO;
             self.progressSlider.hidden  = NO;
             _leftLabel.hidden       = NO;
             _infoButton.hidden      = NO;
@@ -1059,8 +1072,11 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void) setupPresentView
-{
+- (void)replay {
+    [self updatePosition:0 playMode:YES];
+}
+
+- (void)setupPresentView {
     CGRect bounds = self.view.bounds;
     
     if (_decoder.validVideo) {
@@ -1086,7 +1102,7 @@ static NSMutableDictionary * gHistory;
         [self setupUserInteraction];
         
     } else {
-        
+
         _imageView.image = [UIImage imageNamed:@"Hcdmovie.bundle/music_icon.png"];
         _imageView.contentMode = UIViewContentModeCenter;
     }
@@ -1411,18 +1427,20 @@ static NSMutableDictionary * gHistory;
     
     if (self.playing) {
         
+        NSLog(@"_videoFrames.count = %lu, _audioFrames.count = %lu", (unsigned long)_videoFrames.count, (unsigned long)_audioFrames.count);
+        
         const NSUInteger leftFrames =
         (_decoder.validVideo ? _videoFrames.count : 0) +
         (_decoder.validAudio ? _audioFrames.count : 0);
         
+        if (_decoder.isEOF) {
+            self.playFinished = YES;
+            [self pause];
+            [self updateHUD];
+            return;
+        }
+        
         if (0 == leftFrames) {
-            
-            if (_decoder.isEOF) {
-                
-                [self pause];
-                [self updateHUD];
-                return;
-            }
             
             if (_minBufferedDuration > 0 && !_buffered) {
                 
@@ -1539,8 +1557,7 @@ static NSMutableDictionary * gHistory;
     return frame.duration;
 }
 
-- (void) presentSubtitles
-{
+- (void) presentSubtitles {
     NSArray *actual, *outdated;
     
     if ([self subtitleForPosition:_moviePosition
@@ -1637,7 +1654,6 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)updateHUD {
-    NSLog(@"updateHUD");
     
     if (_disableUpdateHUD)
         return;
@@ -1645,12 +1661,15 @@ static NSMutableDictionary * gHistory;
     const CGFloat duration = _decoder.duration;
     const CGFloat position = _moviePosition -_decoder.startTime;
     
-    if (self.progressSlider.state == UIControlStateNormal)
+    if (self.progressSlider.state == UIControlStateNormal) {
         self.progressSlider.value = position / duration;
-    _progressLabel.text = formatTimeInterval(position, NO);
+    }
+    self.progressLabel.text = formatTimeInterval(position, NO);
     
-    if (_decoder.duration != MAXFLOAT)
+    if (_decoder.duration != MAXFLOAT) {
         self.leftLabel.text = formatTimeInterval(duration - position, YES);
+    }
+    self.replayButton.hidden = !self.playFinished;
     
 #ifdef DEBUG
     const NSTimeInterval timeSinceStart = [NSDate timeIntervalSinceReferenceDate] - _debugStartTime;

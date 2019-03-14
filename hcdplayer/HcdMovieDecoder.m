@@ -1362,8 +1362,7 @@ static int interrupt_callback(void *ctx);
     return _videoFrameFormat == format;
 }
 
-- (NSArray *) decodeFrames: (CGFloat) minDuration
-{
+- (NSArray *) decodeFrames: (CGFloat) minDuration {
     if (_videoStream == -1 &&
         _audioStream == -1)
         return nil;
