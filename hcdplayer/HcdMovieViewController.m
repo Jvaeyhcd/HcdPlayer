@@ -667,14 +667,15 @@ static NSMutableDictionary * gHistory;
             
         } else if (sender == _doubleTapGestureRecognizer) {
             
-            UIView *frameView = [self frameView];
-            
-            if (frameView.contentMode == UIViewContentModeScaleAspectFit) {
-                frameView.contentMode = UIViewContentModeScaleAspectFill;
-            } else {
-                frameView.contentMode = UIViewContentModeScaleAspectFit;
+            // 双击屏幕播放或则暂停
+            if (self.playFinished) {
+                return;
             }
-            
+            if (self.playing) {
+                [self pause];
+            } else {
+                [self play];
+            }
         }
     }
 }
@@ -1738,7 +1739,6 @@ static NSMutableDictionary * gHistory;
 - (void)updatePosition: (CGFloat)position
               playMode: (BOOL)playMode {
     [self freeBufferedFrames];
-    
     position = MIN(_decoder.duration - 1, MAX(0, position));
     
     __weak HcdMovieViewController *weakSelf = self;
@@ -1786,8 +1786,7 @@ static NSMutableDictionary * gHistory;
     });
 }
 
-- (void) freeBufferedFrames
-{
+- (void)freeBufferedFrames {
     @synchronized(_videoFrames) {
         [_videoFrames removeAllObjects];
     }
@@ -1807,8 +1806,7 @@ static NSMutableDictionary * gHistory;
     _bufferedDuration = 0;
 }
 
-- (void) showInfoView: (BOOL) showInfo animated: (BOOL)animated
-{
+- (void)showInfoView: (BOOL)showInfo animated: (BOOL)animated {
     if (!_tableView)
         [self createTableView];
     
