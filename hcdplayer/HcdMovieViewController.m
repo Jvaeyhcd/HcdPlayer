@@ -16,6 +16,8 @@
 #import "HcdLogger.h"
 #import "AppDelegate.h"
 #import "HcdPlayerDraggingProgressView.h"
+#import "HcdBrightnessProgressView.h"
+#import "HcdSoundProgressView.h"
 
 #define kLeastMoveDistance 15.0
 
@@ -178,6 +180,8 @@ static NSMutableDictionary * gHistory;
 
 @property (nonatomic, assign) HCDPlayerControlType controlType;       //当前手势是在控制进度、声音还是亮度
 @property (nonatomic, strong) HcdPlayerDraggingProgressView *draggingProgressView;
+@property (nonatomic, strong) HcdBrightnessProgressView *brightnessProgressView;
+@property (nonatomic, strong) HcdSoundProgressView *soundProgressView;
 
 @property (readwrite, assign) UIInterfaceOrientation currentOrientation;
 @property (nonatomic, assign) BOOL           isFullScreen;
@@ -298,6 +302,8 @@ static NSMutableDictionary * gHistory;
     [self.view addSubview:self.topHUD];
     [self.view addSubview:self.bottomView];
     [self.view addSubview:self.replayButton];
+    [self.view addSubview:self.brightnessProgressView];
+    [self.view addSubview:self.soundProgressView];
     
     // top hud
     //    [_doneButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
@@ -656,6 +662,23 @@ static NSMutableDictionary * gHistory;
     return _draggingProgressView;
 }
 
+- (HcdBrightnessProgressView *)brightnessProgressView {
+    if (!_brightnessProgressView) {
+        _brightnessProgressView = [[HcdBrightnessProgressView alloc] initWithFrame:CGRectMake(kBasePadding, (kScreenHeight - 140) / 2, 36, 140)];
+        _brightnessProgressView.layer.cornerRadius = 4;
+        _brightnessProgressView.hidden = YES;
+    }
+    return _brightnessProgressView;
+}
+
+- (HcdSoundProgressView *)soundProgressView {
+    if (!_soundProgressView) {
+        _soundProgressView = [[HcdSoundProgressView alloc] initWithFrame:CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140)];
+        _soundProgressView.layer.cornerRadius = 4;
+    }
+    return _soundProgressView;
+}
+
 #pragma mark - gesture recognizer
 
 - (void)handleTap: (UITapGestureRecognizer *)sender {
@@ -706,9 +729,9 @@ static NSMutableDictionary * gHistory;
                 _controlJudge = YES;
             } else if (tan > sqrt(3)) {
                 if (_touchBeginPoint.x < self.view.frame.size.width / 2) {
-                    _controlType = HCDPlayerControlTypeLight;
-                } else {
                     _controlType = HCDPlayerControlTypeVoice;
+                } else {
+                    _controlType = HCDPlayerControlTypeLight;
                 }
                 _controlJudge = YES;
             } else {
@@ -719,6 +742,12 @@ static NSMutableDictionary * gHistory;
         if (_controlType == HCDPlayerControlTypeProgress) {
             float value = [self moveProgressControlWithTempPoint:touchPoint];
             [self timeValueChangingWithValue:value];
+        } else if (HCDPlayerControlTypeLight == _controlType) {
+            self.brightnessProgressView.hidden = NO;
+            CGFloat brightness = [UIScreen mainScreen].brightness;
+            brightness -= ((touchPoint.y - _touchBeginPoint.y) / 10000);
+            [UIScreen mainScreen].brightness = brightness;
+            self.brightnessProgressView.progress = brightness;
         }
     }
     if (recognizer.state == UIGestureRecognizerStateEnded) {
@@ -738,6 +767,8 @@ static NSMutableDictionary * gHistory;
                 self.draggingProgressView.hidden = YES;
                 float value = [self moveProgressControlWithTempPoint:touchPoint];
                 [self setMoviePosition:value];
+            } else if (_controlType == HCDPlayerControlTypeLight) {
+                self.brightnessProgressView.hidden = YES;
             }
         }
         //LoggerStream(2, @"pan %.2f %.2f %.2f sec", pt.x, vt.x, sc);
@@ -920,6 +951,8 @@ static NSMutableDictionary * gHistory;
         self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
         
         self.replayButton.frame = CGRectMake((kScreenWidth - 60) / 2, (kScreenHeight - 60) / 2, 60, 60);
+        self.brightnessProgressView.frame = CGRectMake(kBasePadding, (kScreenHeight - 140) / 2, 36, 140);
+        self.soundProgressView.frame = CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140);
         
         [self.exitFullButton removeFromSuperview];
         [self.bottomView addSubview:self.fullButton];
@@ -938,6 +971,8 @@ static NSMutableDictionary * gHistory;
             self.progressLabel.frame = CGRectMake(50 + _statusBarHeight, 0, 46, 50);
             self.leftLabel.frame = CGRectMake(kScreenWidth - 100 - _statusBarHeight + 4, 0, 50, 50);
             self.progressSlider.frame = CGRectMake(100 + _statusBarHeight, 0, kScreenWidth - 200 - 2 * _statusBarHeight, 50);
+            self.brightnessProgressView.frame = CGRectMake(3 * kBasePadding + _statusBarHeight, (kScreenHeight - 160) / 2, 40, 160);
+            self.soundProgressView.frame = CGRectMake(kScreenWidth - (3 * kBasePadding + _statusBarHeight) - 40, (kScreenHeight - 160) / 2, 40, 160);
         } else {
             self.bottomView.frame = CGRectMake(0, kScreenHeight - 50, kScreenWidth, 50);
             self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, _statusBarHeight + 50);
@@ -949,6 +984,8 @@ static NSMutableDictionary * gHistory;
             self.progressLabel.frame = CGRectMake(50, 0, 46, 50);
             self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 50, 50);
             self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
+            self.brightnessProgressView.frame = CGRectMake(2 * kBasePadding, (kScreenHeight - 160) / 2, 40, 160);
+            self.soundProgressView.frame = CGRectMake(kScreenWidth - (2 * kBasePadding) - 40, (kScreenHeight - 160) / 2, 40, 160);
         }
         
         self.replayButton.frame = CGRectMake((kScreenWidth - 60) / 2, (kScreenHeight - 60) / 2, 60, 60);

@@ -23,11 +23,12 @@
     if (self) {
         self.direction = HcdProgressDirectionLeftToRight;
         self.progressLayer = [CALayer layer];
-        self.backgroundColor = [UIColor grayColor];
+        self.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
         self.progressLayer.backgroundColor = [UIColor redColor].CGColor;
         self.progressLayer.frame = CGRectMake(0, 0, 0, frame.size.height);
         [self.layer addSublayer:self.progressLayer];
         self.currentViewWidth = frame.size.width;
+        self.autoresizesSubviews = YES;
     }
     return self;
 }
@@ -63,7 +64,7 @@
         case HcdProgressDirectionBottomToTop:
         {
             if (progress <= 0) {
-                self.progressLayer.frame = CGRectMake(0, 0, viewWidth, 0);
+                self.progressLayer.frame = CGRectMake(0, viewHeight, viewWidth, 0);
             } else if (progress <= 1) {
                 self.progressLayer.frame = CGRectMake(0, (1 - progress) * viewHeight, viewWidth, progress * viewHeight);
             } else {
