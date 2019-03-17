@@ -9,6 +9,7 @@
 #import "HcdMovieViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <QuartzCore/QuartzCore.h>
+#import <AVFoundation/AVFoundation.h>
 #import "NSString+Hcd.h"
 #import "HcdMovieDecoder.h"
 #import "HcdAudioManager.h"
@@ -187,6 +188,9 @@ static NSMutableDictionary * gHistory;
 @property (nonatomic, assign) BOOL           isFullScreen;
 @property (nonatomic, assign) BOOL           canFullScreen;
 
+@property (nonatomic, strong) MPVolumeView   *volumeView;             //音量控制控件
+@property (nonatomic, strong) UISlider       *volumeSlider;           //用这个来控制音量
+
 @end
 
 @implementation HcdMovieViewController
@@ -305,6 +309,8 @@ static NSMutableDictionary * gHistory;
     [self.view addSubview:self.brightnessProgressView];
     [self.view addSubview:self.soundProgressView];
     
+    [self.view addSubview:self.volumeView];
+    
     // top hud
     //    [_doneButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     
@@ -419,6 +425,15 @@ static NSMutableDictionary * gHistory;
                                                  name:UIApplicationWillResignActiveNotification
                                                object:[UIApplication sharedApplication]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleStatusBarOrientationChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+    
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(volumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
+}
+
+// 设备音量发生变化
+- (void)volumeChanged:(NSNotification *)notification {
+    self.soundProgressView.hidden = NO;
+    self.soundProgressView.progress = self.volumeSlider.value;
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -609,6 +624,23 @@ static NSMutableDictionary * gHistory;
     return _replayButton;
 }
 
+- (MPVolumeView *)volumeView {
+    if (!_volumeView) {
+        _volumeView = [[MPVolumeView alloc] init];
+        _volumeView.hidden = NO;
+        [_volumeView setShowsRouteButton:YES];
+        [_volumeView setFrame:CGRectMake(-100, -100, 40, 40)];
+        [_volumeView setShowsVolumeSlider:YES];
+        for (UIView * view in _volumeView.subviews) {
+            if ([NSStringFromClass(view.class) isEqualToString:@"MPVolumeSlider"]) {
+                self.volumeSlider = (UISlider *)view;
+                break;
+            }
+        }
+    }
+    return _volumeView;
+}
+
 - (UIView *)topHUD {
     if (!_topHUD) {
         _topHUD    = [[UIView alloc] initWithFrame:CGRectMake(0,0,0,0)];
@@ -675,6 +707,7 @@ static NSMutableDictionary * gHistory;
     if (!_soundProgressView) {
         _soundProgressView = [[HcdSoundProgressView alloc] initWithFrame:CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140)];
         _soundProgressView.layer.cornerRadius = 4;
+        _soundProgressView.hidden = YES;
     }
     return _soundProgressView;
 }
@@ -710,6 +743,8 @@ static NSMutableDictionary * gHistory;
         _hasMoved = NO;
         _controlJudge = NO;
         _touchBeginValue = _moviePosition;
+        _touchBeginVoiceValue = self.volumeSlider.value;
+        _touchBeginLightValue = [UIScreen mainScreen].brightness;
         _touchBeginPoint = touchPoint;
     }
     if (recognizer.state == UIGestureRecognizerStateChanged) {
@@ -748,6 +783,22 @@ static NSMutableDictionary * gHistory;
             brightness -= ((touchPoint.y - _touchBeginPoint.y) / 10000);
             [UIScreen mainScreen].brightness = brightness;
             self.brightnessProgressView.progress = brightness;
+        } else if (HCDPlayerControlTypeVoice == _controlType) {
+            self.volumeView.frame = CGRectMake(-1000, -100, 100, 100);
+            [self.view addSubview:self.volumeView];
+            // 根据触摸开始时的音量和触摸开始时的点去计算出现在滑动到的音量
+            float voiceValue = _touchBeginVoiceValue - ((touchPoint.y - _touchBeginPoint.y) / CGRectGetHeight(self.view.frame));
+            //判断控制一下, 不能超出 0~1
+            if (voiceValue < 0) {
+                self.volumeSlider.value = 0;
+            } else if(voiceValue > 1) {
+                self.volumeSlider.value = 1;
+            } else {
+                self.volumeSlider.value = voiceValue;
+            }
+            
+            self.soundProgressView.hidden = NO;
+            self.soundProgressView.progress = voiceValue;
         }
     }
     if (recognizer.state == UIGestureRecognizerStateEnded) {
@@ -769,6 +820,8 @@ static NSMutableDictionary * gHistory;
                 [self setMoviePosition:value];
             } else if (_controlType == HCDPlayerControlTypeLight) {
                 self.brightnessProgressView.hidden = YES;
+            } else if (_controlType == HCDPlayerControlTypeVoice) {
+                self.soundProgressView.hidden = YES;
             }
         }
         //LoggerStream(2, @"pan %.2f %.2f %.2f sec", pt.x, vt.x, sc);
