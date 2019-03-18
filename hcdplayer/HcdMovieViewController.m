@@ -157,6 +157,8 @@ static NSMutableDictionary * gHistory;
 @property (readwrite) BOOL playFinished;
 
 @property (readwrite, assign) BOOL                  hiddenHUD;
+@property (readwrite, assign) BOOL                  locked;
+@property (readwrite, assign) BOOL                  hiddenLock;
 @property (readwrite, strong) HcdArtworkFrame       *artworkFrame;
 @property (nonatomic, strong) UIView                *topHUD;
 @property (nonatomic, strong) UIToolbar             *topBar;
@@ -199,10 +201,6 @@ static NSMutableDictionary * gHistory;
     if (!gHistory) {
         gHistory = [NSMutableDictionary dictionary];
     }
-}
-
-- (BOOL)prefersStatusBarHidden {
-    return NO;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -310,6 +308,7 @@ static NSMutableDictionary * gHistory;
     [self.view addSubview:self.soundProgressView];
     
     [self.view addSubview:self.volumeView];
+    [self.view addSubview:self.unlockButton];
     
     // top hud
     //    [_doneButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
@@ -585,10 +584,10 @@ static NSMutableDictionary * gHistory;
 - (UIButton *)lockButton {
     if (!_lockButton) {
         _lockButton = [[UIButton alloc] init];
-        _lockButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
+        _lockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
         _lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [_lockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_lock"] forState:UIControlStateNormal];
-        [_lockButton addTarget:self action:@selector(exitFullDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+        [_lockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_lock"] forState:UIControlStateNormal];
+        [_lockButton addTarget:self action:@selector(lockDidTouch:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _lockButton;
 }
@@ -596,10 +595,10 @@ static NSMutableDictionary * gHistory;
 - (UIButton *)unlockButton {
     if (!_unlockButton) {
         _unlockButton = [[UIButton alloc] init];
-        _unlockButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
+        _unlockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
         _unlockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [_unlockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_unlock"] forState:UIControlStateNormal];
-        [_unlockButton addTarget:self action:@selector(exitFullDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+        [_unlockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_unlock"] forState:UIControlStateNormal];
+        [_unlockButton addTarget:self action:@selector(lockDidTouch:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _unlockButton;
 }
@@ -718,7 +717,11 @@ static NSMutableDictionary * gHistory;
     if (sender.state == UIGestureRecognizerStateEnded) {
         
         if (sender == _tapGestureRecognizer) {
-            
+            [self showLockButton:_hiddenLock];
+            if (self.locked) {
+                [self showHUD:NO];
+                return;
+            }
             [self showHUD: _hiddenHUD];
             
         } else if (sender == _doubleTapGestureRecognizer) {
@@ -954,6 +957,18 @@ static NSMutableDictionary * gHistory;
     [self replay];
 }
 
+- (void)lockDidTouch:(id)sender {
+    _locked = !_locked;
+    if (_locked) {
+        [self.unlockButton removeFromSuperview];
+        [self.view addSubview:self.lockButton];
+    } else {
+        [self.lockButton removeFromSuperview];
+        [self.view addSubview:self.unlockButton];
+    }
+    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).isAllowAutorotate = !_locked;
+}
+
 - (void)forwardDidTouch: (id)sender{
     [self setMoviePosition: _moviePosition + 10];
 }
@@ -1006,6 +1021,8 @@ static NSMutableDictionary * gHistory;
         self.replayButton.frame = CGRectMake((kScreenWidth - 60) / 2, (kScreenHeight - 60) / 2, 60, 60);
         self.brightnessProgressView.frame = CGRectMake(kBasePadding, (kScreenHeight - 140) / 2, 36, 140);
         self.soundProgressView.frame = CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140);
+        self.lockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
+        self.unlockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
         
         [self.exitFullButton removeFromSuperview];
         [self.bottomView addSubview:self.fullButton];
@@ -1026,6 +1043,9 @@ static NSMutableDictionary * gHistory;
             self.progressSlider.frame = CGRectMake(100 + _statusBarHeight, 0, kScreenWidth - 200 - 2 * _statusBarHeight, 50);
             self.brightnessProgressView.frame = CGRectMake(3 * kBasePadding + _statusBarHeight, (kScreenHeight - 160) / 2, 40, 160);
             self.soundProgressView.frame = CGRectMake(kScreenWidth - (3 * kBasePadding + _statusBarHeight) - 40, (kScreenHeight - 160) / 2, 40, 160);
+            
+            self.lockButton.frame = CGRectMake(kBasePadding + _statusBarHeight, (kScreenHeight - 40) / 2, 40, 40);
+            self.unlockButton.frame = CGRectMake(kBasePadding + _statusBarHeight, (kScreenHeight - 40) / 2, 40, 40);
         } else {
             self.bottomView.frame = CGRectMake(0, kScreenHeight - 50, kScreenWidth, 50);
             self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, _statusBarHeight + 50);
@@ -1039,6 +1059,9 @@ static NSMutableDictionary * gHistory;
             self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
             self.brightnessProgressView.frame = CGRectMake(2 * kBasePadding, (kScreenHeight - 160) / 2, 40, 160);
             self.soundProgressView.frame = CGRectMake(kScreenWidth - (2 * kBasePadding) - 40, (kScreenHeight - 160) / 2, 40, 160);
+            
+            self.lockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
+            self.unlockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
         }
         
         self.replayButton.frame = CGRectMake((kScreenWidth - 60) / 2, (kScreenHeight - 60) / 2, 60, 60);
@@ -1805,6 +1828,7 @@ static NSMutableDictionary * gHistory;
                         options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
                      animations:^{
                          
+                         [UIApplication sharedApplication].statusBarHidden = weakSelf.hiddenHUD;
                          CGFloat alpha = weakSelf.hiddenHUD ? 0 : 1;
                          weakSelf.topBar.alpha = alpha;
                          weakSelf.topHUD.alpha = alpha;
@@ -1812,6 +1836,21 @@ static NSMutableDictionary * gHistory;
                      }
                      completion:nil];
     
+}
+
+- (void)showLockButton: (BOOL)show {
+    _hiddenLock = !show;
+    __weak HcdMovieViewController *weakSelf = self;
+    [UIView animateWithDuration:0.2
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
+                     animations:^{
+                         
+                         CGFloat alpha = weakSelf.hiddenLock ? 0 : 1;
+                         weakSelf.lockButton.alpha = alpha;
+                         weakSelf.unlockButton.alpha = alpha;
+                     }
+                     completion:nil];
 }
 
 - (void)setMoviePositionFromDecoder {
