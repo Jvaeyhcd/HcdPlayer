@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 
 #import "MainViewController.h"
+#import "HcdDeviceManager.h"
 
 @interface AppDelegate ()
 
@@ -20,7 +21,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    self.isAllowAutorotate = NO;
     [[HcdLocalized sharedInstance] initLanguage];
     
     UIViewController *vc = [[MainViewController alloc] init];
@@ -60,11 +60,19 @@
 }
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-    if (self.isAllowAutorotate) {
-        return (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight);
+    BOOL isAllowAutorotate = [HcdDeviceManager sharedInstance].isAllowAutorotate;
+    BOOL isLocked = [HcdDeviceManager sharedInstance].isLocked;
+    UIInterfaceOrientationMask supportedInterfaceOrientationsForWindow = [HcdDeviceManager sharedInstance].supportedInterfaceOrientationsForWindow;
+    if (isLocked) {
+        return supportedInterfaceOrientationsForWindow;
     } else {
-        return UIInterfaceOrientationMaskPortrait;
+        if (isAllowAutorotate) {
+            return (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight);
+        } else {
+            return UIInterfaceOrientationMaskPortrait;
+        }
     }
+    
 }
 
 

@@ -19,6 +19,7 @@
 		B9A6F2F5221D982B0027D017 /* WiFiTransferTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2F4221D982B0027D017 /* WiFiTransferTableViewCell.m */; };
 		B9A6F2F9221E6D8F0027D017 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2F7221E6D8E0027D017 /* Reachability.m */; };
 		B9A6F2FB221E6D9F0027D017 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A6F2FA221E6D9F0027D017 /* SystemConfiguration.framework */; };
+		B9A92B6322411268002989B2 /* HcdDeviceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A92B6222411268002989B2 /* HcdDeviceManager.m */; };
 		B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD121ED785000F3C70E /* AppDelegate.m */; };
 		B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD421ED785000F3C70E /* MainViewController.m */; };
 		B9AA8FDA21ED785100F3C70E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9AA8FD921ED785100F3C70E /* Assets.xcassets */; };
@@ -101,6 +102,8 @@
 		B9A6F2F7221E6D8E0027D017 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		B9A6F2F8221E6D8F0027D017 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		B9A6F2FA221E6D9F0027D017 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		B9A92B6122411268002989B2 /* HcdDeviceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdDeviceManager.h; sourceTree = "<group>"; };
+		B9A92B6222411268002989B2 /* HcdDeviceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdDeviceManager.m; sourceTree = "<group>"; };
 		B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HcdPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AA8FD021ED785000F3C70E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9AA8FD121ED785000F3C70E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -634,6 +637,8 @@
 				B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */,
 				B9FCE2D9223BF10800E2B9E4 /* HcdProgressView.h */,
 				B9FCE2DA223BF10800E2B9E4 /* HcdProgressView.m */,
+				B9A92B6122411268002989B2 /* HcdDeviceManager.h */,
+				B9A92B6222411268002989B2 /* HcdDeviceManager.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -918,6 +923,7 @@
 				B9AA907421EDC04100F3C70E /* UIColor+Hcd.m in Sources */,
 				B9FCE2E1223BF6BA00E2B9E4 /* HcdSoundProgressView.m in Sources */,
 				B9AA90AD21F5760F00F3C70E /* GCDWebUploader.m in Sources */,
+				B9A92B6322411268002989B2 /* HcdDeviceManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

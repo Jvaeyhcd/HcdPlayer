@@ -19,6 +19,7 @@
 #import "HcdPlayerDraggingProgressView.h"
 #import "HcdBrightnessProgressView.h"
 #import "HcdSoundProgressView.h"
+#import "HcdDeviceManager.h"
 
 #define kLeastMoveDistance 15.0
 
@@ -99,7 +100,6 @@ static NSMutableDictionary * gHistory;
     NSTimeInterval      _tickCorrectionTime;
     NSTimeInterval      _tickCorrectionPosition;
     NSUInteger          _tickCounter;
-    BOOL                _fullscreen;
     BOOL                _fitMode;
     BOOL                _infoMode;
     BOOL                _restoreIdleTimer;
@@ -399,7 +399,7 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).isAllowAutorotate = YES;
+    [HcdDeviceManager sharedInstance].isAllowAutorotate = YES;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -436,7 +436,7 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
-    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).isAllowAutorotate = NO;
+    [HcdDeviceManager sharedInstance].isAllowAutorotate = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super viewWillDisappear:animated];
@@ -921,7 +921,7 @@ static NSMutableDictionary * gHistory;
 #pragma mark - actions
 
 - (void)doneDidTouch:(id)sender {
-    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).isAllowAutorotate = NO;
+    [HcdDeviceManager sharedInstance].isAllowAutorotate = NO;
     if (self.presentingViewController || !self.navigationController) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
@@ -959,14 +959,34 @@ static NSMutableDictionary * gHistory;
 
 - (void)lockDidTouch:(id)sender {
     _locked = !_locked;
+    [HcdDeviceManager sharedInstance].isLocked = _locked;
     if (_locked) {
         [self.unlockButton removeFromSuperview];
         [self.view addSubview:self.lockButton];
+        [self setLockedOrientation:_currentOrientation];
     } else {
         [self.lockButton removeFromSuperview];
         [self.view addSubview:self.unlockButton];
     }
-    ((AppDelegate *)[[UIApplication sharedApplication] delegate]).isAllowAutorotate = !_locked;
+}
+
+- (void)setLockedOrientation:(UIInterfaceOrientation)orientation {
+    UIInterfaceOrientationMask mask = UIInterfaceOrientationMaskPortrait;
+    switch (orientation) {
+        case UIInterfaceOrientationPortrait:
+            mask = UIInterfaceOrientationMaskPortrait;
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+            mask = UIInterfaceOrientationMaskLandscapeLeft;
+            break;
+        case UIInterfaceOrientationLandscapeRight:
+            mask = UIInterfaceOrientationMaskLandscapeRight;
+            break;
+        default:
+            mask = UIInterfaceOrientationMaskPortrait;
+            break;
+    }
+    [HcdDeviceManager sharedInstance].supportedInterfaceOrientationsForWindow = mask;
 }
 
 - (void)forwardDidTouch: (id)sender{
@@ -988,6 +1008,7 @@ static NSMutableDictionary * gHistory;
 //界面方向改变的处理
 - (void)handleStatusBarOrientationChange: (NSNotification *)notification{
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    _currentOrientation = interfaceOrientation;
     [self updatePlayerView:interfaceOrientation];
 }
 
@@ -1026,7 +1047,8 @@ static NSMutableDictionary * gHistory;
         
         [self.exitFullButton removeFromSuperview];
         [self.bottomView addSubview:self.fullButton];
-        _fullscreen = YES;
+        
+        _isFullScreen = NO;
 
     } else if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
         
@@ -1068,7 +1090,7 @@ static NSMutableDictionary * gHistory;
         
         [self.fullButton removeFromSuperview];
         [self.bottomView addSubview:self.exitFullButton];
-        _fullscreen = NO;
+        _isFullScreen = YES;
     }
 }
 
@@ -2026,6 +2048,9 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)fullScreen {
+    if (_locked) {
+        return;
+    }
     if (_isFullScreen) {
         _isFullScreen = NO;
         [self toOrientation:UIInterfaceOrientationPortrait];
