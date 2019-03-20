@@ -740,6 +740,11 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)handlePan: (UIPanGestureRecognizer *)recognizer {
+    
+    if (_locked) {
+        return;
+    }
+    
     CGPoint touchPoint = [recognizer locationInView:self.view];
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
@@ -749,6 +754,8 @@ static NSMutableDictionary * gHistory;
         _touchBeginVoiceValue = self.volumeSlider.value;
         _touchBeginLightValue = [UIScreen mainScreen].brightness;
         _touchBeginPoint = touchPoint;
+        [self showHUD:NO];
+        [self showLockButton:NO];
     }
     if (recognizer.state == UIGestureRecognizerStateChanged) {
         if (fabs(touchPoint.x - _touchBeginPoint.x) < kLeastMoveDistance && fabs(touchPoint.y - _touchBeginPoint.y) < kLeastMoveDistance) {

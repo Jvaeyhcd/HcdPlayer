@@ -57,13 +57,14 @@
     
     [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc4, nil]];
     
-    [self.tabBar dropShadowWithOffset:CGSizeMake(0, -3) radius:10 color:[UIColor colorWithRGBHex:0xE0E0E0] opacity:0.8];
+    self.tabBar.backgroundColor = [UIColor colorWithRGBHex:0xfafafa];
     
     [UITabBar appearance].shadowImage = [[UIImage alloc] init];
     [UITabBar appearance].backgroundImage = [[UIImage alloc] init];
     [UITabBar appearance].translucent = NO;
 //    [[UITabBar appearance] setBackgroundImage:[UIImage imageNamed:@"hcdplayer.bundle/tabbar_bg"]];
     [[UITabBar appearance] setTintColor:kTabbarSelectedColor];
+    [self.tabBar dropShadowWithOffset:CGSizeMake(0, -3) radius:10 color:[UIColor colorWithRGBHex:0xE0E0E0] opacity:0.8];
     
 //    UIView *tabbarBgView = [[UIView alloc] init];
 //    tabbarBgView.backgroundColor = kBarBgColor;
