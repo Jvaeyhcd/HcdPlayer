@@ -10,6 +10,7 @@
 #import "HcdValueTableViewCell.h"
 #import "UITableView+Hcd.h"
 #import "SortViewController.h"
+#import "PasscodeViewController.h"
 
 #import "LanguageViewController.h"
 
@@ -23,6 +24,7 @@ enum {
 enum {
     HcdSettingGeneralLanguage,
     HcdSettingGeneralSort,
+    HcdSettingGeneralPasscode,
     HcdSettingGeneralCount
 };
 
@@ -136,24 +138,35 @@ enum {
         if (indexPath.row == HcdSettingGeneralLanguage) {
             title = HcdLocalized(@"language", nil);
             content = [[HcdLocalized sharedInstance] currentLanguageStr];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         } else if (indexPath.row == HcdSettingGeneralSort) {
             title = HcdLocalized(@"sort", nil);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        } else if (indexPath.row == HcdSettingGeneralPasscode) {
+            title = HcdLocalized(@"passcode-lock", nil);
+            UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
+            cell.accessoryView = switchView;
+            switchView.tag = indexPath.row;
+            [switchView setOn:NO animated:NO];
+            [switchView addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventTouchUpInside];
         }
     } else if (indexPath.section == HcdSettingSectionGesture) {
         if (indexPath.row == HcdSettingGestureOne) {
             title = HcdLocalized(@"oneFingerGesture", nil);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         } else if (indexPath.row == HcdSettingGestureTwo) {
             title = HcdLocalized(@"twoFingerGesture", nil);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
     } else if (indexPath.section == HcdSettingSectionOther) {
         if (indexPath.row == HcdSettingOtherAbout) {
             title = HcdLocalized(@"about", nil);
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
     }
     
     cell.contentLbl.text = content;
     cell.titleLbl.text = title;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     [tableView addLineforPlainCell:cell forRowAtIndexPath:indexPath withLeftSpace:kBasePadding];
     return cell;
 }
@@ -176,6 +189,24 @@ enum {
                 
             }];
         }
+    }
+}
+
+#pragma mark - private
+
+
+- (void) switchChanged:(id)sender {
+    UISwitch *switchControl = sender;
+    switch (switchControl.tag) {
+        case HcdSettingGeneralPasscode: {
+            PasscodeViewController *vc = [[PasscodeViewController alloc] init];
+            [self presentViewController:[[BaseNavigationController alloc] initWithRootViewController:vc] animated:YES completion:^{
+                
+            }];
+            break;
+        }
+        default:
+            break;
     }
 }
 

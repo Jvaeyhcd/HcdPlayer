@@ -41,18 +41,12 @@
     networkVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_wifi_selected"];
     networkVc.tabBarItem.title = HcdLocalized(@"network", nil);
     
-    BrowserViewController *browserVc = [[BrowserViewController alloc] init];
-    browserVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_explore"];
-    browserVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_explore_selected"];
-    browserVc.tabBarItem.title = HcdLocalized(@"browser", nil);
-    
     SettingViewController *settingVc = [[SettingViewController alloc] init];
     settingVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_setting"];
     settingVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_setting_selected"];
     settingVc.tabBarItem.title = HcdLocalized(@"setting", nil);
     
     UINavigationController *nvc1 = [[BaseNavigationController alloc] initWithRootViewController:localVc];
-    UINavigationController *nvc3 = [[BaseNavigationController alloc] initWithRootViewController:browserVc];
     UINavigationController *nvc4 = [[BaseNavigationController alloc] initWithRootViewController:settingVc];
     
     [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc4, nil]];

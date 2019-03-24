@@ -10,4 +10,6 @@ target 'HcdPlayer' do
     pod 'GCDWebServer', '~> 3.0'
     pod 'FDFullscreenPopGesture', '~> 1.1'
     pod 'HcdActionSheet', :path => '../HcdActionSheet'
+    # swift
+    pod 'HcdSpecialField', :path => '../HcdSpecialField'
 end

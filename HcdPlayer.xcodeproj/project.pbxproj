@@ -20,6 +20,7 @@
 		B9A6F2F9221E6D8F0027D017 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2F7221E6D8E0027D017 /* Reachability.m */; };
 		B9A6F2FB221E6D9F0027D017 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A6F2FA221E6D9F0027D017 /* SystemConfiguration.framework */; };
 		B9A92B6322411268002989B2 /* HcdDeviceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A92B6222411268002989B2 /* HcdDeviceManager.m */; };
+		B9A92B662245C02C002989B2 /* PasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A92B652245C02C002989B2 /* PasscodeViewController.m */; };
 		B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD121ED785000F3C70E /* AppDelegate.m */; };
 		B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD421ED785000F3C70E /* MainViewController.m */; };
 		B9AA8FDA21ED785100F3C70E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9AA8FD921ED785100F3C70E /* Assets.xcassets */; };
@@ -104,6 +105,8 @@
 		B9A6F2FA221E6D9F0027D017 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B9A92B6122411268002989B2 /* HcdDeviceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdDeviceManager.h; sourceTree = "<group>"; };
 		B9A92B6222411268002989B2 /* HcdDeviceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdDeviceManager.m; sourceTree = "<group>"; };
+		B9A92B642245C02C002989B2 /* PasscodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PasscodeViewController.h; sourceTree = "<group>"; };
+		B9A92B652245C02C002989B2 /* PasscodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PasscodeViewController.m; sourceTree = "<group>"; };
 		B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HcdPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AA8FD021ED785000F3C70E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9AA8FD121ED785000F3C70E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -693,6 +696,8 @@
 				B9AA908721F2D21300F3C70E /* SettingViewController.m */,
 				B9A6F2EA22199EAF0027D017 /* LanguageViewController.h */,
 				B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */,
+				B9A92B642245C02C002989B2 /* PasscodeViewController.h */,
+				B9A92B652245C02C002989B2 /* PasscodeViewController.m */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -839,6 +844,7 @@
 				"${BUILT_PRODUCTS_DIR}/FDFullscreenPopGesture/FDFullscreenPopGesture.framework",
 				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 				"${BUILT_PRODUCTS_DIR}/HcdActionSheet/HcdActionSheet.framework",
+				"${BUILT_PRODUCTS_DIR}/HcdSpecialField/HcdSpecialField.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
 				"${BUILT_PRODUCTS_DIR}/NSLogger/NSLogger.framework",
 			);
@@ -847,6 +853,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FDFullscreenPopGesture.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HcdActionSheet.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HcdSpecialField.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NSLogger.framework",
 			);
@@ -893,6 +900,7 @@
 				B9AA908F21F303AD00F3C70E /* HcdLocalized.m in Sources */,
 				B9AA906721ED7CF800F3C70E /* HcdMovieDecoder.m in Sources */,
 				B9AA908821F2D21300F3C70E /* SettingViewController.m in Sources */,
+				B9A92B662245C02C002989B2 /* PasscodeViewController.m in Sources */,
 				B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */,
 				B9AA907F21F2D1DD00F3C70E /* LocalMainViewController.m in Sources */,
 				B96CF6FB222649EB00881CD4 /* HcdImagePickerViewController.m in Sources */,
