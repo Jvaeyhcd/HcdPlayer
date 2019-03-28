@@ -64,4 +64,7 @@
 "icloud"="iCloud";
 "replay"="Replay";
 "passcode-lock"="Passcode Lock";
-"enter-passcode"="Please enter your passcode";
+"enter-passcode"="Enter passcode";
+"enter-passcode-tip"="Please enter your passcode";
+"set-passcode-tip"="Please set your passcode";
+"repeat-passcode-tip"="Please repeat passcode";

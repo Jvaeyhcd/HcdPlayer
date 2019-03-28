@@ -11,6 +11,7 @@
 #import "UITableView+Hcd.h"
 #import "SortViewController.h"
 #import "PasscodeViewController.h"
+#import "HcdDeviceManager.h"
 
 #import "LanguageViewController.h"
 
@@ -147,7 +148,7 @@ enum {
             UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
             cell.accessoryView = switchView;
             switchView.tag = indexPath.row;
-            [switchView setOn:NO animated:NO];
+            [switchView setOn:[[HcdDeviceManager sharedInstance] needPasscode] animated:NO];
             [switchView addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventTouchUpInside];
         }
     } else if (indexPath.section == HcdSettingSectionGesture) {
@@ -194,12 +195,12 @@ enum {
 
 #pragma mark - private
 
-
 - (void) switchChanged:(id)sender {
     UISwitch *switchControl = sender;
     switch (switchControl.tag) {
         case HcdSettingGeneralPasscode: {
             PasscodeViewController *vc = [[PasscodeViewController alloc] init];
+            vc.type = PasscodeTypeSet;
             [self presentViewController:[[BaseNavigationController alloc] initWithRootViewController:vc] animated:YES completion:^{
                 
             }];

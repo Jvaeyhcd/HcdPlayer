@@ -64,4 +64,7 @@
 "icloud"="iCloud";
 "replay"="重播";
 "passcode-lock"="密碼鎖";
-"enter-passcode"="請輸入密碼";
+"enter-passcode"="輸入密碼";
+"enter-passcode-tip"="請輸入密碼";
+"set-passcode-tip"="請設置密碼";
+"repeat-passcode-tip"="請重複密碼";

@@ -8,9 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum : NSUInteger {
+    PasscodeTypeSet,
+    PasscodeTypeRepeat,
+    PasscodeTypeCancle,
+    PasscodeTypeUnLock,
+} PasscodeType;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PasscodeViewController : UIViewController
+
+@property (nonatomic, assign) PasscodeType type;
 
 @end
 

@@ -45,4 +45,30 @@
     _isAllowAutorotate = isAllowAutorotate;
 }
 
+- (NSString *)passcode {
+    NSString *passcode = [[NSUserDefaults standardUserDefaults] stringForKey:@"passcode"];
+    if (passcode) {
+        return passcode;
+    }
+    return @"";
+}
+
+@synthesize passcode = _passcode;
+- (void)setPasscode:(NSString *)passcode {
+    _passcode = passcode;
+    [[NSUserDefaults standardUserDefaults] setObject:_passcode forKey:@"passcode"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"needPasscode"];
+}
+
+- (BOOL)needPasscode {
+    return ![[self passcode] isEqualToString:@""] && [[NSUserDefaults standardUserDefaults] boolForKey:@"needPasscode"];
+}
+
+- (void)setNeedPasscode:(BOOL)needPasscode {
+    if (!needPasscode) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"passcode"];
+    }
+    [[NSUserDefaults standardUserDefaults] setBool:needPasscode forKey:@"needPasscode"];
+}
+
 @end

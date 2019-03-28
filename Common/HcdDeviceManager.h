@@ -15,8 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UIInterfaceOrientationMask supportedInterfaceOrientationsForWindow;
 @property (nonatomic, assign) BOOL isLocked;
 @property (nonatomic, assign) BOOL isAllowAutorotate;
+@property (nonatomic, copy) NSString *passcode;
 
 + (HcdDeviceManager *)sharedInstance;
+
+- (BOOL)needPasscode;
+- (void)setNeedPasscode:(BOOL)needPasscode;
 
 @end
 
