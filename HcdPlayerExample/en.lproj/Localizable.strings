@@ -68,3 +68,4 @@
 "enter-passcode-tip"="Please enter your passcode";
 "set-passcode-tip"="Please set your passcode";
 "repeat-passcode-tip"="Please repeat passcode";
+"n-times-failed-passcode"="%d Failed Passcode Attempts";

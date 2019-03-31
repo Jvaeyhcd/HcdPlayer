@@ -200,7 +200,12 @@ enum {
     switch (switchControl.tag) {
         case HcdSettingGeneralPasscode: {
             PasscodeViewController *vc = [[PasscodeViewController alloc] init];
-            vc.type = PasscodeTypeSet;
+            if ([[HcdDeviceManager sharedInstance] needPasscode]) {
+                vc.type = PasscodeTypeCancle;
+            } else {
+                vc.type = PasscodeTypeSet;
+            }
+            
             [self presentViewController:[[BaseNavigationController alloc] initWithRootViewController:vc] animated:YES completion:^{
                 
             }];

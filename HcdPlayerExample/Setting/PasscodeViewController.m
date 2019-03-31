@@ -9,12 +9,15 @@
 #import "PasscodeViewController.h"
 #import "HcdSpecialField-Swift.h"
 #import "HcdDeviceManager.h"
+#import "NSString+Hcd.h"
 
 @interface PasscodeViewController ()
 
 @property (nonatomic, strong) HcdSpecialField *specialField;
 @property (nonatomic, strong) UILabel *tipsLabel;
+@property (nonatomic, strong) UILabel *failedTipsLabel;
 @property (nonatomic, copy) NSString *passcode;
+@property (nonatomic, assign) NSInteger failedTimes;
 
 @end
 
@@ -25,6 +28,7 @@
     self = [super init];
     if (self) {
         _passcode = [HcdDeviceManager sharedInstance].passcode;
+        _failedTimes = 0;
     }
     return self;
 }
@@ -34,6 +38,7 @@
     self.title = HcdLocalized(@"enter-passcode", nil);
     [self.view addSubview:self.specialField];
     [self.view addSubview:self.tipsLabel];
+    [self.view addSubview:self.failedTipsLabel];
     
     [self.specialField addTarget:self action:@selector(specialFieldDidChangeValue) forControlEvents:UIControlEventValueChanged];
     [self.specialField becomeFirstResponder];
@@ -69,8 +74,22 @@
         _tipsLabel.textColor = [UIColor colorWithRGBHex:0x333333];
         _tipsLabel.textAlignment = NSTextAlignmentCenter;
         _tipsLabel.text = HcdLocalized(@"enter-passcode-tip", nil);
+        _tipsLabel.font = [UIFont systemFontOfSize:16];
     }
     return _tipsLabel;
+}
+
+- (UILabel *)failedTipsLabel {
+    if (!_failedTipsLabel) {
+        _failedTipsLabel = [[UILabel alloc] init];
+        _failedTipsLabel.textColor = [UIColor whiteColor];
+        _failedTipsLabel.textAlignment = NSTextAlignmentCenter;
+        _failedTipsLabel.backgroundColor = kMainColor;
+        _failedTipsLabel.font = [UIFont systemFontOfSize:14];
+        _failedTipsLabel.layer.cornerRadius = 16;
+        _failedTipsLabel.layer.masksToBounds = YES;
+    }
+    return _failedTipsLabel;
 }
 
 @synthesize type = _type;
@@ -95,11 +114,29 @@
                 }];
             } else {
                 self.specialField.passcode = @"";
+                _failedTimes++;
+                NSString *failedTips = [NSString stringWithFormat:HcdLocalized(@"n-times-failed-passcode", nil), _failedTimes];
+                CGFloat width = [failedTips widthWithConstainedWidth:kScreenWidth font:self.failedTipsLabel.font] + 18;
+                self.failedTipsLabel.text = failedTips;
+                self.failedTipsLabel.frame = CGRectMake((kScreenWidth - width) / 2, CGRectGetMaxY(self.specialField.frame) + kBasePadding, width, 32);
+                self.failedTipsLabel.hidden = NO;
             }
         } else if (_type == PasscodeTypeUnLock) {
             
         } else if (_type == PasscodeTypeCancle) {
-            
+            if ([_passcode isEqualToString:self.specialField.passcode]) {
+                
+                [[HcdDeviceManager sharedInstance] setNeedPasscode:NO];
+                [self dismissViewControllerAnimated:YES completion:nil];
+            } else {
+                self.specialField.passcode = @"";
+                _failedTimes++;
+                NSString *failedTips = [NSString stringWithFormat:HcdLocalized(@"n-times-failed-passcode", nil), _failedTimes];
+                CGFloat width = [failedTips widthWithConstainedWidth:kScreenWidth font:self.failedTipsLabel.font] + 18;
+                self.failedTipsLabel.text = failedTips;
+                self.failedTipsLabel.frame = CGRectMake((kScreenWidth - width) / 2, CGRectGetMaxY(self.specialField.frame) + kBasePadding, width, 32);
+                self.failedTipsLabel.hidden = NO;
+            }
         }
     }
 }

@@ -68,3 +68,4 @@
 "enter-passcode-tip"="请输入密码";
 "set-passcode-tip"="请设置密码";
 "repeat-passcode-tip"="请重复密码";
+"n-times-failed-passcode"="%d次密码输入错误";
