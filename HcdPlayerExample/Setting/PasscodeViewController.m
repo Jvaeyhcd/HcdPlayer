@@ -122,7 +122,20 @@
                 self.failedTipsLabel.hidden = NO;
             }
         } else if (_type == PasscodeTypeUnLock) {
-            
+            if ([_passcode isEqualToString:self.specialField.passcode]) {
+                self.specialField.passcode = @"";
+                _failedTimes = 0;
+                self.failedTipsLabel.hidden = YES;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"dismissPasscode" object:nil];
+            } else {
+                self.specialField.passcode = @"";
+                _failedTimes++;
+                NSString *failedTips = [NSString stringWithFormat:HcdLocalized(@"n-times-failed-passcode", nil), _failedTimes];
+                CGFloat width = [failedTips widthWithConstainedWidth:kScreenWidth font:self.failedTipsLabel.font] + 18;
+                self.failedTipsLabel.text = failedTips;
+                self.failedTipsLabel.frame = CGRectMake((kScreenWidth - width) / 2, CGRectGetMaxY(self.specialField.frame) + kBasePadding, width, 32);
+                self.failedTipsLabel.hidden = NO;
+            }
         } else if (_type == PasscodeTypeCancle) {
             if ([_passcode isEqualToString:self.specialField.passcode]) {
                 

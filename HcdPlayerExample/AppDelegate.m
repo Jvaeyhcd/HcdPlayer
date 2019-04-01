@@ -10,8 +10,12 @@
 
 #import "MainViewController.h"
 #import "HcdDeviceManager.h"
+#import "PasscodeViewController.h"
 
 @interface AppDelegate ()
+
+@property (nonatomic, strong) MainViewController *mianVc;
+@property (nonatomic, strong) UINavigationController *passcodeVc;
 
 @end
 
@@ -23,13 +27,24 @@
     
     [[HcdLocalized sharedInstance] initLanguage];
     
-    UIViewController *vc = [[MainViewController alloc] init];
+    _mianVc = [[MainViewController alloc] init];
+    
+    PasscodeViewController *vc = [[PasscodeViewController alloc] init];
+    vc.type = PasscodeTypeUnLock;
+    _passcodeVc = [[UINavigationController alloc] initWithRootViewController:vc];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = vc;
+    self.window.rootViewController = _mianVc;
     [self.window makeKeyAndVisible];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissPasscode) name:@"dismissPasscode" object:nil];
+    
     return YES;
+}
+
+- (void)dismissPasscode {
+    self.window.rootViewController = _mianVc;
+    [self.window makeKeyAndVisible];
 }
 
 
@@ -52,6 +67,12 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    if ([[HcdDeviceManager sharedInstance] needPasscode]) {
+        self.window.rootViewController = _passcodeVc;
+    } else {
+        self.window.rootViewController = _mianVc;
+    }
+    [self.window makeKeyAndVisible];
 }
 
 
