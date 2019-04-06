@@ -40,7 +40,7 @@
 - (void)initSubviews {
     [self.view setBackgroundColor:kMainBgColor];
     self.title =  HcdLocalized(@"wifi_transfer", nil);
-    [self showBarButtonItemWithStr:HcdLocalized(@"close", nil) position:RIGHT];
+    [self showBarButtonItemWithImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_close"] position:LEFT];
     
     // 获取Documents目录路径
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
@@ -88,7 +88,7 @@
     [self.view addSubview:_tableView];
 }
 
-- (void)rightNavBarButtonClicked {
+- (void)leftNavBarButtonClicked {
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];

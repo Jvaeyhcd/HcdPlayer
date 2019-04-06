@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B902F411222EB79E0049A626 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B902F410222EB79E0049A626 /* BaseViewController.m */; };
+		B9085F2A2258331000AF8DC5 /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9085F292258331000AF8DC5 /* DocumentViewController.m */; };
 		B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F3222627AA00881CD4 /* HcdDocument.m */; };
 		B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F6222627F600881CD4 /* iCloudManager.m */; };
 		B96CF6FB222649EB00881CD4 /* HcdImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */; };
@@ -79,6 +80,8 @@
 		B7312D76511DB2F0072839EE /* Pods-HcdPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		B902F40F222EB79E0049A626 /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		B902F410222EB79E0049A626 /* BaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
+		B9085F282258331000AF8DC5 /* DocumentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocumentViewController.h; sourceTree = "<group>"; };
+		B9085F292258331000AF8DC5 /* DocumentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DocumentViewController.m; sourceTree = "<group>"; };
 		B96CF6F2222627AA00881CD4 /* HcdDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdDocument.h; sourceTree = "<group>"; };
 		B96CF6F3222627AA00881CD4 /* HcdDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdDocument.m; sourceTree = "<group>"; };
 		B96CF6F5222627F600881CD4 /* iCloudManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudManager.h; sourceTree = "<group>"; };
@@ -667,6 +670,8 @@
 				B9BB461621F8B96F00682DD5 /* MoveViewController.m */,
 				B9BB461E21FBF37100682DD5 /* SortViewController.h */,
 				B9BB461F21FBF37100682DD5 /* SortViewController.m */,
+				B9085F282258331000AF8DC5 /* DocumentViewController.h */,
+				B9085F292258331000AF8DC5 /* DocumentViewController.m */,
 			);
 			path = Local;
 			sourceTree = "<group>";
@@ -896,6 +901,7 @@
 				B9AA90A721F56B4200F3C70E /* WifiTransferViewController.m in Sources */,
 				B9AA90BF21F73A8E00F3C70E /* UITableView+Hcd.m in Sources */,
 				B9AA90A121F5612200F3C70E /* UIViewController+Hcd.m in Sources */,
+				B9085F2A2258331000AF8DC5 /* DocumentViewController.m in Sources */,
 				B9AA906321ED7C0A00F3C70E /* HcdAudioManager.m in Sources */,
 				B9AA908F21F303AD00F3C70E /* HcdLocalized.m in Sources */,
 				B9AA906721ED7CF800F3C70E /* HcdMovieDecoder.m in Sources */,

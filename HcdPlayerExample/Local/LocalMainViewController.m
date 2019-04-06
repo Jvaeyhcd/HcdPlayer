@@ -22,6 +22,7 @@
 #import "HcdImagePickerViewController.h"
 #import "HcdMovieViewController.h"
 #import "HcdFileSortManager.h"
+#import "DocumentViewController.h"
 
 #define kEditBottomViewHeight 50
 
@@ -648,6 +649,18 @@ typedef enum : NSUInteger {
                 }
                 HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
                 [self presentViewController:movieVc animated:YES completion:nil];
+                break;
+            }
+            case FileType_doc:
+            case FileType_pdf:
+            case FileType_txt:
+            case FileType_xls:
+            {
+                DocumentViewController *vc = [[DocumentViewController alloc] init];
+                vc.documentPath = path;
+                UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+                [self presentViewController:nav animated:YES completion:nil];
+                break;
             }
                 
             default:

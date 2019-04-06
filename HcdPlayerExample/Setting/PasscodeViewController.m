@@ -51,6 +51,10 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [self.specialField becomeFirstResponder];
+}
+
 - (HcdSpecialField *)specialField {
     if (!_specialField) {
         _specialField = [[HcdSpecialField alloc] init];
