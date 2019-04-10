@@ -51,6 +51,11 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    _passcode = [HcdDeviceManager sharedInstance].passcode;
+    _failedTimes = 0;
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [self.specialField becomeFirstResponder];
 }
