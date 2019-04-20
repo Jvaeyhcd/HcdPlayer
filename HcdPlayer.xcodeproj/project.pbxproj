@@ -66,11 +66,13 @@
 		B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461921F9D1BD00682DD5 /* HcdAlertInputView.m */; };
 		B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */; };
 		B9BB462021FBF37100682DD5 /* SortViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461F21FBF37100682DD5 /* SortViewController.m */; };
+		B9BC111B226B64B200145E2B /* VersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC111A226B64B200145E2B /* VersionView.m */; };
 		B9DAF6E2223E54CD00D7A512 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */; };
 		B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */; };
 		B9FCE2DB223BF10800E2B9E4 /* HcdProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2DA223BF10800E2B9E4 /* HcdProgressView.m */; };
 		B9FCE2DE223BF6A900E2B9E4 /* HcdBrightnessProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2DD223BF6A900E2B9E4 /* HcdBrightnessProgressView.m */; };
 		B9FCE2E1223BF6BA00E2B9E4 /* HcdSoundProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2E0223BF6BA00E2B9E4 /* HcdSoundProgressView.m */; };
+		B9FD9F102267557900EC8B37 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FD9F0F2267557900EC8B37 /* AboutViewController.m */; };
 		FFBCB2C6A040A2AA5AA1069B /* Pods_HcdPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -279,6 +281,8 @@
 		B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIPlaceHolderTextView.m; sourceTree = "<group>"; };
 		B9BB461E21FBF37100682DD5 /* SortViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SortViewController.h; sourceTree = "<group>"; };
 		B9BB461F21FBF37100682DD5 /* SortViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SortViewController.m; sourceTree = "<group>"; };
+		B9BC1119226B64B200145E2B /* VersionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VersionView.h; sourceTree = "<group>"; };
+		B9BC111A226B64B200145E2B /* VersionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VersionView.m; sourceTree = "<group>"; };
 		B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		B9FCE2D6223520B900E2B9E4 /* HcdPlayerDraggingProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdPlayerDraggingProgressView.h; sourceTree = "<group>"; };
 		B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdPlayerDraggingProgressView.m; sourceTree = "<group>"; };
@@ -288,6 +292,8 @@
 		B9FCE2DD223BF6A900E2B9E4 /* HcdBrightnessProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdBrightnessProgressView.m; sourceTree = "<group>"; };
 		B9FCE2DF223BF6BA00E2B9E4 /* HcdSoundProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdSoundProgressView.h; sourceTree = "<group>"; };
 		B9FCE2E0223BF6BA00E2B9E4 /* HcdSoundProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdSoundProgressView.m; sourceTree = "<group>"; };
+		B9FD9F0E2267557900EC8B37 /* AboutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		B9FD9F0F2267557900EC8B37 /* AboutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -703,6 +709,10 @@
 				B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */,
 				B9A92B642245C02C002989B2 /* PasscodeViewController.h */,
 				B9A92B652245C02C002989B2 /* PasscodeViewController.m */,
+				B9FD9F0E2267557900EC8B37 /* AboutViewController.h */,
+				B9FD9F0F2267557900EC8B37 /* AboutViewController.m */,
+				B9BC1119226B64B200145E2B /* VersionView.h */,
+				B9BC111A226B64B200145E2B /* VersionView.m */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -915,7 +925,9 @@
 				B9AA90C221F7F7A400F3C70E /* FolderViewController.m in Sources */,
 				B9AA90B021F5AA6400F3C70E /* FinderViewController.m in Sources */,
 				B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */,
+				B9FD9F102267557900EC8B37 /* AboutViewController.m in Sources */,
 				B9AA908521F2D20400F3C70E /* BrowserViewController.m in Sources */,
+				B9BC111B226B64B200145E2B /* VersionView.m in Sources */,
 				B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */,
 				B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */,
 				B902F411222EB79E0049A626 /* BaseViewController.m in Sources */,

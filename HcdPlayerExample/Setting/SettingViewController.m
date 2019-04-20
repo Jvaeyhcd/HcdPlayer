@@ -11,6 +11,7 @@
 #import "UITableView+Hcd.h"
 #import "SortViewController.h"
 #import "PasscodeViewController.h"
+#import "AboutViewController.h"
 #import "HcdDeviceManager.h"
 
 #import "LanguageViewController.h"
@@ -189,6 +190,11 @@ enum {
             [self presentViewController:nvc animated:YES completion:^{
                 
             }];
+        }
+    } else if (indexPath.section == HcdSettingSectionOther) {
+        if (indexPath.row == HcdSettingOtherAbout) {
+            AboutViewController  *vc = [[AboutViewController alloc] init];
+            [self pushViewController:vc animated:YES];
         }
     }
 }
