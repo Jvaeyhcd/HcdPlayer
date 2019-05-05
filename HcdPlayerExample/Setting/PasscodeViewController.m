@@ -8,7 +8,7 @@
 
 #import "PasscodeViewController.h"
 #import "HcdSpecialField-Swift.h"
-#import "HcdDeviceManager.h"
+#import "HcdAppManager.h"
 #import "NSString+Hcd.h"
 
 @interface PasscodeViewController ()
@@ -27,7 +27,7 @@
 {
     self = [super init];
     if (self) {
-        _passcode = [HcdDeviceManager sharedInstance].passcode;
+        _passcode = [HcdAppManager sharedInstance].passcode;
         _failedTimes = 0;
     }
     return self;
@@ -52,7 +52,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    _passcode = [HcdDeviceManager sharedInstance].passcode;
+    _passcode = [HcdAppManager sharedInstance].passcode;
     _failedTimes = 0;
 }
 
@@ -117,7 +117,7 @@
         } else if (_type == PasscodeTypeRepeat) {
             if (_passcode == self.specialField.passcode) {
                 [self.specialField resignFirstResponder];
-                [[HcdDeviceManager sharedInstance] setPasscode:_passcode];
+                [[HcdAppManager sharedInstance] setPasscode:_passcode];
                 [self dismissViewControllerAnimated:YES completion:^{
                     
                 }];
@@ -148,7 +148,7 @@
         } else if (_type == PasscodeTypeCancle) {
             if ([_passcode isEqualToString:self.specialField.passcode]) {
                 
-                [[HcdDeviceManager sharedInstance] setNeedPasscode:NO];
+                [[HcdAppManager sharedInstance] setNeedPasscode:NO];
                 [self dismissViewControllerAnimated:YES completion:nil];
             } else {
                 self.specialField.passcode = @"";

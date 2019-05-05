@@ -9,12 +9,11 @@
 #import "AppDelegate.h"
 
 #import "MainViewController.h"
-#import "HcdDeviceManager.h"
+#import "HcdAppManager.h"
 #import "PasscodeViewController.h"
 
 @interface AppDelegate ()
 
-@property (nonatomic, strong) MainViewController *mianVc;
 @property (nonatomic, strong) UINavigationController *passcodeVc;
 
 @end
@@ -27,14 +26,12 @@
     
     [[HcdLocalized sharedInstance] initLanguage];
     
-    _mianVc = [[MainViewController alloc] init];
-    
     PasscodeViewController *vc = [[PasscodeViewController alloc] init];
     vc.type = PasscodeTypeUnLock;
     _passcodeVc = [[UINavigationController alloc] initWithRootViewController:vc];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = _mianVc;
+    self.window.rootViewController = [HcdAppManager sharedInstance].mainVc;
     [self.window makeKeyAndVisible];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissPasscode) name:@"dismissPasscode" object:nil];
@@ -43,7 +40,7 @@
 }
 
 - (void)dismissPasscode {
-    self.window.rootViewController = _mianVc;
+    self.window.rootViewController = [HcdAppManager sharedInstance].mainVc;
     [self.window makeKeyAndVisible];
 }
 
@@ -67,10 +64,10 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    if ([[HcdDeviceManager sharedInstance] needPasscode]) {
+    if ([[HcdAppManager sharedInstance] needPasscode]) {
         self.window.rootViewController = _passcodeVc;
     } else {
-        self.window.rootViewController = _mianVc;
+        self.window.rootViewController = [HcdAppManager sharedInstance].mainVc;
     }
     [self.window makeKeyAndVisible];
 }
@@ -81,9 +78,9 @@
 }
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-    BOOL isAllowAutorotate = [HcdDeviceManager sharedInstance].isAllowAutorotate;
-    BOOL isLocked = [HcdDeviceManager sharedInstance].isLocked;
-    UIInterfaceOrientationMask supportedInterfaceOrientationsForWindow = [HcdDeviceManager sharedInstance].supportedInterfaceOrientationsForWindow;
+    BOOL isAllowAutorotate = [HcdAppManager sharedInstance].isAllowAutorotate;
+    BOOL isLocked = [HcdAppManager sharedInstance].isLocked;
+    UIInterfaceOrientationMask supportedInterfaceOrientationsForWindow = [HcdAppManager sharedInstance].supportedInterfaceOrientationsForWindow;
     if (isLocked) {
         return supportedInterfaceOrientationsForWindow;
     } else {

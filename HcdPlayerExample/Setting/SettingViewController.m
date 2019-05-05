@@ -12,7 +12,7 @@
 #import "SortViewController.h"
 #import "PasscodeViewController.h"
 #import "AboutViewController.h"
-#import "HcdDeviceManager.h"
+#import "HcdAppManager.h"
 
 #import "LanguageViewController.h"
 
@@ -55,6 +55,10 @@ enum {
     self.title = @"Setting";
     [self initDatas];
     [self initSubviews];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 - (void)initDatas {
@@ -149,7 +153,7 @@ enum {
             UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
             cell.accessoryView = switchView;
             switchView.tag = indexPath.row;
-            [switchView setOn:[[HcdDeviceManager sharedInstance] needPasscode] animated:NO];
+            [switchView setOn:[[HcdAppManager sharedInstance] needPasscode] animated:NO];
             [switchView addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventTouchUpInside];
         }
     } else if (indexPath.section == HcdSettingSectionGesture) {
@@ -194,6 +198,7 @@ enum {
     } else if (indexPath.section == HcdSettingSectionOther) {
         if (indexPath.row == HcdSettingOtherAbout) {
             AboutViewController  *vc = [[AboutViewController alloc] init];
+            vc.hidesBottomBarWhenPushed = YES;
             [self pushViewController:vc animated:YES];
         }
     }
@@ -206,7 +211,7 @@ enum {
     switch (switchControl.tag) {
         case HcdSettingGeneralPasscode: {
             PasscodeViewController *vc = [[PasscodeViewController alloc] init];
-            if ([[HcdDeviceManager sharedInstance] needPasscode]) {
+            if ([[HcdAppManager sharedInstance] needPasscode]) {
                 vc.type = PasscodeTypeCancle;
             } else {
                 vc.type = PasscodeTypeSet;

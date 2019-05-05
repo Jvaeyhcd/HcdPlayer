@@ -6,15 +6,15 @@
 //  Copyright © 2019 Salvador. All rights reserved.
 //
 
-#import "HcdDeviceManager.h"
+#import "HcdAppManager.h"
 
-@implementation HcdDeviceManager
+@implementation HcdAppManager
 
-+ (HcdDeviceManager *)sharedInstance {
-    static HcdDeviceManager *manager = nil;
++ (HcdAppManager *)sharedInstance {
+    static HcdAppManager *manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        manager = [[HcdDeviceManager alloc] init];
+        manager = [[HcdAppManager alloc] init];
     });
     return manager;
 }
@@ -26,6 +26,7 @@
         _supportedInterfaceOrientationsForWindow = UIInterfaceOrientationMaskPortrait;
         _isLocked = NO;
         _isAllowAutorotate = NO;
+        _mainVc = [[MainViewController alloc] init];
     }
     return self;
 }

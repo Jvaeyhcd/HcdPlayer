@@ -42,7 +42,7 @@
 "dragUpDownRightSide"="屏幕右邊上下滑動";
 "other"="其他";
 "about"="關於";
-"version"="版本";
+"version"="版本號";
 "contactUs"="聯繫我們";
 "legalNotices"="法律聲明";
 "default"="默認";
@@ -69,3 +69,7 @@
 "set-passcode-tip"="請設置密碼";
 "repeat-passcode-tip"="請重複密碼";
 "n-times-failed-passcode"="%d次密碼輸入錯誤";
+"playlist"="播放列表";
+"copyright"="版權信息";
+"contact_us"="聯繫我們";
+"praise"="給個好評";

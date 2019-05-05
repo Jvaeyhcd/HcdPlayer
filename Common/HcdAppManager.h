@@ -7,17 +7,23 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MainViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HcdDeviceManager : NSObject
+@interface HcdAppManager : NSObject
 
 @property (nonatomic, assign) UIInterfaceOrientationMask supportedInterfaceOrientationsForWindow;
 @property (nonatomic, assign) BOOL isLocked;
 @property (nonatomic, assign) BOOL isAllowAutorotate;
 @property (nonatomic, copy) NSString *passcode;
 
-+ (HcdDeviceManager *)sharedInstance;
+/**
+ 主界面
+ */
+@property (nonatomic, strong) MainViewController *mainVc;
+
++ (HcdAppManager *)sharedInstance;
 
 - (BOOL)needPasscode;
 - (void)setNeedPasscode:(BOOL)needPasscode;

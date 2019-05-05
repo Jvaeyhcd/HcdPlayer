@@ -19,7 +19,7 @@
 #import "HcdPlayerDraggingProgressView.h"
 #import "HcdBrightnessProgressView.h"
 #import "HcdSoundProgressView.h"
-#import "HcdDeviceManager.h"
+#import "HcdAppManager.h"
 
 #define kLeastMoveDistance 15.0
 
@@ -399,7 +399,7 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [HcdDeviceManager sharedInstance].isAllowAutorotate = YES;
+    [HcdAppManager sharedInstance].isAllowAutorotate = YES;
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -436,7 +436,7 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
-    [HcdDeviceManager sharedInstance].isAllowAutorotate = NO;
+    [HcdAppManager sharedInstance].isAllowAutorotate = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super viewWillDisappear:animated];
@@ -928,7 +928,7 @@ static NSMutableDictionary * gHistory;
 #pragma mark - actions
 
 - (void)doneDidTouch:(id)sender {
-    [HcdDeviceManager sharedInstance].isAllowAutorotate = NO;
+    [HcdAppManager sharedInstance].isAllowAutorotate = NO;
     if (self.presentingViewController || !self.navigationController) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
@@ -966,7 +966,7 @@ static NSMutableDictionary * gHistory;
 
 - (void)lockDidTouch:(id)sender {
     _locked = !_locked;
-    [HcdDeviceManager sharedInstance].isLocked = _locked;
+    [HcdAppManager sharedInstance].isLocked = _locked;
     if (_locked) {
         [self.unlockButton removeFromSuperview];
         [self.view addSubview:self.lockButton];
@@ -993,7 +993,7 @@ static NSMutableDictionary * gHistory;
             mask = UIInterfaceOrientationMaskPortrait;
             break;
     }
-    [HcdDeviceManager sharedInstance].supportedInterfaceOrientationsForWindow = mask;
+    [HcdAppManager sharedInstance].supportedInterfaceOrientationsForWindow = mask;
 }
 
 - (void)forwardDidTouch: (id)sender{

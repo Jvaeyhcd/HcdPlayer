@@ -11,7 +11,7 @@
 #import "UIView+Hcd.h"
 
 #import "SettingViewController.h"
-#import "NetworkMainViewController.h"
+#import "PlaylistViewController.h"
 #import "LocalMainViewController.h"
 #import "BrowserViewController.h"
 
@@ -32,24 +32,25 @@
 
 - (void)createTabbar {
     LocalMainViewController *localVc = [[LocalMainViewController alloc] init];
-    localVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_file"];
-    localVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_file_selected"];
+    localVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_folder"];
+    localVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_folder"];
     localVc.tabBarItem.title = HcdLocalized(@"local", nil);
     
-    NetworkMainViewController *networkVc = [[NetworkMainViewController alloc] init];
-    networkVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_wifi"];
-    networkVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_wifi_selected"];
-    networkVc.tabBarItem.title = HcdLocalized(@"network", nil);
+    PlaylistViewController *playListVc = [[PlaylistViewController alloc] init];
+    playListVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_playlist"];
+    playListVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_playlist"];
+    playListVc.tabBarItem.title = HcdLocalized(@"playlist", nil);
     
     SettingViewController *settingVc = [[SettingViewController alloc] init];
-    settingVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_setting"];
-    settingVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_setting_selected"];
+    settingVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_settings"];
+    settingVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_settings"];
     settingVc.tabBarItem.title = HcdLocalized(@"setting", nil);
     
     UINavigationController *nvc1 = [[BaseNavigationController alloc] initWithRootViewController:localVc];
+    UINavigationController *nvc2 = [[BaseNavigationController alloc] initWithRootViewController:playListVc];
     UINavigationController *nvc4 = [[BaseNavigationController alloc] initWithRootViewController:settingVc];
     
-    [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc4, nil]];
+    [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc2, nvc4, nil]];
     
     self.tabBar.backgroundColor = [UIColor colorWithRGBHex:0xfafafa];
     

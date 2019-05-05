@@ -23,6 +23,7 @@
 #define kMainColor [UIColor colorWithRGBHex:0xFC622F]
 #define kMainBgColor [UIColor colorWithRGBHex:0xFFFFFF]
 #define kNavBgColor [UIColor colorWithRGBHex:0xFC622F]
+#define kNavTitleColor [UIColor colorWithRGBHex:0xFFFFFF]
 #define kBarBgColor [UIColor colorWithRGBHex:0xEEEEEE]
 #define kSplitLineBgColor [UIColor colorWithRGBHex:0xEEEEEE]
 #define kTabbarSelectedColor [UIColor colorWithRGBHex:0xFF7900]
@@ -50,5 +51,9 @@
 #define kTabbarSafeBottomMargin (iPhoneX ? 34.f : 0.f)
 // 适配iPhone X Tabbar高度
 #define kTabbarHeight (iPhoneX ? (49.f+34.f) : 49.f)
+
+#define APP_VERSION [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
+#define APP_BUILD [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]
+
 
 #endif /* HcdPlayer_Prefix_pch */

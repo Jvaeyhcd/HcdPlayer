@@ -11,6 +11,7 @@
 #import "UITableView+Hcd.h"
 
 #import "MainViewController.h"
+#import "HcdAppManager.h"
 
 @interface LanguageViewController () {
     UITableView             *_tableView;
@@ -95,10 +96,20 @@
         [[HcdLocalized sharedInstance] setLanguage:@"zh-Hans"];
     }
     
-    MainViewController *vc = [[MainViewController alloc] init];
-    vc.selectedIndex = 1;
+    MainViewController *mainVc = [[MainViewController alloc] init];
+    mainVc.selectedIndex = 2;
+    [HcdAppManager sharedInstance].mainVc = mainVc;
     
-    [UIApplication sharedApplication].keyWindow.rootViewController = vc;
+    LanguageViewController *vc = [[LanguageViewController alloc] init];
+    UINavigationController *nvc = mainVc.selectedViewController;
+    nvc.tabBarController.tabBar.hidden = YES;
+    NSMutableArray *vcs = nvc.viewControllers.mutableCopy;
+    [vcs addObject:vc];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].keyWindow.rootViewController = mainVc;
+        nvc.viewControllers = vcs;
+    });
 }
 
 #pragma mark - private
