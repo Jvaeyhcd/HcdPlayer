@@ -52,6 +52,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [HcdAppManager sharedInstance].isAllowAutorotate = NO;
+    [HcdAppManager sharedInstance].passcodeViewShow = YES;
     _passcode = [HcdAppManager sharedInstance].passcode;
     _failedTimes = 0;
 }
@@ -135,7 +137,11 @@
                 self.specialField.passcode = @"";
                 _failedTimes = 0;
                 self.failedTipsLabel.hidden = YES;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"dismissPasscode" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:DISSMISS_PASSCODE_NOTIFICATION object:nil];
+                [HcdAppManager sharedInstance].passcodeViewShow = NO;
+                [self dismissViewControllerAnimated:YES completion:^{
+                    
+                }];
             } else {
                 self.specialField.passcode = @"";
                 _failedTimes++;

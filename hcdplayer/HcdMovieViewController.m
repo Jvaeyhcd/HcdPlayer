@@ -423,7 +423,9 @@ static NSMutableDictionary * gHistory;
                                              selector:@selector(applicationWillResignActive:)
                                                  name:UIApplicationWillResignActiveNotification
                                                object:[UIApplication sharedApplication]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleStatusBarOrientationChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleStatusBarOrientationChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePasscodeDismissed:) name:DISSMISS_PASSCODE_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDeviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(volumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
@@ -437,6 +439,7 @@ static NSMutableDictionary * gHistory;
 
 - (void) viewWillDisappear:(BOOL)animated {
     [HcdAppManager sharedInstance].isAllowAutorotate = NO;
+    [HcdAppManager sharedInstance].isLocked = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super viewWillDisappear:animated];
@@ -585,8 +588,10 @@ static NSMutableDictionary * gHistory;
     if (!_lockButton) {
         _lockButton = [[UIButton alloc] init];
         _lockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
+        _lockButton.layer.cornerRadius = 20;
+        _lockButton.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
         _lockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [_lockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_lock"] forState:UIControlStateNormal];
+        [_lockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_lock"] forState:UIControlStateNormal];
         [_lockButton addTarget:self action:@selector(lockDidTouch:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _lockButton;
@@ -596,8 +601,10 @@ static NSMutableDictionary * gHistory;
     if (!_unlockButton) {
         _unlockButton = [[UIButton alloc] init];
         _unlockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
+        _unlockButton.layer.cornerRadius = 20;
+        _unlockButton.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
         _unlockButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [_unlockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_unlock"] forState:UIControlStateNormal];
+        [_unlockButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_unlock"] forState:UIControlStateNormal];
         [_unlockButton addTarget:self action:@selector(lockDidTouch:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _unlockButton;
@@ -928,6 +935,7 @@ static NSMutableDictionary * gHistory;
 #pragma mark - actions
 
 - (void)doneDidTouch:(id)sender {
+    [HcdAppManager sharedInstance].isLocked = NO;
     [HcdAppManager sharedInstance].isAllowAutorotate = NO;
     if (self.presentingViewController || !self.navigationController) {
         [self dismissViewControllerAnimated:YES completion:nil];
@@ -1012,26 +1020,66 @@ static NSMutableDictionary * gHistory;
 
 #pragma mark - 全屏旋转处理
 
-//界面方向改变的处理
+/**
+ * 监听手机设备发生了旋转
+ */
 - (void)handleStatusBarOrientationChange: (NSNotification *)notification{
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    _currentOrientation = interfaceOrientation;
+    [self toOrientation:interfaceOrientation];
+}
+
+- (void)handleDeviceOrientationChange:(NSNotification *)notification {
+    if ([HcdAppManager sharedInstance].passcodeViewShow) {
+        return;
+    }
+    if (![HcdAppManager sharedInstance].isLocked) {
+        [HcdAppManager sharedInstance].isAllowAutorotate = YES;
+    }
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    UIInterfaceOrientation interfaceOrientation;
+    switch (orientation) {
+        case UIDeviceOrientationPortrait:
+            interfaceOrientation = UIInterfaceOrientationPortrait;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            interfaceOrientation = UIInterfaceOrientationLandscapeRight;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            interfaceOrientation = UIInterfaceOrientationPortraitUpsideDown;
+            break;
+        default:
+            interfaceOrientation = UIInterfaceOrientationPortrait;
+            break;
+    }
+    [[UIApplication sharedApplication] setStatusBarOrientation:interfaceOrientation];
     [self updatePlayerView:interfaceOrientation];
 }
 
+- (void)handlePasscodeDismissed:(NSNotification *)notification {
+    if (!_locked) {
+        [HcdAppManager sharedInstance].isAllowAutorotate = YES;
+    } else {
+        [HcdAppManager sharedInstance].isAllowAutorotate = NO;
+    }
+}
+
+/**
+ * 手动设置旋转的方向
+ */
 - (void)toOrientation:(UIInterfaceOrientation)orientation {
     if (_currentOrientation == orientation) {
         return;
     }
     _currentOrientation = orientation;
-    [self updatePlayerView:_currentOrientation];
-    [UIView animateWithDuration:0.5 animations:^{
-        [[UIDevice currentDevice] setValue: @(orientation) forKey:@"orientation"];
-    } completion:^(BOOL finished) {
-        
-    }];
+    [self setInterfaceOrientation:_currentOrientation];
 }
 
+/**
+ * 更新视频播放界面布局
+ */
 - (void)updatePlayerView:(UIInterfaceOrientation)orientation {
     if (orientation == UIInterfaceOrientationPortrait) {
         self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, _statusBarHeight + 50);

@@ -69,6 +69,7 @@
 		B9BC111B226B64B200145E2B /* VersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC111A226B64B200145E2B /* VersionView.m */; };
 		B9BC111D227D7DC800145E2B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9BC111C227D7DC700145E2B /* MessageUI.framework */; };
 		B9BC1120227DBB6F00145E2B /* SendEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC111F227DBB6F00145E2B /* SendEmailViewController.m */; };
+		B9BC112322846F0D00145E2B /* HPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC112222846F0C00145E2B /* HPlayerViewController.m */; };
 		B9DAF6E2223E54CD00D7A512 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */; };
 		B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */; };
 		B9FCE2DB223BF10800E2B9E4 /* HcdProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2DA223BF10800E2B9E4 /* HcdProgressView.m */; };
@@ -288,6 +289,8 @@
 		B9BC111C227D7DC700145E2B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		B9BC111E227DBB6F00145E2B /* SendEmailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendEmailViewController.h; sourceTree = "<group>"; };
 		B9BC111F227DBB6F00145E2B /* SendEmailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SendEmailViewController.m; sourceTree = "<group>"; };
+		B9BC112122846F0C00145E2B /* HPlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPlayerViewController.h; sourceTree = "<group>"; };
+		B9BC112222846F0C00145E2B /* HPlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPlayerViewController.m; sourceTree = "<group>"; };
 		B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		B9FCE2D6223520B900E2B9E4 /* HcdPlayerDraggingProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdPlayerDraggingProgressView.h; sourceTree = "<group>"; };
 		B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdPlayerDraggingProgressView.m; sourceTree = "<group>"; };
@@ -685,6 +688,8 @@
 				B9BB461F21FBF37100682DD5 /* SortViewController.m */,
 				B9085F282258331000AF8DC5 /* DocumentViewController.h */,
 				B9085F292258331000AF8DC5 /* DocumentViewController.m */,
+				B9BC112122846F0C00145E2B /* HPlayerViewController.h */,
+				B9BC112222846F0C00145E2B /* HPlayerViewController.m */,
 			);
 			path = Local;
 			sourceTree = "<group>";
@@ -925,6 +930,7 @@
 				B9AA906321ED7C0A00F3C70E /* HcdAudioManager.m in Sources */,
 				B9AA908F21F303AD00F3C70E /* HcdLocalized.m in Sources */,
 				B9AA906721ED7CF800F3C70E /* HcdMovieDecoder.m in Sources */,
+				B9BC112322846F0D00145E2B /* HPlayerViewController.m in Sources */,
 				B9AA908821F2D21300F3C70E /* SettingViewController.m in Sources */,
 				B9A92B662245C02C002989B2 /* PasscodeViewController.m in Sources */,
 				B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */,
@@ -1113,7 +1119,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = WZUD9UNF4W;
+				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/hcdplayer/HcdPlayer-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg-iOS/include";
@@ -1127,7 +1133,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = cc.jvaeyhcd.hcdPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1144,7 +1150,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = WZUD9UNF4W;
+				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/hcdplayer/HcdPlayer-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg-iOS/include";
@@ -1158,7 +1164,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = cc.jvaeyhcd.hcdPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;

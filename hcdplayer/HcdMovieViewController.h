@@ -21,9 +21,19 @@ extern NSString * const HcdMovieParameterDisableDeinterlacing;   // BOOL
 + (id) movieViewControllerWithContentPath: (NSString *) path
                                parameters: (NSDictionary *) parameters;
 
+/**
+ * 视频的播放状态
+ */
 @property (readonly) BOOL playing;
 
+/**
+ * 开始播放
+ */
 - (void) play;
+
+/**
+ * 暂停播放
+ */
 - (void) pause;
 
 @end
