@@ -20,6 +20,8 @@
 #import "HcdBrightnessProgressView.h"
 #import "HcdSoundProgressView.h"
 #import "HcdAppManager.h"
+#import "MRDLNA.h"
+#import "HcdActionSheet.h"
 
 #define kLeastMoveDistance 15.0
 
@@ -86,7 +88,7 @@ static NSMutableDictionary * gHistory;
 #define NETWORK_MIN_BUFFERED_DURATION 2.0
 #define NETWORK_MAX_BUFFERED_DURATION 4.0
 
-@interface HcdMovieViewController () {
+@interface HcdMovieViewController ()<DLNADelegate> {
     
     HcdMovieDecoder      *_decoder;
     dispatch_queue_t    _dispatchQueue;
@@ -152,6 +154,7 @@ static NSMutableDictionary * gHistory;
     float _touchBeginVoiceValue;
 }
 
+@property (nonatomic, copy) NSString *path;
 @property (readwrite) BOOL playing;
 @property (readwrite) BOOL decoding;
 @property (readwrite) BOOL playFinished;
@@ -193,6 +196,16 @@ static NSMutableDictionary * gHistory;
 @property (nonatomic, strong) MPVolumeView   *volumeView;             //音量控制控件
 @property (nonatomic, strong) UISlider       *volumeSlider;           //用这个来控制音量
 
+/**
+ * DLNA manager
+ */
+@property (nonatomic, strong) MRDLNA *dlnaManager;
+
+/**
+ * 附近支持DLNA的设备
+ */
+@property (nonatomic, strong) NSArray *deviceArr;
+
 @end
 
 @implementation HcdMovieViewController
@@ -223,6 +236,12 @@ static NSMutableDictionary * gHistory;
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         [self initData];
+        _path = path;
+        // 添加到播放记录中
+        NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        NSString *relativePath = path;
+        relativePath = [relativePath stringByReplacingOccurrencesOfString:documentPath withString:@""];
+        [[HcdAppManager sharedInstance] addPathToPlaylist:relativePath];
         _moviePosition = 0;
         //        self.wantsFullScreenLayout = YES;
         
@@ -398,8 +417,15 @@ static NSMutableDictionary * gHistory;
     }
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.dlnaManager = [MRDLNA sharedMRDLNAManager];
+    self.dlnaManager.delegate = self;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [HcdAppManager sharedInstance].isAllowAutorotate = YES;
+    [self.dlnaManager startSearch];
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -532,10 +558,11 @@ static NSMutableDictionary * gHistory;
 - (UIButton *)airPlayButton {
     if (!_airPlayButton) {
         _airPlayButton = [[UIButton alloc]init];
-        [_airPlayButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_air_play"] forState:UIControlStateNormal];
+        [_airPlayButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_tv"] forState:UIControlStateNormal];
         _airPlayButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
         _airPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [_airPlayButton addTarget:self action:@selector(infoDidTouch:) forControlEvents:UIControlEventTouchUpInside];
+        _airPlayButton.hidden = YES;
+        [_airPlayButton addTarget:self action:@selector(airPlayClicked) forControlEvents:UIControlEventTouchUpInside];
     }
     return _airPlayButton;
 }
@@ -2310,6 +2337,41 @@ static NSMutableDictionary * gHistory;
             }
         }
     }
+}
+
+#pragma mark - DLNADelegate
+
+- (void)searchDLNAResult:(NSArray *)devicesArray {
+    self.deviceArr = [[NSArray alloc] initWithArray:devicesArray];
+}
+
+- (void)dlnaStartPlay {
+    // dlna开始播放了回调
+}
+
+/**
+ * 响应点击电视事件
+ */
+- (void)airPlayClicked {
+    NSMutableArray *deviceNameArr = [NSMutableArray array];
+    for (CLUPnPDevice *device in self.deviceArr) {
+        [deviceNameArr addObject:device.friendlyName];
+    }
+    HcdActionSheet *sheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil)
+                                                    otherButtonTitles:deviceNameArr
+                                                          attachTitle:HcdLocalized(@"please_select_device", nil)];
+     __weak HcdMovieViewController *weakSelf = self;
+    sheet.selectButtonAtIndex = ^(NSInteger index) {
+        if (index > 0) {
+            CLUPnPDevice *device = [self.deviceArr objectAtIndex:index - 1];
+            self.dlnaManager.device = device;
+            self.dlnaManager.playUrl = weakSelf.path;
+            [self.dlnaManager startDLNA];
+        }
+    };
+    [[UIApplication sharedApplication].keyWindow addSubview:sheet];
+    [sheet showHcdActionSheet];
+    
 }
 
 @end

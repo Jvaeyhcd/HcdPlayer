@@ -8,6 +8,8 @@
 
 #import "HcdAppManager.h"
 
+#define PLAYLIST @"playlist"
+
 @implementation HcdAppManager
 
 + (HcdAppManager *)sharedInstance {
@@ -70,6 +72,39 @@
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"passcode"];
     }
     [[NSUserDefaults standardUserDefaults] setBool:needPasscode forKey:@"needPasscode"];
+}
+
+@synthesize playList = _playList;
+- (void)setPlayList:(NSArray *)playList {
+    _playList = playList;
+    [[NSUserDefaults standardUserDefaults] setObject:_playList forKey:PLAYLIST];
+}
+
+- (NSArray *)playList {
+    NSArray *playList = [[NSUserDefaults standardUserDefaults] arrayForKey:PLAYLIST];
+    if (playList && [playList count] > 0) {
+        _playList = playList;
+    } else {
+        _playList = [NSArray array];
+    }
+    return _playList;
+}
+
+/**
+ * 将播放路径添加到播放列表
+ * @param path 文件路径
+ */
+- (void)addPathToPlaylist:(NSString *)path {
+    NSMutableArray *list = [NSMutableArray arrayWithArray:self.playList];
+    for (NSInteger i = 0; i < list.count; i++) {
+        NSString *str = [list objectAtIndex:i];
+        if ([str isEqualToString:path]) {
+            [list removeObjectAtIndex:i];
+            break;
+        }
+    }
+    [list insertObject:path atIndex:0];
+    self.playList = [[NSArray alloc] initWithArray:list];
 }
 
 @end

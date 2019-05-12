@@ -31,8 +31,14 @@
     _passcodeVc = [[UINavigationController alloc] initWithRootViewController:vc];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [HcdAppManager sharedInstance].mainVc;
+    
+    if ([[HcdAppManager sharedInstance] needPasscode]) {
+        self.window.rootViewController = _passcodeVc;
+    } else {
+        self.window.rootViewController = [HcdAppManager sharedInstance].mainVc;
+    }
     [self.window makeKeyAndVisible];
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissPasscode) name:@"dismissPasscode" object:nil];
     
@@ -64,12 +70,6 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    if ([[HcdAppManager sharedInstance] needPasscode]) {
-        self.window.rootViewController = _passcodeVc;
-    } else {
-        self.window.rootViewController = [HcdAppManager sharedInstance].mainVc;
-    }
-    [self.window makeKeyAndVisible];
 }
 
 

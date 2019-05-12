@@ -13,9 +13,9 @@
 #import "UITableView+Hcd.h"
 
 enum {
-    HcdAboutVender,
     HcdAboutContactUs,
     HcdAboutRate,
+    HcdAboutNewVersion,
     HcdAboutCount
 };
 
@@ -80,8 +80,8 @@ enum {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HcdValueTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdValueCell forIndexPath:indexPath];
     switch (indexPath.row) {
-        case HcdAboutVender:
-            cell.titleLbl.text = HcdLocalized(@"copyright", nil);
+        case HcdAboutNewVersion:
+            cell.titleLbl.text = HcdLocalized(@"update_version", nil);
             break;
         case HcdAboutContactUs:
             cell.titleLbl.text = HcdLocalized(@"contact_us", nil);
@@ -100,7 +100,7 @@ enum {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.row) {
-        case HcdAboutVender:
+        case HcdAboutNewVersion:
             break;
         case HcdAboutContactUs:
             [self contactUsByEmail];

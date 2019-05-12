@@ -18,7 +18,7 @@
 
 enum {
     HcdSettingSectionGeneral,
-    HcdSettingSectionGesture,
+//    HcdSettingSectionGesture,
     HcdSettingSectionOther,
     HcdSettingSectionCount
 };
@@ -95,8 +95,8 @@ enum {
     switch (section) {
         case HcdSettingSectionGeneral:
             return HcdSettingGeneralCount;
-        case HcdSettingSectionGesture:
-            return HcdSettingGestureCount;
+//        case HcdSettingSectionGesture:
+//            return HcdSettingGestureCount;
         case HcdSettingSectionOther:
             return HcdSettingOtherCount;
         default:
@@ -121,9 +121,9 @@ enum {
         case HcdSettingSectionGeneral:
             header = HcdLocalized(@"general", nil);
             break;
-        case HcdSettingSectionGesture:
-            header = HcdLocalized(@"gesture", nil);
-            break;
+//        case HcdSettingSectionGesture:
+//            header = HcdLocalized(@"gesture", nil);
+//            break;
         case HcdSettingSectionOther:
             header = HcdLocalized(@"other", nil);
             break;
@@ -156,14 +156,14 @@ enum {
             [switchView setOn:[[HcdAppManager sharedInstance] needPasscode] animated:NO];
             [switchView addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventTouchUpInside];
         }
-    } else if (indexPath.section == HcdSettingSectionGesture) {
-        if (indexPath.row == HcdSettingGestureOne) {
-            title = HcdLocalized(@"oneFingerGesture", nil);
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        } else if (indexPath.row == HcdSettingGestureTwo) {
-            title = HcdLocalized(@"twoFingerGesture", nil);
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }
+//    } else if (indexPath.section == HcdSettingSectionGesture) {
+//        if (indexPath.row == HcdSettingGestureOne) {
+//            title = HcdLocalized(@"oneFingerGesture", nil);
+//            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//        } else if (indexPath.row == HcdSettingGestureTwo) {
+//            title = HcdLocalized(@"twoFingerGesture", nil);
+//            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//        }
     } else if (indexPath.section == HcdSettingSectionOther) {
         if (indexPath.row == HcdSettingOtherAbout) {
             title = HcdLocalized(@"about", nil);

@@ -39,9 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *passcode;
 
 /**
- 主界面
+ * 主界面
  */
 @property (nonatomic, strong) MainViewController *mainVc;
+
+/**
+ * 播放主界面列表
+ */
+@property (nonatomic, copy) NSArray *playList;
 
 + (HcdAppManager *)sharedInstance;
 
@@ -54,6 +59,12 @@ NS_ASSUME_NONNULL_BEGIN
  * 设置需要输入的解锁密码
  */
 - (void)setNeedPasscode:(BOOL)needPasscode;
+
+/**
+ * 将播放路径添加到播放列表
+ * @param path 文件路径
+ */
+- (void)addPathToPlaylist:(NSString *)path;
 
 @end
 
