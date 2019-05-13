@@ -9,13 +9,25 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeIconFiles</key>
-			<array/>
+			<key>CFBundleTypeName</key>
+			<string>com.cloud.OpenFile.common-data</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>public.avi</string>
-				<string>public.3gpp</string>
-				<string>public.mpeg-4</string>
+				<string>com.microsoft.powerpoint.ppt</string>
+				<string>public.item</string>
+				<string>com.microsoft.word.doc</string>
+				<string>com.adobe.pdf</string>
+				<string>com.microsoft.excel.xls</string>
+				<string>public.image</string>
+				<string>public.content</string>
+				<string>public.composite-content</string>
+				<string>public.archive</string>
+				<string>public.audio</string>
+				<string>public.movie</string>
+				<string>public.text</string>
+				<string>public.data</string>
 			</array>
 		</dict>
 	</array>
@@ -56,5 +68,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
 </dict>
 </plist>
