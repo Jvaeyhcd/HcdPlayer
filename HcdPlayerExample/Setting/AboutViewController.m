@@ -11,6 +11,7 @@
 #import "VersionView.h"
 #import "HcdValueTableViewCell.h"
 #import "UITableView+Hcd.h"
+#import <StoreKit/StoreKit.h>
 
 enum {
     HcdAboutContactUs,
@@ -19,7 +20,7 @@ enum {
     HcdAboutCount
 };
 
-@interface AboutViewController ()<UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate>
+@interface AboutViewController ()<UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate, SKStoreProductViewControllerDelegate>
 
 @property (nonatomic, retain) VersionView *versionView;
 @property (nonatomic, retain) UITableView *tableView;
@@ -101,11 +102,13 @@ enum {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.row) {
         case HcdAboutNewVersion:
+            [self goToAppStoreComment];
             break;
         case HcdAboutContactUs:
             [self contactUsByEmail];
             break;
         case HcdAboutRate:
+            [self goToAppStoreComment];
             break;
         default:
             break;
@@ -118,12 +121,20 @@ enum {
     [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - SKStoreProductViewControllerDelegate
+- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
+    [self dismissViewControllerAnimated:viewController completion:nil];
+}
+
 #pragma mark - private
 
 - (void)leftNavBarButtonClicked {
     [self popViewController:YES];
 }
 
+/**
+ 发送邮件联系我们
+ */
 - (void)contactUsByEmail {
     if (![MFMailComposeViewController canSendMail]) {
         return;
@@ -144,6 +155,19 @@ enum {
     [vc setToRecipients:@[@"chedahuang@icloud.com"]];
     vc.mailComposeDelegate = self;
     [self presentViewController:vc animated:YES completion:nil];
+}
+
+/**
+ 跳转至App Store编写评论
+ */
+- (void)goToAppStoreComment {
+    SKStoreProductViewController *storeProductViewController = [[SKStoreProductViewController alloc] init];
+    storeProductViewController.delegate = self;
+    [storeProductViewController loadProductWithParameters:@{SKStoreProductParameterITunesItemIdentifier: KAPPID} completionBlock:^(BOOL result, NSError * _Nullable error) {
+        if (!error) {
+            [self presentViewController:storeProductViewController animated:YES completion:nil];
+        }
+    }];
 }
 
 /*

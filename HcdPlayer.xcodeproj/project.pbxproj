@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -62,6 +62,7 @@
 		B9AA90BB21F5F6D100F3C70E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AA90BA21F5F6D100F3C70E /* CoreGraphics.framework */; };
 		B9AA90BF21F73A8E00F3C70E /* UITableView+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90BE21F73A8E00F3C70E /* UITableView+Hcd.m */; };
 		B9AA90C221F7F7A400F3C70E /* FolderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90C121F7F7A400F3C70E /* FolderViewController.m */; };
+		B9B57CF3229237CE00E492CD /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9B57CF2229237CE00E492CD /* StoreKit.framework */; };
 		B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461621F8B96F00682DD5 /* MoveViewController.m */; };
 		B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461921F9D1BD00682DD5 /* HcdAlertInputView.m */; };
 		B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */; };
@@ -276,6 +277,7 @@
 		B9AA90BE21F73A8E00F3C70E /* UITableView+Hcd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITableView+Hcd.m"; sourceTree = "<group>"; };
 		B9AA90C021F7F7A300F3C70E /* FolderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FolderViewController.h; sourceTree = "<group>"; };
 		B9AA90C121F7F7A400F3C70E /* FolderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FolderViewController.m; sourceTree = "<group>"; };
+		B9B57CF2229237CE00E492CD /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		B9BB461521F8B96F00682DD5 /* MoveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MoveViewController.h; sourceTree = "<group>"; };
 		B9BB461621F8B96F00682DD5 /* MoveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoveViewController.m; sourceTree = "<group>"; };
 		B9BB461821F9D1BD00682DD5 /* HcdAlertInputView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdAlertInputView.h; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9B57CF3229237CE00E492CD /* StoreKit.framework in Frameworks */,
 				B9BC111D227D7DC800145E2B /* MessageUI.framework in Frameworks */,
 				B9DAF6E2223E54CD00D7A512 /* MediaPlayer.framework in Frameworks */,
 				B9A6F2FB221E6D9F0027D017 /* SystemConfiguration.framework in Frameworks */,
@@ -333,6 +336,7 @@
 		2D328B5F2BEDFD13C59C3EA7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B9B57CF2229237CE00E492CD /* StoreKit.framework */,
 				B9BC111C227D7DC700145E2B /* MessageUI.framework */,
 				B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */,
 				B9A6F2FA221E6D9F0027D017 /* SystemConfiguration.framework */,
@@ -782,7 +786,6 @@
 				B9AA8FCA21ED785000F3C70E /* Frameworks */,
 				B9AA8FCB21ED785000F3C70E /* Resources */,
 				5093962991FC2CBF83A528E8 /* [CP] Embed Pods Frameworks */,
-				08557EBB1653FB076A6067ED /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -848,51 +851,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		08557EBB1653FB076A6067ED /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		5093962991FC2CBF83A528E8 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
-				"${BUILT_PRODUCTS_DIR}/FDFullscreenPopGesture/FDFullscreenPopGesture.framework",
-				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
-				"${BUILT_PRODUCTS_DIR}/HcdActionSheet/HcdActionSheet.framework",
-				"${BUILT_PRODUCTS_DIR}/HcdSpecialField/HcdSpecialField.framework",
-				"${BUILT_PRODUCTS_DIR}/MRDLNA/MRDLNA.framework",
-				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
-				"${BUILT_PRODUCTS_DIR}/NSLogger/NSLogger.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FDFullscreenPopGesture.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HcdActionSheet.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HcdSpecialField.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MRDLNA.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NSLogger.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A3196022B8FC8B224DC3B207 /* [CP] Check Pods Manifest.lock */ = {
@@ -1126,7 +1099,19 @@
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/hcdplayer/HcdPlayer-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg-iOS/include";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/FFmpeg-iOS/include",
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaAsyncSocket\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FDFullscreenPopGesture\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GCDWebServer\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/HcdActionSheet\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/HcdSpecialField\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MBProgressHUD\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MRDLNA\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Masonry\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/NSLogger\"",
+				);
 				INFOPLIST_FILE = HcdPlayerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1141,6 +1126,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = dis_hplayer;
 				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
 			name = Debug;
 		};
@@ -1157,7 +1143,19 @@
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/hcdplayer/HcdPlayer-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/FFmpeg-iOS/include";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/FFmpeg-iOS/include",
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaAsyncSocket\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FDFullscreenPopGesture\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GCDWebServer\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/HcdActionSheet\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/HcdSpecialField\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MBProgressHUD\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/MRDLNA\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Masonry\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/NSLogger\"",
+				);
 				INFOPLIST_FILE = HcdPlayerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1172,6 +1170,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = dis_hplayer;
 				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/**";
 			};
 			name = Release;
 		};
