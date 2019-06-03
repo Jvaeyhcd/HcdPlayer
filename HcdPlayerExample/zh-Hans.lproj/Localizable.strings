@@ -75,3 +75,5 @@
 "praise"="给个好评";
 "update_version"="版本更新";
 "please_select_device"="请选择要投屏的设备";
+"playlist_empty_tips"="您还未播放过视频";
+"select_a_video_to_play"="请在本地选择一个视频进行播放";

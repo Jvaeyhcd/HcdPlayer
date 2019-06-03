@@ -54,7 +54,7 @@
 
 #define APP_VERSION [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]
 #define APP_BUILD [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]
-#define KAPPID @""
+#define KAPPID @"1462751886"
 
 #define DISSMISS_PASSCODE_NOTIFICATION @"dismissPasscode"
 

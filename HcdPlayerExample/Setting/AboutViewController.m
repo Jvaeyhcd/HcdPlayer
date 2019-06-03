@@ -102,7 +102,7 @@ enum {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.row) {
         case HcdAboutNewVersion:
-            [self goToAppStoreComment];
+            [self gotoAppStore];
             break;
         case HcdAboutContactUs:
             [self contactUsByEmail];
@@ -149,6 +149,7 @@ enum {
     NSString *message = @"";
     MFMailComposeViewController *vc = [[SendEmailViewController alloc] init];
     vc.title = subject;
+    vc.navigationBar.tintColor = kNavTitleColor;
     
     [vc setSubject:subject];
     [vc setMessageBody:message isHTML:NO];
@@ -161,13 +162,19 @@ enum {
  跳转至App Store编写评论
  */
 - (void)goToAppStoreComment {
-    SKStoreProductViewController *storeProductViewController = [[SKStoreProductViewController alloc] init];
-    storeProductViewController.delegate = self;
-    [storeProductViewController loadProductWithParameters:@{SKStoreProductParameterITunesItemIdentifier: KAPPID} completionBlock:^(BOOL result, NSError * _Nullable error) {
-        if (!error) {
-            [self presentViewController:storeProductViewController animated:YES completion:nil];
-        }
-    }];
+    
+    NSString *str = [NSString stringWithFormat:  @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", KAPPID];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+    
+}
+
+
+/**
+ 跳转至App Store
+ */
+- (void)gotoAppStore {
+    NSString * urlStr = [NSString stringWithFormat: @"itms-apps://itunes.apple.com/app/id%@", KAPPID];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
 }
 
 /*

@@ -165,12 +165,12 @@
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:16], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
-    return [[NSAttributedString alloc]initWithString:HcdLocalized(@"listEmptyTips", nil) attributes:attributes];
+    return [[NSAttributedString alloc]initWithString:HcdLocalized(@"playlist_empty_tips", nil) attributes:attributes];
 }
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
-    return [[NSAttributedString alloc]initWithString:HcdLocalized(@"import_file_tips", nil) attributes:attributes];
+    return [[NSAttributedString alloc]initWithString:HcdLocalized(@"select_a_video_to_play", nil) attributes:attributes];
 }
 
 

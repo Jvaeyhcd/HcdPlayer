@@ -75,3 +75,5 @@
 "praise"="Praise";
 "update_version"="New version";
 "please_select_device"="Please select the device to project";
+"playlist_empty_tips"="No played video";
+"select_a_video_to_play"="Please select a video to play in local folder";
