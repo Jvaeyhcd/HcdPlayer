@@ -132,7 +132,7 @@
     HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:[NSString stringWithFormat:HcdLocalized(@"sureDelete", nil), fileNmae]];
     
     __weak PlaylistViewController *weakSelf = self;
-    deleteSheet.selectButtonAtIndex = ^(NSInteger index) {
+    deleteSheet.seletedButtonIndex = ^(NSInteger index) {
         switch (index) {
             case 1:
             {

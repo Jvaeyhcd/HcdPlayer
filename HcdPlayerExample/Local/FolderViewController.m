@@ -228,7 +228,7 @@ typedef enum : NSUInteger {
     if (!_importActionSheet) {
         _importActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"icloud", nil), HcdLocalized(@"wifi_transfer", nil)] attachTitle:HcdLocalized(@"import_tips", nil)];
         __weak FolderViewController *weakSelf = self;
-        _importActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+        _importActionSheet.seletedButtonIndex = ^(NSInteger index) {
             switch (index) {
                 case 1:
                     [weakSelf showiCloudDocumentPicker];
@@ -249,7 +249,7 @@ typedef enum : NSUInteger {
         NSArray *otherButtonTitles = @[HcdLocalized(@"new_folder", nil), HcdLocalized(@"import", nil), HcdLocalized(@"select", nil), HcdLocalized(@"sort", nil)];
         _navMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
         __weak FolderViewController *weakSelf = self;
-        _navMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+        _navMoreActionSheet.seletedButtonIndex = ^(NSInteger index) {
             switch (index) {
                 case 1: {
                     // create new folder
@@ -295,7 +295,7 @@ typedef enum : NSUInteger {
         _fileCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
         
         __weak FolderViewController *weakSelf = self;
-        _fileCellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+        _fileCellMoreActionSheet.seletedButtonIndex = ^(NSInteger index) {
             switch (index) {
                 case 1:
                     [weakSelf showMoveViewController];
@@ -321,7 +321,7 @@ typedef enum : NSUInteger {
         _folderCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
         
         __weak FolderViewController *weakSelf = self;
-        _folderCellMoreActionSheet.selectButtonAtIndex = ^(NSInteger index) {
+        _folderCellMoreActionSheet.seletedButtonIndex = ^(NSInteger index) {
             switch (index) {
                 case 1:
                     
@@ -455,7 +455,7 @@ typedef enum : NSUInteger {
     HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:[NSString stringWithFormat:HcdLocalized(@"sureDelete", nil), fileNmae]];
     
     __weak FolderViewController *weakSelf = self;
-    deleteSheet.selectButtonAtIndex = ^(NSInteger index) {
+    deleteSheet.seletedButtonIndex = ^(NSInteger index) {
         switch (index) {
             case 1:
                 [weakSelf deleteFileIndex];
@@ -487,7 +487,7 @@ typedef enum : NSUInteger {
     HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:HcdLocalized(@"sure_delete_selected", nil)];
     
     __weak FolderViewController *weakSelf = self;
-    deleteSheet.selectButtonAtIndex = ^(NSInteger index) {
+    deleteSheet.seletedButtonIndex = ^(NSInteger index) {
         switch (index) {
             case 1:
                 [weakSelf deleteSelectedCell];

@@ -2361,7 +2361,7 @@ static NSMutableDictionary * gHistory;
                                                     otherButtonTitles:deviceNameArr
                                                           attachTitle:HcdLocalized(@"please_select_device", nil)];
      __weak HcdMovieViewController *weakSelf = self;
-    sheet.selectButtonAtIndex = ^(NSInteger index) {
+    sheet.seletedButtonIndex = ^(NSInteger index) {
         if (index > 0) {
             CLUPnPDevice *device = [self.deviceArr objectAtIndex:index - 1];
             self.dlnaManager.device = device;
