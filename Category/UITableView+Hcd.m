@@ -31,7 +31,7 @@
         layer.fillColor = [UIColor colorWithWhite:1.f alpha:0.8f].CGColor;
     }
     
-    CGColorRef lineColor = [UIColor colorWithHexString:@"0xdddddd"].CGColor;
+    CGColorRef lineColor = [UIColor colorWithHexString:@"0xEFEFEF"].CGColor;
     CGColorRef sectionLineColor = lineColor;
     
     //    CGColorRef lineColor = [UIColor colorWithHexString:@"0xdddddd"].CGColor;
