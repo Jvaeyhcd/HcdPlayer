@@ -736,8 +736,8 @@ static NSMutableDictionary * gHistory;
 
 - (HcdBrightnessProgressView *)brightnessProgressView {
     if (!_brightnessProgressView) {
-        _brightnessProgressView = [[HcdBrightnessProgressView alloc] initWithFrame:CGRectMake(kBasePadding, (kScreenHeight - 140) / 2, 36, 140)];
-        _brightnessProgressView.layer.cornerRadius = 4;
+        _brightnessProgressView = [[HcdBrightnessProgressView alloc] initWithFrame:CGRectMake(kBasePadding, (kScreenHeight - 140) / 2, 32, 140)];
+        _brightnessProgressView.layer.cornerRadius = 16;
         _brightnessProgressView.hidden = YES;
     }
     return _brightnessProgressView;
@@ -747,8 +747,8 @@ static NSMutableDictionary * gHistory;
     if (!_soundProgressView) {
 //        _soundProgressView = [[HcdSoundProgressView alloc] initWithFrame:CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140)];
         _soundProgressView = [HcdSoundProgressView getInstance];
-        _soundProgressView.frame = CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140);
-        _soundProgressView.layer.cornerRadius = 4;
+        _soundProgressView.frame = CGRectMake(kScreenWidth - kBasePadding - 32, (kScreenHeight - 140) / 2, 32, 140);
+        _soundProgressView.layer.cornerRadius = 16;
         _soundProgressView.hidden = YES;
     }
     return _soundProgressView;
@@ -1131,8 +1131,8 @@ static NSMutableDictionary * gHistory;
         self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
         
         self.replayButton.frame = CGRectMake((kScreenWidth - 60) / 2, (kScreenHeight - 60) / 2, 60, 60);
-        self.brightnessProgressView.frame = CGRectMake(kBasePadding, (kScreenHeight - 140) / 2, 36, 140);
-        self.soundProgressView.frame = CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140);
+        self.brightnessProgressView.frame = CGRectMake(kBasePadding, (kScreenHeight - 140) / 2, 32, 140);
+        self.soundProgressView.frame = CGRectMake(kScreenWidth - kBasePadding - 32, (kScreenHeight - 140) / 2, 32, 140);
         self.lockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
         self.unlockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
         
@@ -1154,8 +1154,8 @@ static NSMutableDictionary * gHistory;
             self.progressLabel.frame = CGRectMake(50 + _statusBarHeight, 0, 46, 50);
             self.leftLabel.frame = CGRectMake(kScreenWidth - 100 - _statusBarHeight + 4, 0, 50, 50);
             self.progressSlider.frame = CGRectMake(100 + _statusBarHeight, 0, kScreenWidth - 200 - 2 * _statusBarHeight, 50);
-            self.brightnessProgressView.frame = CGRectMake(3 * kBasePadding + _statusBarHeight, (kScreenHeight - 160) / 2, 40, 160);
-            self.soundProgressView.frame = CGRectMake(kScreenWidth - (3 * kBasePadding + _statusBarHeight) - 40, (kScreenHeight - 160) / 2, 40, 160);
+            self.brightnessProgressView.frame = CGRectMake(3 * kBasePadding + _statusBarHeight, (kScreenHeight - 160) / 2, 32, 160);
+            self.soundProgressView.frame = CGRectMake(kScreenWidth - (3 * kBasePadding + _statusBarHeight) - 32, (kScreenHeight - 160) / 2, 32, 160);
             
             self.lockButton.frame = CGRectMake(kBasePadding + _statusBarHeight, (kScreenHeight - 40) / 2, 40, 40);
             self.unlockButton.frame = CGRectMake(kBasePadding + _statusBarHeight, (kScreenHeight - 40) / 2, 40, 40);
@@ -1170,8 +1170,8 @@ static NSMutableDictionary * gHistory;
             self.progressLabel.frame = CGRectMake(50, 0, 46, 50);
             self.leftLabel.frame = CGRectMake(kScreenWidth-100 + 4, 0, 50, 50);
             self.progressSlider.frame = CGRectMake(100, 0, kScreenWidth - 200, 50);
-            self.brightnessProgressView.frame = CGRectMake(2 * kBasePadding, (kScreenHeight - 160) / 2, 40, 160);
-            self.soundProgressView.frame = CGRectMake(kScreenWidth - (2 * kBasePadding) - 40, (kScreenHeight - 160) / 2, 40, 160);
+            self.brightnessProgressView.frame = CGRectMake(2 * kBasePadding, (kScreenHeight - 160) / 2, 32, 160);
+            self.soundProgressView.frame = CGRectMake(kScreenWidth - (2 * kBasePadding) - 32, (kScreenHeight - 160) / 2, 32, 160);
             
             self.lockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
             self.unlockButton.frame = CGRectMake(kBasePadding, (kScreenHeight - 40) / 2, 40, 40);
