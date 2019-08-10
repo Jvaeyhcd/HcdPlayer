@@ -12,6 +12,8 @@
 
 @property (nonatomic, strong, readonly) UIView *contentView;
 
+@property (nonatomic, weak) NSTimer *hideDelayTimer;
+
 @end
 
 @implementation HcdPlayerDraggingProgressView
@@ -144,12 +146,32 @@
     return _durationTimeLabel;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (void)show {
+    // Cancel any scheduled hideAnimated:afterDelay: calls
+    if (self.hideDelayTimer) {
+        [self.hideDelayTimer invalidate];
+    }
+    self.hidden = NO;
+    self.alpha = 1.0;
+    NSTimer *timer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(handleHideTimer:) userInfo:nil repeats:NO];
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    self.hideDelayTimer = timer;
 }
-*/
+
+- (void)handleHideTimer:(NSTimer *)timer {
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        self.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.hidden = YES;
+    }];
+}
+
+- (void)dealloc {
+    if (self.hideDelayTimer) {
+        [self.hideDelayTimer invalidate];
+        self.hideDelayTimer = nil;
+    }
+}
 
 @end

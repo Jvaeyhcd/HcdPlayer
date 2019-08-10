@@ -424,6 +424,10 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    
+    // 不自动锁屏
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    
     [HcdAppManager sharedInstance].isAllowAutorotate = YES;
     [self.dlnaManager startSearch];
 }
@@ -459,16 +463,19 @@ static NSMutableDictionary * gHistory;
 
 // 设备音量发生变化
 - (void)volumeChanged:(NSNotification *)notification {
-    self.soundProgressView.hidden = NO;
+    [self.soundProgressView show];
     self.soundProgressView.progress = self.volumeSlider.value;
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
+    
+    [super viewWillDisappear:animated];
+    // 恢复自动锁屏
+    [UIApplication sharedApplication].idleTimerDisabled = NO;
+    
     [HcdAppManager sharedInstance].isAllowAutorotate = NO;
     [HcdAppManager sharedInstance].isLocked = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    [super viewWillDisappear:animated];
     
     [_activityIndicatorView stopAnimating];
     
@@ -738,7 +745,9 @@ static NSMutableDictionary * gHistory;
 
 - (HcdSoundProgressView *)soundProgressView {
     if (!_soundProgressView) {
-        _soundProgressView = [[HcdSoundProgressView alloc] initWithFrame:CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140)];
+//        _soundProgressView = [[HcdSoundProgressView alloc] initWithFrame:CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140)];
+        _soundProgressView = [HcdSoundProgressView getInstance];
+        _soundProgressView.frame = CGRectMake(kScreenWidth - kBasePadding - 36, (kScreenHeight - 140) / 2, 36, 140);
         _soundProgressView.layer.cornerRadius = 4;
         _soundProgressView.hidden = YES;
     }
@@ -751,11 +760,7 @@ static NSMutableDictionary * gHistory;
     if (sender.state == UIGestureRecognizerStateEnded) {
         
         if (sender == _tapGestureRecognizer) {
-            [self showLockButton:_hiddenLock];
-            if (self.locked) {
-                [self showHUD:NO];
-                return;
-            }
+
             [self showHUD: _hiddenHUD];
             
         } else if (sender == _doubleTapGestureRecognizer) {
@@ -822,11 +827,14 @@ static NSMutableDictionary * gHistory;
             float value = [self moveProgressControlWithTempPoint:touchPoint];
             [self timeValueChangingWithValue:value];
         } else if (HCDPlayerControlTypeLight == _controlType) {
-            self.brightnessProgressView.hidden = NO;
+            
             CGFloat brightness = [UIScreen mainScreen].brightness;
             brightness -= ((touchPoint.y - _touchBeginPoint.y) / 10000);
             [UIScreen mainScreen].brightness = brightness;
+            
+            [self.brightnessProgressView show];
             self.brightnessProgressView.progress = brightness;
+            
         } else if (HCDPlayerControlTypeVoice == _controlType) {
             self.volumeView.frame = CGRectMake(-1000, -100, 100, 100);
             [self.view addSubview:self.volumeView];
@@ -841,7 +849,7 @@ static NSMutableDictionary * gHistory;
                 self.volumeSlider.value = voiceValue;
             }
             
-            self.soundProgressView.hidden = NO;
+            [self.soundProgressView show];
             self.soundProgressView.progress = voiceValue;
         }
     }
@@ -859,13 +867,13 @@ static NSMutableDictionary * gHistory;
         _controlJudge = NO;
         if (_hasMoved) {
             if (_controlType == HCDPlayerControlTypeProgress) {
-                self.draggingProgressView.hidden = YES;
+//                self.draggingProgressView.hidden = YES;
                 float value = [self moveProgressControlWithTempPoint:touchPoint];
                 [self setMoviePosition:value];
             } else if (_controlType == HCDPlayerControlTypeLight) {
-                self.brightnessProgressView.hidden = YES;
+//                self.brightnessProgressView.hidden = YES;
             } else if (_controlType == HCDPlayerControlTypeVoice) {
-                self.soundProgressView.hidden = YES;
+//                self.soundProgressView.hidden = YES;
             }
         }
         //LoggerStream(2, @"pan %.2f %.2f %.2f sec", pt.x, vt.x, sc);
@@ -888,10 +896,11 @@ static NSMutableDictionary * gHistory;
     } else if (value < _touchBeginValue) {
         self.draggingProgressView.directionImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_forward"];
     }
-    self.draggingProgressView.hidden = NO;
+    
     CGFloat duration = _decoder.duration;
     self.draggingProgressView.durationTimeLabel.text = formatTimeInterval(duration, NO);
     self.draggingProgressView.shiftTimeLabel.text = formatTimeInterval(value, NO);
+    [self.draggingProgressView show];
 }
 
 #pragma mark - public
@@ -1924,19 +1933,28 @@ static NSMutableDictionary * gHistory;
     _hiddenHUD = !show;
 //    _panGestureRecognizer.enabled = _hiddenHUD;
     
-    [[UIApplication sharedApplication] setIdleTimerDisabled:_hiddenHUD];
-    
     __weak HcdMovieViewController *weakSelf = self;
     [UIView animateWithDuration:0.2
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
                      animations:^{
                          
-                         [UIApplication sharedApplication].statusBarHidden = weakSelf.hiddenHUD;
                          CGFloat alpha = weakSelf.hiddenHUD ? 0 : 1;
-                         weakSelf.topBar.alpha = alpha;
-                         weakSelf.topHUD.alpha = alpha;
-                         weakSelf.bottomView.alpha = alpha;
+                         
+                         weakSelf.lockButton.alpha = alpha;
+                         weakSelf.unlockButton.alpha = alpha;
+                         
+                         if (self.locked) {
+                             weakSelf.topBar.alpha = 0;
+                             weakSelf.topHUD.alpha = 0;
+                             weakSelf.bottomView.alpha = 0;
+                             [UIApplication sharedApplication].statusBarHidden = YES;
+                         } else {
+                             weakSelf.topBar.alpha = alpha;
+                             weakSelf.topHUD.alpha = alpha;
+                             weakSelf.bottomView.alpha = alpha;
+                             [UIApplication sharedApplication].statusBarHidden = weakSelf.hiddenHUD;
+                         }
                      }
                      completion:nil];
     

@@ -12,8 +12,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HcdSoundProgressView : UIView
 
+/**
+ 进度百分比0~1
+ */
 @property (nonatomic, assign) CGFloat progress;
+
+/**
+ 进度条颜色
+ */
 @property (nonatomic, strong) UIColor *progressColor;
+
++ (HcdSoundProgressView *)getInstance;
+
+- (void)show;
 
 @end
 

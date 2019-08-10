@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setProgressTimeStr:(NSString *)shiftTimeStr;
 - (void)setProgressTimeStr:(NSString *)shiftTimeStr totalTimeStr:(NSString *)totalTimeStr;
 
+- (void)show;
+
 @end
 
 NS_ASSUME_NONNULL_END
