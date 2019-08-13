@@ -59,7 +59,7 @@ typedef enum : NSUInteger {
     
     // 评分提示
     NSInteger launchCount = [[NSUserDefaults standardUserDefaults] integerForKey:@"launchCount"];
-    if (launchCount % 365 == 10) {
+    if (launchCount % 365 == 3) {
         // 显示评分
         if (@available(iOS 10.3, *)) {
             if([SKStoreReviewController respondsToSelector:@selector(requestReview)]){
