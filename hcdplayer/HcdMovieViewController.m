@@ -21,6 +21,8 @@
 #import "HcdSoundProgressView.h"
 #import "HcdAppManager.h"
 #import "MRDLNA.h"
+#import <GCDWebServer/GCDWebDAVServer.h>
+#import <GCDWebServer/GCDWebServerFileResponse.h>
 #import "HcdActionSheet.h"
 
 #define kLeastMoveDistance 15.0
@@ -88,7 +90,7 @@ static NSMutableDictionary * gHistory;
 #define NETWORK_MIN_BUFFERED_DURATION 2.0
 #define NETWORK_MAX_BUFFERED_DURATION 4.0
 
-@interface HcdMovieViewController ()<DLNADelegate> {
+@interface HcdMovieViewController ()<DLNADelegate, GCDWebDAVServerDelegate> {
     
     HcdMovieDecoder      *_decoder;
     dispatch_queue_t    _dispatchQueue;
@@ -205,6 +207,11 @@ static NSMutableDictionary * gHistory;
  * 附近支持DLNA的设备
  */
 @property (nonatomic, strong) NSArray *deviceArr;
+
+/**
+ * 服务器
+ */
+@property (nonatomic, strong) GCDWebDAVServer* davServer;
 
 @end
 
@@ -421,6 +428,8 @@ static NSMutableDictionary * gHistory;
     [super viewDidLoad];
     self.dlnaManager = [MRDLNA sharedMRDLNAManager];
     self.dlnaManager.delegate = self;
+    
+    [self makeServer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -568,7 +577,7 @@ static NSMutableDictionary * gHistory;
         [_airPlayButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_tv"] forState:UIControlStateNormal];
         _airPlayButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
         _airPlayButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        _airPlayButton.hidden = YES;
+        _airPlayButton.hidden = NO;
         [_airPlayButton addTarget:self action:@selector(airPlayClicked) forControlEvents:UIControlEventTouchUpInside];
     }
     return _airPlayButton;
@@ -1208,6 +1217,21 @@ static NSMutableDictionary * gHistory;
         default:
             break;
     }
+}
+
+/**
+ 开启服务器
+ */
+- (void)makeServer {
+    __weak typeof(self) weakSelf = self;
+    NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    self.davServer = [[GCDWebDAVServer alloc] initWithUploadDirectory:documentsPath];
+    self.davServer.delegate =  self;
+    [self.davServer addHandlerForMethod:@"GET" pathRegex:@"/video.mov" requestClass:[GCDWebServerRequest class] asyncProcessBlock:^(__kindof GCDWebServerRequest * _Nonnull request, GCDWebServerCompletionBlock  _Nonnull completionBlock) {
+        GCDWebServerFileResponse *res = [GCDWebServerFileResponse responseWithFile:weakSelf.path byteRange:request.byteRange];
+        completionBlock(res);
+    }];
+    [self.davServer start];
 }
 
 - (void) setMovieDecoder: (HcdMovieDecoder *) decoder
@@ -2371,6 +2395,11 @@ static NSMutableDictionary * gHistory;
  * 响应点击电视事件
  */
 - (void)airPlayClicked {
+    
+    if (!self.deviceArr || self.deviceArr.count == 0) {
+        [self.dlnaManager startSearch];
+    }
+    
     NSMutableArray *deviceNameArr = [NSMutableArray array];
     for (CLUPnPDevice *device in self.deviceArr) {
         [deviceNameArr addObject:device.friendlyName];
@@ -2381,9 +2410,9 @@ static NSMutableDictionary * gHistory;
      __weak HcdMovieViewController *weakSelf = self;
     sheet.seletedButtonIndex = ^(NSInteger index) {
         if (index > 0) {
-            CLUPnPDevice *device = [self.deviceArr objectAtIndex:index - 1];
+            CLUPnPDevice *device = [weakSelf.deviceArr objectAtIndex:index - 1];
             self.dlnaManager.device = device;
-            self.dlnaManager.playUrl = weakSelf.path;
+            self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", weakSelf.davServer.serverURL.absoluteString];
             [self.dlnaManager startDLNA];
         }
     };
