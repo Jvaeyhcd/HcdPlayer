@@ -9,9 +9,10 @@ target 'HcdPlayer' do
     pod 'Masonry', '~> 1.1.0'
     pod 'GCDWebServer', '3.4.2'
     pod 'GCDWebServer/WebDAV', '3.4.2'
+    pod 'CocoaAsyncSocket'
     pod 'FDFullscreenPopGesture', '~> 1.1'
     pod 'HcdActionSheet', :path => '../HcdActionSheet'
-    pod 'MRDLNA'
+#    pod 'MRDLNA'
     pod 'MBProgressHUD'
     # swift
     pod 'HcdSpecialField', :path => '../HcdSpecialField'

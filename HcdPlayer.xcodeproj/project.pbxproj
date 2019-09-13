@@ -72,6 +72,18 @@
 		B9BC1120227DBB6F00145E2B /* SendEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC111F227DBB6F00145E2B /* SendEmailViewController.m */; };
 		B9BC112322846F0D00145E2B /* HPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC112222846F0C00145E2B /* HPlayerViewController.m */; };
 		B9DAF6E2223E54CD00D7A512 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */; };
+		B9DF3EE42324889900DDA47E /* SearchDLNAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EE32324889900DDA47E /* SearchDLNAViewController.m */; };
+		B9DF3EFB2324924400DDA47E /* CLUPnPAVPositionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EE62324924400DDA47E /* CLUPnPAVPositionInfo.m */; };
+		B9DF3EFC2324924400DDA47E /* CLUPnPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EE82324924400DDA47E /* CLUPnPAction.m */; };
+		B9DF3EFD2324924400DDA47E /* SetUrl.xml in Resources */ = {isa = PBXBuildFile; fileRef = B9DF3EEA2324924400DDA47E /* SetUrl.xml */; };
+		B9DF3EFE2324924400DDA47E /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EEE2324924400DDA47E /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B9DF3EFF2324924400DDA47E /* CLUPnPDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EEF2324924400DDA47E /* CLUPnPDevice.m */; };
+		B9DF3F002324924400DDA47E /* MRDLNA.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EF12324924400DDA47E /* MRDLNA.m */; };
+		B9DF3F012324924400DDA47E /* CLUPnPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EF22324924400DDA47E /* CLUPnPServer.m */; };
+		B9DF3F022324924400DDA47E /* CLUPnPRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EF42324924400DDA47E /* CLUPnPRenderer.m */; };
+		B9DF3F032324924400DDA47E /* StopAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EF72324924400DDA47E /* StopAction.m */; };
+		B9DF3F042324924400DDA47E /* Device.xml in Resources */ = {isa = PBXBuildFile; fileRef = B9DF3EF82324924400DDA47E /* Device.xml */; };
+		B9DF3F06232493F100DDA47E /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DF3F05232493F000DDA47E /* libxml2.tbd */; };
 		B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */; };
 		B9FCE2DB223BF10800E2B9E4 /* HcdProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2DA223BF10800E2B9E4 /* HcdProgressView.m */; };
 		B9FCE2DE223BF6A900E2B9E4 /* HcdBrightnessProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2DD223BF6A900E2B9E4 /* HcdBrightnessProgressView.m */; };
@@ -294,6 +306,29 @@
 		B9BC112122846F0C00145E2B /* HPlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HPlayerViewController.h; sourceTree = "<group>"; };
 		B9BC112222846F0C00145E2B /* HPlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPlayerViewController.m; sourceTree = "<group>"; };
 		B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		B9DF3EE22324889900DDA47E /* SearchDLNAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchDLNAViewController.h; sourceTree = "<group>"; };
+		B9DF3EE32324889900DDA47E /* SearchDLNAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchDLNAViewController.m; sourceTree = "<group>"; };
+		B9DF3EE62324924400DDA47E /* CLUPnPAVPositionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLUPnPAVPositionInfo.m; sourceTree = "<group>"; };
+		B9DF3EE72324924400DDA47E /* CLUPnPRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUPnPRenderer.h; sourceTree = "<group>"; };
+		B9DF3EE82324924400DDA47E /* CLUPnPAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLUPnPAction.m; sourceTree = "<group>"; };
+		B9DF3EE92324924400DDA47E /* CLUPnPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUPnPServer.h; sourceTree = "<group>"; };
+		B9DF3EEA2324924400DDA47E /* SetUrl.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = SetUrl.xml; sourceTree = "<group>"; };
+		B9DF3EEB2324924400DDA47E /* StopAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StopAction.h; sourceTree = "<group>"; };
+		B9DF3EED2324924400DDA47E /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDataXMLNode.h; sourceTree = "<group>"; };
+		B9DF3EEE2324924400DDA47E /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDataXMLNode.m; sourceTree = "<group>"; };
+		B9DF3EEF2324924400DDA47E /* CLUPnPDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLUPnPDevice.m; sourceTree = "<group>"; };
+		B9DF3EF02324924400DDA47E /* CLUPnPResponseDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUPnPResponseDelegate.h; sourceTree = "<group>"; };
+		B9DF3EF12324924400DDA47E /* MRDLNA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDLNA.m; sourceTree = "<group>"; };
+		B9DF3EF22324924400DDA47E /* CLUPnPServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLUPnPServer.m; sourceTree = "<group>"; };
+		B9DF3EF32324924400DDA47E /* CLUPnPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUPnPAction.h; sourceTree = "<group>"; };
+		B9DF3EF42324924400DDA47E /* CLUPnPRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLUPnPRenderer.m; sourceTree = "<group>"; };
+		B9DF3EF52324924400DDA47E /* CLUPnPAVPositionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUPnPAVPositionInfo.h; sourceTree = "<group>"; };
+		B9DF3EF62324924400DDA47E /* CLUPnP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUPnP.h; sourceTree = "<group>"; };
+		B9DF3EF72324924400DDA47E /* StopAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StopAction.m; sourceTree = "<group>"; };
+		B9DF3EF82324924400DDA47E /* Device.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Device.xml; sourceTree = "<group>"; };
+		B9DF3EF92324924400DDA47E /* MRDLNA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDLNA.h; sourceTree = "<group>"; };
+		B9DF3EFA2324924400DDA47E /* CLUPnPDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUPnPDevice.h; sourceTree = "<group>"; };
+		B9DF3F05232493F000DDA47E /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		B9FCE2D6223520B900E2B9E4 /* HcdPlayerDraggingProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdPlayerDraggingProgressView.h; sourceTree = "<group>"; };
 		B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdPlayerDraggingProgressView.m; sourceTree = "<group>"; };
 		B9FCE2D9223BF10800E2B9E4 /* HcdProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdProgressView.h; sourceTree = "<group>"; };
@@ -311,6 +346,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9DF3F06232493F100DDA47E /* libxml2.tbd in Frameworks */,
 				B9B57CF3229237CE00E492CD /* StoreKit.framework in Frameworks */,
 				B9BC111D227D7DC800145E2B /* MessageUI.framework in Frameworks */,
 				B9DAF6E2223E54CD00D7A512 /* MediaPlayer.framework in Frameworks */,
@@ -336,6 +372,7 @@
 		2D328B5F2BEDFD13C59C3EA7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B9DF3F05232493F000DDA47E /* libxml2.tbd */,
 				B9B57CF2229237CE00E492CD /* StoreKit.framework */,
 				B9BC111C227D7DC700145E2B /* MessageUI.framework */,
 				B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */,
@@ -609,6 +646,8 @@
 				B9FCE2DD223BF6A900E2B9E4 /* HcdBrightnessProgressView.m */,
 				B9FCE2DF223BF6BA00E2B9E4 /* HcdSoundProgressView.h */,
 				B9FCE2E0223BF6BA00E2B9E4 /* HcdSoundProgressView.m */,
+				B9DF3EE22324889900DDA47E /* SearchDLNAViewController.h */,
+				B9DF3EE32324889900DDA47E /* SearchDLNAViewController.m */,
 			);
 			path = hcdplayer;
 			sourceTree = "<group>";
@@ -738,6 +777,7 @@
 		B9AA908B21F3038700F3C70E /* Vender */ = {
 			isa = PBXGroup;
 			children = (
+				B9DF3EE52324924400DDA47E /* MRDLNA */,
 				B9A6F2F6221E6D730027D017 /* Reachability */,
 				B9A6F2EF221C41730027D017 /* DZNEmptyDataSet */,
 				B9AA90A821F5760F00F3C70E /* GCDWebUploader */,
@@ -763,6 +803,41 @@
 				B9AA90AB21F5760F00F3C70E /* GCDWebUploader.m */,
 			);
 			path = GCDWebUploader;
+			sourceTree = "<group>";
+		};
+		B9DF3EE52324924400DDA47E /* MRDLNA */ = {
+			isa = PBXGroup;
+			children = (
+				B9DF3EE62324924400DDA47E /* CLUPnPAVPositionInfo.m */,
+				B9DF3EE72324924400DDA47E /* CLUPnPRenderer.h */,
+				B9DF3EE82324924400DDA47E /* CLUPnPAction.m */,
+				B9DF3EE92324924400DDA47E /* CLUPnPServer.h */,
+				B9DF3EEA2324924400DDA47E /* SetUrl.xml */,
+				B9DF3EEB2324924400DDA47E /* StopAction.h */,
+				B9DF3EEC2324924400DDA47E /* MRC */,
+				B9DF3EEF2324924400DDA47E /* CLUPnPDevice.m */,
+				B9DF3EF02324924400DDA47E /* CLUPnPResponseDelegate.h */,
+				B9DF3EF12324924400DDA47E /* MRDLNA.m */,
+				B9DF3EF22324924400DDA47E /* CLUPnPServer.m */,
+				B9DF3EF32324924400DDA47E /* CLUPnPAction.h */,
+				B9DF3EF42324924400DDA47E /* CLUPnPRenderer.m */,
+				B9DF3EF52324924400DDA47E /* CLUPnPAVPositionInfo.h */,
+				B9DF3EF62324924400DDA47E /* CLUPnP.h */,
+				B9DF3EF72324924400DDA47E /* StopAction.m */,
+				B9DF3EF82324924400DDA47E /* Device.xml */,
+				B9DF3EF92324924400DDA47E /* MRDLNA.h */,
+				B9DF3EFA2324924400DDA47E /* CLUPnPDevice.h */,
+			);
+			path = MRDLNA;
+			sourceTree = "<group>";
+		};
+		B9DF3EEC2324924400DDA47E /* MRC */ = {
+			isa = PBXGroup;
+			children = (
+				B9DF3EED2324924400DDA47E /* GDataXMLNode.h */,
+				B9DF3EEE2324924400DDA47E /* GDataXMLNode.m */,
+			);
+			path = MRC;
 			sourceTree = "<group>";
 		};
 		FC28C05C1DFD0F571E15C0F1 /* Pods */ = {
@@ -840,9 +915,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9DF3EFD2324924400DDA47E /* SetUrl.xml in Resources */,
 				B9AA908A21F2F24D00F3C70E /* hcdplayer.bundle in Resources */,
 				B9AA909B21F307AD00F3C70E /* Localizable.strings in Resources */,
 				B9AA909521F305CC00F3C70E /* InfoPlist.strings in Resources */,
+				B9DF3F042324924400DDA47E /* Device.xml in Resources */,
 				B9AA90AC21F5760F00F3C70E /* GCDWebUploader.bundle in Resources */,
 				B9AA8FDA21ED785100F3C70E /* Assets.xcassets in Resources */,
 			);
@@ -893,11 +970,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9DF3F022324924400DDA47E /* CLUPnPRenderer.m in Sources */,
 				B9A6F2F2221C41730027D017 /* UIScrollView+EmptyDataSet.m in Sources */,
 				B9FCE2DB223BF10800E2B9E4 /* HcdProgressView.m in Sources */,
 				B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */,
 				B9AA90B921F5F5B800F3C70E /* UIView+Hcd.m in Sources */,
 				B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */,
+				B9DF3EFE2324924400DDA47E /* GDataXMLNode.m in Sources */,
 				B9AA90B621F5EE3700F3C70E /* FilesListTableViewCell.m in Sources */,
 				B9AA90A721F56B4200F3C70E /* WifiTransferViewController.m in Sources */,
 				B9AA90BF21F73A8E00F3C70E /* UITableView+Hcd.m in Sources */,
@@ -905,11 +984,13 @@
 				B9085F2A2258331000AF8DC5 /* DocumentViewController.m in Sources */,
 				B9BC1120227DBB6F00145E2B /* SendEmailViewController.m in Sources */,
 				B9AA906321ED7C0A00F3C70E /* HcdAudioManager.m in Sources */,
+				B9DF3EE42324889900DDA47E /* SearchDLNAViewController.m in Sources */,
 				B9AA908F21F303AD00F3C70E /* HcdLocalized.m in Sources */,
 				B9AA906721ED7CF800F3C70E /* HcdMovieDecoder.m in Sources */,
 				B9BC112322846F0D00145E2B /* HPlayerViewController.m in Sources */,
 				B9AA908821F2D21300F3C70E /* SettingViewController.m in Sources */,
 				B9A92B662245C02C002989B2 /* PasscodeViewController.m in Sources */,
+				B9DF3F032324924400DDA47E /* StopAction.m in Sources */,
 				B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */,
 				B9AA907F21F2D1DD00F3C70E /* LocalMainViewController.m in Sources */,
 				B96CF6FB222649EB00881CD4 /* HcdImagePickerViewController.m in Sources */,
@@ -920,8 +1001,10 @@
 				B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */,
 				B9FD9F102267557900EC8B37 /* AboutViewController.m in Sources */,
 				B9AA908521F2D20400F3C70E /* BrowserViewController.m in Sources */,
+				B9DF3EFF2324924400DDA47E /* CLUPnPDevice.m in Sources */,
 				B9BC111B226B64B200145E2B /* VersionView.m in Sources */,
 				B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */,
+				B9DF3F012324924400DDA47E /* CLUPnPServer.m in Sources */,
 				B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */,
 				B902F411222EB79E0049A626 /* BaseViewController.m in Sources */,
 				B9AA907821EDCB6100F3C70E /* BaseNavigationController.m in Sources */,
@@ -931,6 +1014,8 @@
 				B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */,
 				B9AA90A421F5631700F3C70E /* NSString+Hcd.m in Sources */,
 				B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */,
+				B9DF3F002324924400DDA47E /* MRDLNA.m in Sources */,
+				B9DF3EFB2324924400DDA47E /* CLUPnPAVPositionInfo.m in Sources */,
 				B9A6F2F9221E6D8F0027D017 /* Reachability.m in Sources */,
 				B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */,
 				B96CF6FE22265BE200881CD4 /* HcdFileSortManager.m in Sources */,
@@ -940,6 +1025,7 @@
 				B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */,
 				B9AA906D21ED7E0F00F3C70E /* HcdMovieViewController.m in Sources */,
 				B9AA907421EDC04100F3C70E /* UIColor+Hcd.m in Sources */,
+				B9DF3EFC2324924400DDA47E /* CLUPnPAction.m in Sources */,
 				B9FCE2E1223BF6BA00E2B9E4 /* HcdSoundProgressView.m in Sources */,
 				B9AA90AD21F5760F00F3C70E /* GCDWebUploader.m in Sources */,
 				B9A92B6322411268002989B2 /* HcdAppManager.m in Sources */,
@@ -1111,6 +1197,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/MRDLNA\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Masonry\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/NSLogger\"",
+					"${SDKROOT}/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = HcdPlayerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1155,6 +1242,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/MRDLNA\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Masonry\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/NSLogger\"",
+					"${SDKROOT}/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = HcdPlayerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;

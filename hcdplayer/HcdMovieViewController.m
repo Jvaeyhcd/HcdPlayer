@@ -7,6 +7,7 @@
 //
 
 #import "HcdMovieViewController.h"
+#import "SearchDLNAViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AVFoundation/AVFoundation.h>
@@ -285,7 +286,14 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void) dealloc {
+    
+    // 暂停播放
     [self pause];
+    
+    [self.davServer stop];
+    self.davServer = nil;
+    
+    [self.dlnaManager endDLNA];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (_dispatchQueue) {
@@ -434,6 +442,8 @@ static NSMutableDictionary * gHistory;
 
 - (void)viewWillAppear:(BOOL)animated {
     
+    self.navigationController.navigationBarHidden = YES;
+    
     // 不自动锁屏
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     
@@ -479,6 +489,7 @@ static NSMutableDictionary * gHistory;
 - (void) viewWillDisappear:(BOOL)animated {
     
     [super viewWillDisappear:animated];
+    
     // 恢复自动锁屏
     [UIApplication sharedApplication].idleTimerDisabled = NO;
     
@@ -516,7 +527,7 @@ static NSMutableDictionary * gHistory;
     LoggerStream(1, @"applicationWillResignActive");
 }
 
-#pragma mark - getter
+#pragma mark - lazy load
 
 - (UILabel *)progressLabel {
     if (!_progressLabel) {
@@ -1149,6 +1160,7 @@ static NSMutableDictionary * gHistory;
         [self.bottomView addSubview:self.fullButton];
         
         _isFullScreen = NO;
+        self.airPlayButton.hidden = NO;
 
     } else if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
         
@@ -1191,6 +1203,7 @@ static NSMutableDictionary * gHistory;
         [self.fullButton removeFromSuperview];
         [self.bottomView addSubview:self.exitFullButton];
         _isFullScreen = YES;
+        self.airPlayButton.hidden = YES;
     }
 }
 
@@ -1617,7 +1630,10 @@ static NSMutableDictionary * gHistory;
     return NO;
 }
 
-- (void) asyncDecodeFrames {
+/**
+ 异步解码每一帧画面
+ */
+- (void)asyncDecodeFrames {
     if (self.decoding)
         return;
     
@@ -2396,28 +2412,32 @@ static NSMutableDictionary * gHistory;
  */
 - (void)airPlayClicked {
     
-    if (!self.deviceArr || self.deviceArr.count == 0) {
-        [self.dlnaManager startSearch];
-    }
+    SearchDLNAViewController *vc = [[SearchDLNAViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
     
-    NSMutableArray *deviceNameArr = [NSMutableArray array];
-    for (CLUPnPDevice *device in self.deviceArr) {
-        [deviceNameArr addObject:device.friendlyName];
-    }
-    HcdActionSheet *sheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil)
-                                                    otherButtonTitles:deviceNameArr
-                                                          attachTitle:HcdLocalized(@"please_select_device", nil)];
-     __weak HcdMovieViewController *weakSelf = self;
-    sheet.seletedButtonIndex = ^(NSInteger index) {
-        if (index > 0) {
-            CLUPnPDevice *device = [weakSelf.deviceArr objectAtIndex:index - 1];
-            self.dlnaManager.device = device;
-            self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", weakSelf.davServer.serverURL.absoluteString];
-            [self.dlnaManager startDLNA];
-        }
-    };
-    [[UIApplication sharedApplication].keyWindow addSubview:sheet];
-    [sheet showHcdActionSheet];
+//    if (!self.deviceArr || self.deviceArr.count == 0) {
+//        [self.dlnaManager startSearch];
+//    }
+//
+//    NSMutableArray *deviceNameArr = [NSMutableArray array];
+//    for (CLUPnPDevice *device in self.deviceArr) {
+//        [deviceNameArr addObject:device.friendlyName];
+//    }
+//    HcdActionSheet *sheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil)
+//                                                    otherButtonTitles:deviceNameArr
+//                                                          attachTitle:HcdLocalized(@"please_select_device", nil)];
+//     __weak HcdMovieViewController *weakSelf = self;
+//    sheet.seletedButtonIndex = ^(NSInteger index) {
+//        if (index > 0) {
+//            CLUPnPDevice *device = [weakSelf.deviceArr objectAtIndex:index - 1];
+//            self.dlnaManager.device = device;
+//            self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", weakSelf.davServer.serverURL.absoluteString];
+//            [self.dlnaManager startDLNA];
+//        }
+//    };
+//    [[UIApplication sharedApplication].keyWindow addSubview:sheet];
+//    [sheet showHcdActionSheet];
     
 }
 
