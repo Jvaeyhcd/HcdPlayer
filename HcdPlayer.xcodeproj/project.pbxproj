@@ -84,6 +84,7 @@
 		B9DF3F032324924400DDA47E /* StopAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EF72324924400DDA47E /* StopAction.m */; };
 		B9DF3F042324924400DDA47E /* Device.xml in Resources */ = {isa = PBXBuildFile; fileRef = B9DF3EF82324924400DDA47E /* Device.xml */; };
 		B9DF3F06232493F100DDA47E /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DF3F05232493F000DDA47E /* libxml2.tbd */; };
+		B9E2F618232CC9B90059662A /* HcdPopSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E2F617232CC9B90059662A /* HcdPopSelectView.m */; };
 		B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */; };
 		B9FCE2DB223BF10800E2B9E4 /* HcdProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2DA223BF10800E2B9E4 /* HcdProgressView.m */; };
 		B9FCE2DE223BF6A900E2B9E4 /* HcdBrightnessProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2DD223BF6A900E2B9E4 /* HcdBrightnessProgressView.m */; };
@@ -329,6 +330,8 @@
 		B9DF3EF92324924400DDA47E /* MRDLNA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDLNA.h; sourceTree = "<group>"; };
 		B9DF3EFA2324924400DDA47E /* CLUPnPDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUPnPDevice.h; sourceTree = "<group>"; };
 		B9DF3F05232493F000DDA47E /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		B9E2F616232CC9B90059662A /* HcdPopSelectView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdPopSelectView.h; sourceTree = "<group>"; };
+		B9E2F617232CC9B90059662A /* HcdPopSelectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdPopSelectView.m; sourceTree = "<group>"; };
 		B9FCE2D6223520B900E2B9E4 /* HcdPlayerDraggingProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdPlayerDraggingProgressView.h; sourceTree = "<group>"; };
 		B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdPlayerDraggingProgressView.m; sourceTree = "<group>"; };
 		B9FCE2D9223BF10800E2B9E4 /* HcdProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdProgressView.h; sourceTree = "<group>"; };
@@ -690,6 +693,8 @@
 				B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */,
 				B9BB461821F9D1BD00682DD5 /* HcdAlertInputView.h */,
 				B9BB461921F9D1BD00682DD5 /* HcdAlertInputView.m */,
+				B9E2F616232CC9B90059662A /* HcdPopSelectView.h */,
+				B9E2F617232CC9B90059662A /* HcdPopSelectView.m */,
 				B9A1DC242224091800F4C9C2 /* EditBottomView.h */,
 				B9A1DC252224091800F4C9C2 /* EditBottomView.m */,
 				B96CF6F2222627AA00881CD4 /* HcdDocument.h */,
@@ -1012,6 +1017,7 @@
 				B9AA908221F2D1F100F3C70E /* PlaylistViewController.m in Sources */,
 				B9AA90B321F5B2C400F3C70E /* HcdFileManager.m in Sources */,
 				B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */,
+				B9E2F618232CC9B90059662A /* HcdPopSelectView.m in Sources */,
 				B9AA90A421F5631700F3C70E /* NSString+Hcd.m in Sources */,
 				B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */,
 				B9DF3F002324924400DDA47E /* MRDLNA.m in Sources */,

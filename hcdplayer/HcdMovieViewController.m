@@ -25,6 +25,7 @@
 #import <GCDWebServer/GCDWebDAVServer.h>
 #import <GCDWebServer/GCDWebServerFileResponse.h>
 #import "HcdActionSheet.h"
+#import "HcdPopSelectView.h"
 
 #define kLeastMoveDistance 15.0
 
@@ -2412,18 +2413,20 @@ static NSMutableDictionary * gHistory;
  */
 - (void)airPlayClicked {
     
-    SearchDLNAViewController *vc = [[SearchDLNAViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self presentViewController:nav animated:YES completion:nil];
+//    SearchDLNAViewController *vc = [[SearchDLNAViewController alloc] init];
+//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+//    [self presentViewController:nav animated:YES completion:nil];
     
-//    if (!self.deviceArr || self.deviceArr.count == 0) {
-//        [self.dlnaManager startSearch];
-//    }
-//
-//    NSMutableArray *deviceNameArr = [NSMutableArray array];
-//    for (CLUPnPDevice *device in self.deviceArr) {
-//        [deviceNameArr addObject:device.friendlyName];
-//    }
+    [self pause];
+    
+    if (!self.deviceArr || self.deviceArr.count == 0) {
+        [self.dlnaManager startSearch];
+    }
+
+    NSMutableArray *deviceNameArr = [NSMutableArray array];
+    for (CLUPnPDevice *device in self.deviceArr) {
+        [deviceNameArr addObject:device.friendlyName];
+    }
 //    HcdActionSheet *sheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil)
 //                                                    otherButtonTitles:deviceNameArr
 //                                                          attachTitle:HcdLocalized(@"please_select_device", nil)];
@@ -2438,6 +2441,19 @@ static NSMutableDictionary * gHistory;
 //    };
 //    [[UIApplication sharedApplication].keyWindow addSubview:sheet];
 //    [sheet showHcdActionSheet];
+    
+    HcdPopSelectView *selectDeviceView = [[HcdPopSelectView alloc] initWithDataArray:deviceNameArr title:@"请选择要投屏的设备"];
+    
+//    __weak typeof(self) weakSelf = self;
+    selectDeviceView.seletedIndex = ^(NSInteger index) {
+        CLUPnPDevice *device = [self.deviceArr objectAtIndex:index];
+        self.dlnaManager.device = device;
+        self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", self.davServer.serverURL.absoluteString];
+        [self.dlnaManager startDLNA];
+    };
+    
+    [[UIApplication sharedApplication].keyWindow addSubview:selectDeviceView];
+    [selectDeviceView show];
     
 }
 
