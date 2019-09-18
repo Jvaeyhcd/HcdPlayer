@@ -26,6 +26,7 @@
 #import <GCDWebServer/GCDWebServerFileResponse.h>
 #import "HcdActionSheet.h"
 #import "HcdPopSelectView.h"
+#import "RemoteControlView.h"
 
 #define kLeastMoveDistance 15.0
 
@@ -192,6 +193,8 @@ static NSMutableDictionary * gHistory;
 @property (nonatomic, strong) HcdPlayerDraggingProgressView *draggingProgressView;
 @property (nonatomic, strong) HcdBrightnessProgressView *brightnessProgressView;
 @property (nonatomic, strong) HcdSoundProgressView *soundProgressView;
+
+@property (nonatomic, strong) RemoteControlView *dlnaControlView;
 
 @property (readwrite, assign) UIInterfaceOrientation currentOrientation;
 @property (nonatomic, assign) BOOL           isFullScreen;
@@ -773,6 +776,13 @@ static NSMutableDictionary * gHistory;
         _soundProgressView.hidden = YES;
     }
     return _soundProgressView;
+}
+
+- (RemoteControlView *)dlnaControlView {
+    if (!_dlnaControlView) {
+        _dlnaControlView = [[RemoteControlView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+    }
+    return _dlnaControlView;
 }
 
 #pragma mark - gesture recognizer
@@ -2406,6 +2416,7 @@ static NSMutableDictionary * gHistory;
 
 - (void)dlnaStartPlay {
     // dlna开始播放了回调
+    [self.dlnaControlView show];
 }
 
 /**
@@ -2413,12 +2424,8 @@ static NSMutableDictionary * gHistory;
  */
 - (void)airPlayClicked {
     
-//    SearchDLNAViewController *vc = [[SearchDLNAViewController alloc] init];
-//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-//    [self presentViewController:nav animated:YES completion:nil];
-    
     [self pause];
-    
+
     if (!self.deviceArr || self.deviceArr.count == 0) {
         [self.dlnaManager startSearch];
     }
@@ -2427,31 +2434,16 @@ static NSMutableDictionary * gHistory;
     for (CLUPnPDevice *device in self.deviceArr) {
         [deviceNameArr addObject:device.friendlyName];
     }
-//    HcdActionSheet *sheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil)
-//                                                    otherButtonTitles:deviceNameArr
-//                                                          attachTitle:HcdLocalized(@"please_select_device", nil)];
-//     __weak HcdMovieViewController *weakSelf = self;
-//    sheet.seletedButtonIndex = ^(NSInteger index) {
-//        if (index > 0) {
-//            CLUPnPDevice *device = [weakSelf.deviceArr objectAtIndex:index - 1];
-//            self.dlnaManager.device = device;
-//            self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", weakSelf.davServer.serverURL.absoluteString];
-//            [self.dlnaManager startDLNA];
-//        }
-//    };
-//    [[UIApplication sharedApplication].keyWindow addSubview:sheet];
-//    [sheet showHcdActionSheet];
-    
+
     HcdPopSelectView *selectDeviceView = [[HcdPopSelectView alloc] initWithDataArray:deviceNameArr title:@"请选择要投屏的设备"];
-    
-//    __weak typeof(self) weakSelf = self;
+
     selectDeviceView.seletedIndex = ^(NSInteger index) {
         CLUPnPDevice *device = [self.deviceArr objectAtIndex:index];
         self.dlnaManager.device = device;
         self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", self.davServer.serverURL.absoluteString];
         [self.dlnaManager startDLNA];
     };
-    
+
     [[UIApplication sharedApplication].keyWindow addSubview:selectDeviceView];
     [selectDeviceView show];
     

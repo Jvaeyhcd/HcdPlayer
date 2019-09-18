@@ -85,6 +85,7 @@
 		B9DF3F042324924400DDA47E /* Device.xml in Resources */ = {isa = PBXBuildFile; fileRef = B9DF3EF82324924400DDA47E /* Device.xml */; };
 		B9DF3F06232493F100DDA47E /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DF3F05232493F000DDA47E /* libxml2.tbd */; };
 		B9E2F618232CC9B90059662A /* HcdPopSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E2F617232CC9B90059662A /* HcdPopSelectView.m */; };
+		B9E2F61B232E68AA0059662A /* RemoteControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E2F61A232E68AA0059662A /* RemoteControlView.m */; };
 		B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */; };
 		B9FCE2DB223BF10800E2B9E4 /* HcdProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2DA223BF10800E2B9E4 /* HcdProgressView.m */; };
 		B9FCE2DE223BF6A900E2B9E4 /* HcdBrightnessProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCE2DD223BF6A900E2B9E4 /* HcdBrightnessProgressView.m */; };
@@ -332,6 +333,8 @@
 		B9DF3F05232493F000DDA47E /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		B9E2F616232CC9B90059662A /* HcdPopSelectView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdPopSelectView.h; sourceTree = "<group>"; };
 		B9E2F617232CC9B90059662A /* HcdPopSelectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdPopSelectView.m; sourceTree = "<group>"; };
+		B9E2F619232E68AA0059662A /* RemoteControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteControlView.h; sourceTree = "<group>"; };
+		B9E2F61A232E68AA0059662A /* RemoteControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RemoteControlView.m; sourceTree = "<group>"; };
 		B9FCE2D6223520B900E2B9E4 /* HcdPlayerDraggingProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdPlayerDraggingProgressView.h; sourceTree = "<group>"; };
 		B9FCE2D7223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdPlayerDraggingProgressView.m; sourceTree = "<group>"; };
 		B9FCE2D9223BF10800E2B9E4 /* HcdProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdProgressView.h; sourceTree = "<group>"; };
@@ -651,6 +654,8 @@
 				B9FCE2E0223BF6BA00E2B9E4 /* HcdSoundProgressView.m */,
 				B9DF3EE22324889900DDA47E /* SearchDLNAViewController.h */,
 				B9DF3EE32324889900DDA47E /* SearchDLNAViewController.m */,
+				B9E2F619232E68AA0059662A /* RemoteControlView.h */,
+				B9E2F61A232E68AA0059662A /* RemoteControlView.m */,
 			);
 			path = hcdplayer;
 			sourceTree = "<group>";
@@ -978,6 +983,7 @@
 				B9DF3F022324924400DDA47E /* CLUPnPRenderer.m in Sources */,
 				B9A6F2F2221C41730027D017 /* UIScrollView+EmptyDataSet.m in Sources */,
 				B9FCE2DB223BF10800E2B9E4 /* HcdProgressView.m in Sources */,
+				B9E2F61B232E68AA0059662A /* RemoteControlView.m in Sources */,
 				B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */,
 				B9AA90B921F5F5B800F3C70E /* UIView+Hcd.m in Sources */,
 				B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */,

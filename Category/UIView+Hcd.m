@@ -23,7 +23,7 @@
 - (void)setCornerOnTop:(CGFloat)radius {
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
                                      byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight)
-                                           cornerRadii:CGSizeMake(10.0f, 10.0f)];
+                                           cornerRadii:CGSizeMake(radius, radius)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
     maskLayer.frame = self.bounds;
     maskLayer.path = maskPath.CGPath;
@@ -33,7 +33,7 @@
 - (void)setCornerOnBottom:(CGFloat)radius {
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
                                                    byRoundingCorners:(UIRectCornerBottomLeft | UIRectCornerBottomRight)
-                                                         cornerRadii:CGSizeMake(10.0f, 10.0f)];
+                                                         cornerRadii:CGSizeMake(radius, radius)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
     maskLayer.frame = self.bounds;
     maskLayer.path = maskPath.CGPath;
@@ -43,7 +43,7 @@
 - (void)setCornerOnLeft:(CGFloat)radius {
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
                                                    byRoundingCorners:(UIRectCornerBottomLeft | UIRectCornerTopLeft)
-                                                         cornerRadii:CGSizeMake(10.0f, 10.0f)];
+                                                         cornerRadii:CGSizeMake(radius, radius)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
     maskLayer.frame = self.bounds;
     maskLayer.path = maskPath.CGPath;
@@ -53,7 +53,7 @@
 - (void)setCornerOnRight:(CGFloat)radius {
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
                                                    byRoundingCorners:(UIRectCornerTopRight | UIRectCornerBottomRight)
-                                                         cornerRadii:CGSizeMake(10.0f, 10.0f)];
+                                                         cornerRadii:CGSizeMake(radius, radius)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
     maskLayer.frame = self.bounds;
     maskLayer.path = maskPath.CGPath;
