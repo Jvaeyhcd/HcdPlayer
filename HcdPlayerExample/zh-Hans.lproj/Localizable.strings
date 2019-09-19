@@ -78,3 +78,6 @@
 "playlist_empty_tips"="您还未播放过视频";
 "select_a_video_to_play"="请在本地选择一个视频进行播放";
 "select_a_device"="选择投屏设备";
+"switch_device"="切换设备";
+"quit"="退出投屏";
+"is_playing"="正在播放";

@@ -2452,7 +2452,9 @@ static NSMutableDictionary * gHistory;
     HcdPopSelectView *selectDeviceView = [[HcdPopSelectView alloc] initWithDataArray:deviceNameArr title:@"请选择要投屏的设备"];
 
     selectDeviceView.seletedIndex = ^(NSInteger index) {
+        
         CLUPnPDevice *device = [self.deviceArr objectAtIndex:index];
+        self.dlnaControlView.deviceLbl.text = device.modelName;
         [self.dlnaManager endDLNA];
         self.dlnaManager.device = device;
         self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", self.davServer.serverURL.absoluteString];

@@ -92,7 +92,7 @@
     if (!_quitBtn) {
         _quitBtn = [[UIButton alloc] init];
         _quitBtn.backgroundColor = [UIColor colorWithRGBHex:0x444444];
-        [_quitBtn setTitle:@"退出播放" forState:UIControlStateNormal];
+        [_quitBtn setTitle:HcdLocalized(@"quit", nil) forState:UIControlStateNormal];
         [_quitBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _quitBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         [_quitBtn addTarget:self action:@selector(clickQuitBtn) forControlEvents:UIControlEventTouchUpInside];
@@ -105,7 +105,7 @@
     if (!_changeBtn) {
         _changeBtn = [[UIButton alloc] init];
         _changeBtn.backgroundColor = [UIColor colorWithRGBHex:0x444444];
-        [_changeBtn setTitle:@"切换设备" forState:UIControlStateNormal];
+        [_changeBtn setTitle:HcdLocalized(@"switch_device", nil) forState:UIControlStateNormal];
         [_changeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _changeBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         [_changeBtn addTarget:self action:@selector(clickChangeBtn) forControlEvents:UIControlEventTouchUpInside];
@@ -120,7 +120,7 @@
         _deviceLbl.font = [UIFont systemFontOfSize:16];
         _deviceLbl.textColor = [UIColor whiteColor];
         _deviceLbl.textAlignment = NSTextAlignmentCenter;
-        _deviceLbl.text = @"客厅电视";
+        _deviceLbl.text = @"";
         [self addSubview:_deviceLbl];
     }
     return _deviceLbl;
@@ -132,7 +132,7 @@
         _statusLbl.font = [UIFont systemFontOfSize:12];
         _statusLbl.textColor = [UIColor color999];
         _statusLbl.textAlignment = NSTextAlignmentCenter;
-        _statusLbl.text = @"正在播放";
+        _statusLbl.text = HcdLocalized(@"is_playing", nil);
         [self addSubview:_statusLbl];
     }
     return _statusLbl;
