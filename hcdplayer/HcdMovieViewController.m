@@ -93,7 +93,7 @@ static NSMutableDictionary * gHistory;
 #define NETWORK_MIN_BUFFERED_DURATION 2.0
 #define NETWORK_MAX_BUFFERED_DURATION 4.0
 
-@interface HcdMovieViewController ()<DLNADelegate, GCDWebDAVServerDelegate> {
+@interface HcdMovieViewController ()<DLNADelegate, GCDWebDAVServerDelegate, RemoteControlViewDelegate> {
     
     HcdMovieDecoder      *_decoder;
     dispatch_queue_t    _dispatchQueue;
@@ -781,6 +781,7 @@ static NSMutableDictionary * gHistory;
 - (RemoteControlView *)dlnaControlView {
     if (!_dlnaControlView) {
         _dlnaControlView = [[RemoteControlView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+        _dlnaControlView.delegate = self;
     }
     return _dlnaControlView;
 }
@@ -1041,15 +1042,7 @@ static NSMutableDictionary * gHistory;
 
 - (void)lockDidTouch:(id)sender {
     _locked = !_locked;
-    [HcdAppManager sharedInstance].isLocked = _locked;
-    if (_locked) {
-        [self.unlockButton removeFromSuperview];
-        [self.view addSubview:self.lockButton];
-        [self setLockedOrientation:_currentOrientation];
-    } else {
-        [self.lockButton removeFromSuperview];
-        [self.view addSubview:self.unlockButton];
-    }
+    [self setDeviceLocked:_locked];
 }
 
 - (void)setLockedOrientation:(UIInterfaceOrientation)orientation {
@@ -1240,6 +1233,18 @@ static NSMutableDictionary * gHistory;
             break;
         default:
             break;
+    }
+}
+
+- (void)setDeviceLocked:(BOOL)locked {
+    [HcdAppManager sharedInstance].isLocked = locked;
+    if (locked) {
+        [self.unlockButton removeFromSuperview];
+        [self.view addSubview:self.lockButton];
+        [self setLockedOrientation:_currentOrientation];
+    } else {
+        [self.lockButton removeFromSuperview];
+        [self.view addSubview:self.unlockButton];
     }
 }
 
@@ -2415,8 +2420,12 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)dlnaStartPlay {
-    // dlna开始播放了回调
-    [self.dlnaControlView show];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // dlna开始播放了回调
+        [self.dlnaControlView show];
+    });
+    
 }
 
 /**
@@ -2424,6 +2433,11 @@ static NSMutableDictionary * gHistory;
  */
 - (void)airPlayClicked {
     
+    // 锁定旋转
+    _locked = YES;
+    [self setDeviceLocked:_locked];
+    
+    // 暂停播放
     [self pause];
 
     if (!self.deviceArr || self.deviceArr.count == 0) {
@@ -2439,6 +2453,7 @@ static NSMutableDictionary * gHistory;
 
     selectDeviceView.seletedIndex = ^(NSInteger index) {
         CLUPnPDevice *device = [self.deviceArr objectAtIndex:index];
+        [self.dlnaManager endDLNA];
         self.dlnaManager.device = device;
         self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", self.davServer.serverURL.absoluteString];
         [self.dlnaManager startDLNA];
@@ -2447,6 +2462,20 @@ static NSMutableDictionary * gHistory;
     [[UIApplication sharedApplication].keyWindow addSubview:selectDeviceView];
     [selectDeviceView show];
     
+}
+
+#pragma mark - RemoteControlViewDelegate
+
+- (void)didClickChangeDevice {
+    
+    [self airPlayClicked];
+}
+
+- (void)didClickQuitDLNAPlay {
+    // 停止endDLNA播放
+    [self.dlnaManager endDLNA];
+    // 隐藏播放控制界面
+    [self.dlnaControlView hide];
 }
 
 @end
