@@ -293,6 +293,7 @@ typedef enum : NSUInteger {
                 case 4: {
                     SortViewController *vc = [[SortViewController alloc] init];
                     BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
+                    nvc.modalPresentationStyle = UIModalPresentationFullScreen;
                     [weakSelf presentViewController:nvc animated:YES completion:^{
                         
                     }];
@@ -383,6 +384,7 @@ typedef enum : NSUInteger {
     vc.currentPath = _currentPath;
     vc.fileList = fileList;
     BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController: vc];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav animated:YES completion:^{
         
     }];
@@ -462,6 +464,7 @@ typedef enum : NSUInteger {
     vc.currentPath = _currentPath;
     vc.fileList = [[NSMutableArray alloc] initWithObjects:[NSString stringWithFormat:@"%@/%@", _currentPath, fileNmae], nil];
     BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController: vc];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav animated:YES completion:^{
         
     }];
@@ -551,11 +554,13 @@ typedef enum : NSUInteger {
     [UINavigationBar appearance].tintColor = kMainColor;
     UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.avi", @"public.3gpp", @"public.mpeg-4"] inMode:UIDocumentPickerModeOpen];
     picker.delegate = self;
+    picker.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:picker animated:YES completion:nil];
 }
 
 - (void)showWiFiTransferViewController {
     BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:[WifiTransferViewController new]];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav animated:YES completion:^{
         
     }];
@@ -568,6 +573,7 @@ typedef enum : NSUInteger {
     picker.delegate = self;
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     picker.mediaTypes = [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie, nil];
+    picker.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.navigationController presentViewController:picker animated:YES completion:nil];
 }
 
@@ -664,6 +670,7 @@ typedef enum : NSUInteger {
                     parameters[HcdMovieParameterDisableDeinterlacing] = @(YES);
                 }
                 HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
+                movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
                 [self presentViewController:movieVc animated:YES completion:nil];
                 break;
             }
@@ -675,6 +682,7 @@ typedef enum : NSUInteger {
                 DocumentViewController *vc = [[DocumentViewController alloc] init];
                 vc.documentPath = path;
                 UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+                nav.modalPresentationStyle = UIModalPresentationFullScreen;
                 [self presentViewController:nav animated:YES completion:nil];
                 break;
             }

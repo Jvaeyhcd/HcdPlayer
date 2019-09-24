@@ -191,6 +191,7 @@ enum {
         } else if (indexPath.row == HcdSettingGeneralSort) {
             SortViewController *vc = [[SortViewController alloc] init];
             BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
+            nvc.modalPresentationStyle = UIModalPresentationFullScreen;
             [self presentViewController:nvc animated:YES completion:^{
                 
             }];
@@ -217,7 +218,9 @@ enum {
                 vc.type = PasscodeTypeSet;
             }
             
-            [self presentViewController:[[BaseNavigationController alloc] initWithRootViewController:vc] animated:YES completion:^{
+            BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController:vc];
+            nav.modalPresentationStyle = UIModalPresentationFullScreen;
+            [self presentViewController:nav animated:YES completion:^{
                 
             }];
             break;

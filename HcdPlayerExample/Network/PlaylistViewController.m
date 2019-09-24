@@ -90,6 +90,7 @@
     }
     if (path) {
         HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:[NSString stringWithFormat:@"%@%@", documentPath, path] parameters:parameters];
+        movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:movieVc animated:YES completion:nil];
     }
 }

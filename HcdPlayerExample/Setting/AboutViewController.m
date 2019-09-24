@@ -155,6 +155,7 @@ enum {
     [vc setMessageBody:message isHTML:NO];
     [vc setToRecipients:@[@"chedahuang@icloud.com"]];
     vc.mailComposeDelegate = self;
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:nil];
 }
 
