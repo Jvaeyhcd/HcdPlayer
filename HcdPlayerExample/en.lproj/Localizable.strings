@@ -81,3 +81,9 @@
 "switch_device"="Switch Device";
 "quit"="Quit";
 "is_playing"="Playing";
+
+"html_template_name" = "index";
+
+"PROLOGUE" = "<p style='color: #EEEEEE;'>Drag &amp; drop files on this window or use the \"Upload Files&hellip;\" button to upload new files.</p>";
+"EPILOGUE" = "";
+"FOOTER_FORMAT" = "%@ %@";

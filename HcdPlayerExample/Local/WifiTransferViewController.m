@@ -56,6 +56,9 @@
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     _webServer = [[GCDWebUploader alloc] initWithUploadDirectory:documentsPath];
     _webServer.delegate = self;
+    _webServer.prologue = HcdLocalized(@"PROLOGUE", nil);
+    _webServer.epilogue = HcdLocalized(@"EPILOGUE", nil);
+    _webServer.htmlTemplate = HcdLocalized(@"html_template_name", nil);
     _webServer.allowHiddenItems = YES;
     if ([_webServer start]) {
         NSLog(@"GCDWebServer running locally on port %lu", (unsigned long)_webServer.serverURL);

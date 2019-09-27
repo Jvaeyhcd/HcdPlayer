@@ -81,3 +81,9 @@
 "switch_device"="切換設備";
 "quit"="退出投屏";
 "is_playing"="正在播放";
+
+"html_template_name" = "index.zh.hant";
+
+"PROLOGUE" = "<p style='color: #EEEEEE;'>拖動文件到本窗口，或者點擊\"上傳文件\"按鈕選擇文件上傳</p>";
+"EPILOGUE" = "";
+"FOOTER_FORMAT" = "%@ %@";

@@ -126,7 +126,14 @@ NS_ASSUME_NONNULL_END
 #endif
                      footer = [NSString stringWithFormat:[siteBundle localizedStringForKey:@"FOOTER_FORMAT" value:@"" table:nil], name, version];
                    }
-                   return [GCDWebServerDataResponse responseWithHTMLTemplate:(NSString*)[siteBundle pathForResource:@"index" ofType:@"html"]
+        
+        NSString *htmlName = @"index";
+        
+        if (server.htmlTemplate) {
+            htmlName = server.htmlTemplate;
+        }
+        
+                   return [GCDWebServerDataResponse responseWithHTMLTemplate:(NSString*)[siteBundle pathForResource:htmlName ofType:@"html"]
                                                                    variables:@{
                                                                      @"device" : device,
                                                                      @"title" : title,

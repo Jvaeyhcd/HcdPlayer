@@ -81,3 +81,9 @@
 "switch_device"="切换设备";
 "quit"="退出投屏";
 "is_playing"="正在播放";
+
+"html_template_name" = "index.zh.hans";
+
+"PROLOGUE" = "<p style='color: #EEEEEE;'>拖动文件到本窗口，或者点击\"上传文件\"按钮选择文件上传</p>";
+"EPILOGUE" = "";
+"FOOTER_FORMAT" = "%@ %@";

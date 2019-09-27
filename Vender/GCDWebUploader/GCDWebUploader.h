@@ -153,6 +153,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, copy) NSString* footer;
 
+@property(nonatomic, copy) NSString* htmlTemplate;
+
 /**
  *  This method is the designated initializer for the class.
  */
