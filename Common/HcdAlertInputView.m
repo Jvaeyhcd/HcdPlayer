@@ -13,9 +13,8 @@
 
 #define kScreen_Height [UIScreen mainScreen].bounds.size.height
 #define kScreen_Width [UIScreen mainScreen].bounds.size.width
-#define kScaleFrom_iPhone5_Desgin(_X_) (_X_ * (kScreen_Width/320))
 
-#define kContenViewHeight kScaleFrom_iPhone5_Desgin(110)
+#define kContenViewHeight scaleFromiPhoneXDesign(110)
 
 @interface HcdAlertInputView()<UITextViewDelegate>
 

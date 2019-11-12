@@ -12,7 +12,7 @@
 
 #define kCellIdSingleSelectTableViewCell @"SingleSelectTableViewCell"
 
-#define kContenViewHeight kScaleFrom_iPhone6_Desgin(110)
+#define kContenViewHeight scaleFromiPhoneXDesign(110)
 
 #define kRowHeight 50.0
 

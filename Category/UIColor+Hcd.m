@@ -109,6 +109,19 @@
                            alpha:1.0f];
 }
 
++ (UIColor *)colorRGBHex:(UInt32)hex darkColorRGBHex:(UInt32)darkHex {
+    
+    BOOL isDark = NO;
+    if (@available(iOS 12.0, *)) {
+        isDark = ([UIApplication sharedApplication].keyWindow.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark);
+    }
+    
+    if (isDark) {
+        return [UIColor colorWithRGBHex:darkHex];
+    }
+    return [UIColor colorWithRGBHex:hex];
+}
+
 + (UIColor *)colorWithHexString:(NSString *)stringToConvert {
     NSScanner *scanner = [NSScanner scannerWithString:stringToConvert];
     unsigned hexNum;

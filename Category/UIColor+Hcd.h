@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIColor *)color666;
 + (UIColor *)color999;
 
++ (UIColor *)colorRGBHex:(UInt32)hex darkColorRGBHex:(UInt32)darkHex;
+
 @end
 
 NS_ASSUME_NONNULL_END
