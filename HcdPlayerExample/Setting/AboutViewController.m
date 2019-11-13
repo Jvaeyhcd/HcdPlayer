@@ -118,6 +118,7 @@ enum {
 #pragma mark - MFMailComposeViewControllerDelegate
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -147,16 +148,18 @@ enum {
     NSString *version = [[[NSBundle mainBundle] infoDictionary]objectForKey:@"CFBundleShortVersionString"];
     NSString *subject = [NSString stringWithFormat:@"[%@ %@]", title, version];
     NSString *message = @"";
-    MFMailComposeViewController *vc = [[SendEmailViewController alloc] init];
+    MFMailComposeViewController *vc = [[MFMailComposeViewController alloc] init];
     vc.title = subject;
-    vc.navigationBar.tintColor = kNavTitleColor;
+//    vc.navigationBar.tintColor = kNavTitleColor;
+    vc.navigationBar.backgroundColor = [UIColor whiteColor];
+    vc.navigationBar.barStyle = UIBarStyleDefault;
     
     [vc setSubject:subject];
     [vc setMessageBody:message isHTML:NO];
     [vc setToRecipients:@[@"chedahuang@icloud.com"]];
     vc.mailComposeDelegate = self;
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self presentViewController:vc animated:YES completion:nil];
+    [self presentViewController:vc animated:NO completion:nil];
 }
 
 /**

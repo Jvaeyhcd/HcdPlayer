@@ -2454,7 +2454,7 @@ static NSMutableDictionary * gHistory;
     selectDeviceView.seletedIndex = ^(NSInteger index) {
         
         CLUPnPDevice *device = [self.deviceArr objectAtIndex:index];
-        self.dlnaControlView.deviceLbl.text = device.modelName;
+        self.dlnaControlView.deviceLbl.text = device.friendlyName;
         [self.dlnaManager endDLNA];
         self.dlnaManager.device = device;
         self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", self.davServer.serverURL.absoluteString];
@@ -2478,6 +2478,13 @@ static NSMutableDictionary * gHistory;
     [self.dlnaManager endDLNA];
     // 隐藏播放控制界面
     [self.dlnaControlView hide];
+    
+    // 重新开始播放
+    if (self.playFinished) {
+        [self replay];
+    } else {
+        [self play];
+    }
 }
 
 @end
