@@ -45,46 +45,46 @@ typedef enum {
     
 } HcdVideoFrameFormat;
 
-@interface HcdMovieFrame : NSObject
+@interface HcdMovieFrame: NSObject
 @property (readonly, nonatomic) HcdMovieFrameType type;
 @property (readonly, nonatomic) CGFloat position;
 @property (readonly, nonatomic) CGFloat duration;
 @end
 
-@interface HcdAudioFrame : HcdMovieFrame
+@interface HcdAudioFrame: HcdMovieFrame
 @property (readonly, nonatomic, strong) NSData *samples;
 @end
 
-@interface HcdVideoFrame : HcdMovieFrame
+@interface HcdVideoFrame: HcdMovieFrame
 @property (readonly, nonatomic) HcdVideoFrameFormat format;
 @property (readonly, nonatomic) NSUInteger width;
 @property (readonly, nonatomic) NSUInteger height;
 @end
 
-@interface HcdVideoFrameRGB : HcdVideoFrame
+@interface HcdVideoFrameRGB: HcdVideoFrame
 @property (readonly, nonatomic) NSUInteger linesize;
 @property (readonly, nonatomic, strong) NSData *rgb;
-- (UIImage *) asImage;
+- (UIImage *)asImage;
 @end
 
-@interface HcdVideoFrameYUV : HcdVideoFrame
+@interface HcdVideoFrameYUV: HcdVideoFrame
 @property (readonly, nonatomic, strong) NSData *luma;
 @property (readonly, nonatomic, strong) NSData *chromaB;
 @property (readonly, nonatomic, strong) NSData *chromaR;
 @end
 
-@interface HcdArtworkFrame : HcdMovieFrame
+@interface HcdArtworkFrame: HcdMovieFrame
 @property (readonly, nonatomic, strong) NSData *picture;
-- (UIImage *) asImage;
+- (UIImage *)asImage;
 @end
 
-@interface HcdSubtitleFrame : HcdMovieFrame
+@interface HcdSubtitleFrame: HcdMovieFrame
 @property (readonly, nonatomic, strong) NSString *text;
 @end
 
 typedef BOOL(^HcdMovieDecoderInterruptCallback)(void);
 
-@interface HcdMovieDecoder : NSObject
+@interface HcdMovieDecoder: NSObject
 
 @property (readonly, nonatomic, strong) NSString *path;
 @property (readonly, nonatomic) BOOL isEOF;
@@ -108,26 +108,26 @@ typedef BOOL(^HcdMovieDecoderInterruptCallback)(void);
 @property (readwrite, nonatomic) BOOL disableDeinterlacing;
 @property (readwrite, nonatomic, strong) HcdMovieDecoderInterruptCallback interruptCallback;
 
-+ (id) movieDecoderWithContentPath: (NSString *) path
-                             error: (NSError **) perror;
++ (id)movieDecoderWithContentPath:(NSString *)path
+                            error:(NSError **)perror;
 
-- (BOOL) openFile: (NSString *) path
-            error: (NSError **) perror;
+- (BOOL)openFile:(NSString *)path
+           error:(NSError **)perror;
 
--(void) closeFile;
+-(void)closeFile;
 
-- (BOOL) setupVideoFrameFormat: (HcdVideoFrameFormat) format;
+- (BOOL)setupVideoFrameFormat:(HcdVideoFrameFormat)format;
 
-- (NSArray *) decodeFrames: (CGFloat) minDuration;
+- (NSArray *)decodeFrames:(CGFloat)minDuration;
 
 @end
 
-@interface HcdMovieSubtitleASSParser : NSObject
+@interface HcdMovieSubtitleASSParser: NSObject
 
-+ (NSArray *) parseEvents: (NSString *) events;
-+ (NSArray *) parseDialogue: (NSString *) dialogue
-                  numFields: (NSUInteger) numFields;
-+ (NSString *) removeCommandsFromEventText: (NSString *) text;
++ (NSArray *)parseEvents: (NSString *)events;
++ (NSArray *)parseDialogue: (NSString *)dialogue
+                  numFields: (NSUInteger)numFields;
++ (NSString *)removeCommandsFromEventText: (NSString *)text;
 
 @end
 

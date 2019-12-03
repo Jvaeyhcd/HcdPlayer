@@ -22,6 +22,7 @@
 #import "HcdFileSortManager.h"
 #import "WifiTransferViewController.h"
 #import "HcdMovieViewController.h"
+#import "DocumentViewController.h"
 
 #define kEditBottomViewHeight (50 + kTabbarSafeBottomMargin)
 
@@ -651,6 +652,19 @@ typedef enum : NSUInteger {
                 HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
                 movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
                 [self presentViewController:movieVc animated:YES completion:nil];
+                break;
+            }
+            case FileType_doc:
+            case FileType_pdf:
+            case FileType_txt:
+            case FileType_xls:
+            {
+                DocumentViewController *vc = [[DocumentViewController alloc] init];
+                vc.documentPath = path;
+                UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+                nav.modalPresentationStyle = UIModalPresentationFullScreen;
+                [self presentViewController:nav animated:YES completion:nil];
+                break;
             }
             default:
                 break;

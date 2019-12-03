@@ -24,10 +24,10 @@ typedef void (^HcdAudioManagerOutputBlock)(float *data, UInt32 numFrames, UInt32
 
 @property (readwrite, copy) HcdAudioManagerOutputBlock outputBlock;
 
-- (BOOL) activateAudioSession;
-- (void) deactivateAudioSession;
-- (BOOL) play;
-- (void) pause;
+- (BOOL)activateAudioSession;
+- (void)deactivateAudioSession;
+- (BOOL)play;
+- (void)pause;
 
 @end
 

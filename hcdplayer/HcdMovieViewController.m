@@ -36,8 +36,7 @@ NSString * const HcdMovieParameterDisableDeinterlacing = @"HcdMovieParameterDisa
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft)
-{
+static NSString * formatTimeInterval(CGFloat seconds, BOOL isLeft) {
     seconds = MAX(0, seconds);
     
     NSInteger s = seconds;
@@ -88,8 +87,8 @@ typedef enum : NSUInteger {
 
 static NSMutableDictionary * gHistory;
 
-#define LOCAL_MIN_BUFFERED_DURATION   0.2
-#define LOCAL_MAX_BUFFERED_DURATION   0.4
+#define LOCAL_MIN_BUFFERED_DURATION   1.0
+#define LOCAL_MAX_BUFFERED_DURATION   2.0
 #define NETWORK_MIN_BUFFERED_DURATION 2.0
 #define NETWORK_MAX_BUFFERED_DURATION 4.0
 
@@ -233,16 +232,16 @@ static NSMutableDictionary * gHistory;
 }
 
 // 播放器控制器的初始化方法
-+ (id) movieViewControllerWithContentPath: (NSString *) path
-                               parameters: (NSDictionary *) parameters {
++ (id)movieViewControllerWithContentPath:(NSString *)path
+                              parameters:(NSDictionary *)parameters {
     // 音频管理类的初始化 单例
     id<HcdAudioManager> audioManager = [HcdAudioManager audioManager];
     [audioManager activateAudioSession];
     return [[HcdMovieViewController alloc] initWithContentPath: path parameters: parameters];
 }
 
-- (id) initWithContentPath: (NSString *) path
-                parameters: (NSDictionary *) parameters {
+- (id)initWithContentPath:(NSString *)path
+               parameters:(NSDictionary *)parameters {
     NSAssert(path.length > 0, @"empty path");
     
     self = [super initWithNibName:nil bundle:nil];
@@ -289,7 +288,8 @@ static NSMutableDictionary * gHistory;
     return self;
 }
 
-- (void) dealloc {
+/// view controller销毁
+- (void)dealloc{
     
     // 暂停播放
     [self pause];
@@ -308,8 +308,7 @@ static NSMutableDictionary * gHistory;
     LoggerStream(1, @"%@ dealloc", self);
 }
 
-- (void)loadView
-{
+- (void)loadView {
     // LoggerStream(1, @"loadView");
     CGRect bounds = [[UIScreen mainScreen] bounds];
     
@@ -321,18 +320,6 @@ static NSMutableDictionary * gHistory;
     
     CGFloat width = bounds.size.width;
     CGFloat height = bounds.size.height;
-    
-#ifdef DEBUG
-    _messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(20,40,width-40,40)];
-    _messageLabel.backgroundColor = [UIColor clearColor];
-    _messageLabel.textColor = [UIColor redColor];
-    _messageLabel.hidden = YES;
-    _messageLabel.font = [UIFont systemFontOfSize:14];
-    _messageLabel.numberOfLines = 2;
-    _messageLabel.textAlignment = NSTextAlignmentCenter;
-    _messageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:_messageLabel];
-#endif
     
     CGFloat topH = 50;
     CGFloat botH = 50;
@@ -353,13 +340,13 @@ static NSMutableDictionary * gHistory;
     
     [self.topHUD addSubview:self.doneButton];
     [self.topHUD addSubview:self.airPlayButton];
+    [self.topHUD addSubview:self.infoButton];
     
 //    [self.bottomView addSubview:self.doneButton];
     [self.bottomView addSubview:self.playButton];
     [self.bottomView addSubview:self.progressLabel];
     [self.bottomView addSubview:self.progressSlider];
     [self.bottomView addSubview:self.leftLabel];
-//    [self.bottomView addSubview:self.infoButton];
     [self.bottomView addSubview:self.fullButton];
     
     [self.view addSubview:self.draggingProgressView];
@@ -412,6 +399,20 @@ static NSMutableDictionary * gHistory;
         self.leftLabel.hidden = YES;
         self.infoButton.hidden = YES;
     }
+    
+#ifdef DEBUG
+    _messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 100, width - 40, 40)];
+    _messageLabel.backgroundColor = [UIColor clearColor];
+    _messageLabel.textColor = [UIColor redColor];
+    _messageLabel.hidden = NO;
+    _messageLabel.font = [UIFont systemFontOfSize:14];
+    _messageLabel.numberOfLines = 2;
+    _messageLabel.textAlignment = NSTextAlignmentCenter;
+    _messageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.view addSubview:_messageLabel];
+    
+    self.infoButton.hidden = NO;
+#endif
 }
 
 - (void)didReceiveMemoryWarning {
@@ -455,7 +456,7 @@ static NSMutableDictionary * gHistory;
     [self.dlnaManager startSearch];
 }
 
-- (void) viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     if (_infoMode) {
@@ -490,7 +491,7 @@ static NSMutableDictionary * gHistory;
     self.soundProgressView.progress = self.volumeSlider.value;
 }
 
-- (void) viewWillDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated {
     
     [super viewWillDisappear:animated];
     
@@ -524,7 +525,7 @@ static NSMutableDictionary * gHistory;
     LoggerStream(1, @"viewWillDisappear %@", self);
 }
 
-- (void) applicationWillResignActive: (NSNotification *)notification {
+- (void)applicationWillResignActive:(NSNotification *)notification {
     [self showHUD:YES];
     [self pause];
     
@@ -578,8 +579,9 @@ static NSMutableDictionary * gHistory;
 - (UIButton *)infoButton {
     if (!_infoButton) {
         _infoButton = [[UIButton alloc]init];
+        _infoButton.hidden = YES;
         [_infoButton setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_info_outline"] forState:UIControlStateNormal];
-        _infoButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
+        _infoButton.frame = CGRectMake(kScreenWidth - 50 - 50, _statusBarHeight, 50, 50);
         _infoButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [_infoButton addTarget:self action:@selector(infoDidTouch:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -788,7 +790,7 @@ static NSMutableDictionary * gHistory;
 
 #pragma mark - gesture recognizer
 
-- (void)handleTap: (UITapGestureRecognizer *)sender {
+- (void)handleTap:(UITapGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateEnded) {
         
         if (sender == _tapGestureRecognizer) {
@@ -810,7 +812,7 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void)handlePan: (UIPanGestureRecognizer *)recognizer {
+- (void)handlePan:(UIPanGestureRecognizer *)recognizer {
     
     if (_locked) {
         return;
@@ -986,7 +988,7 @@ static NSMutableDictionary * gHistory;
     LoggerStream(1, @"pause movie");
 }
 
-- (void) setMoviePosition: (CGFloat) position {
+- (void)setMoviePosition:(CGFloat)position {
     BOOL playMode = self.playing;
     
     self.playing = NO;
@@ -1146,6 +1148,7 @@ static NSMutableDictionary * gHistory;
         self.bottomView.frame = CGRectMake(0, kScreenHeight - (_tabbarSafeBottomMargin + 50), kScreenWidth, _tabbarSafeBottomMargin + 50);
         self.doneButton.frame = CGRectMake(0, _statusBarHeight, 50, 50);
         self.airPlayButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
+        self.infoButton.frame = CGRectMake(CGRectGetMinX(self.airPlayButton.frame)-50, _statusBarHeight, 50, 50);
         self.pauseButton.frame = CGRectMake(0, 0, 50, 50);
         self.playButton.frame = CGRectMake(0, 0, 50, 50);
         self.fullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
@@ -1173,6 +1176,7 @@ static NSMutableDictionary * gHistory;
             self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, 50);
             self.doneButton.frame = CGRectMake(_statusBarHeight, 0, 50, 50);
             self.airPlayButton.frame = CGRectMake(kScreenWidth - 50 - _statusBarHeight, 0, 50, 50);
+            self.infoButton.frame = CGRectMake(CGRectGetMinX(self.airPlayButton.frame) - 50, 0, 50, 50);
             self.pauseButton.frame = CGRectMake(_statusBarHeight, 0, 50, 50);
             self.playButton.frame = CGRectMake(_statusBarHeight, 0, 50, 50);
             self.exitFullButton.frame = CGRectMake(kScreenWidth - 50 - _statusBarHeight, 0, 50, 50);
@@ -1189,6 +1193,7 @@ static NSMutableDictionary * gHistory;
             self.topHUD.frame = CGRectMake(0, 0, kScreenWidth, _statusBarHeight + 50);
             self.doneButton.frame = CGRectMake(0, _statusBarHeight, 50, 50);
             self.airPlayButton.frame = CGRectMake(kScreenWidth-50, _statusBarHeight, 50, 50);
+            self.infoButton.frame = CGRectMake(CGRectGetMinX(self.airPlayButton.frame) - 50, _statusBarHeight, 50, 50);
             self.pauseButton.frame = CGRectMake(0, 0, 50, 50);
             self.playButton.frame = CGRectMake(0, 0, 50, 50);
             self.exitFullButton.frame = CGRectMake(kScreenWidth - 50, 0, 50, 50);
@@ -1263,8 +1268,8 @@ static NSMutableDictionary * gHistory;
     [self.davServer start];
 }
 
-- (void) setMovieDecoder: (HcdMovieDecoder *) decoder
-               withError: (NSError *) error {
+- (void)setMovieDecoder:(HcdMovieDecoder *)decoder
+              withError:(NSError *)error {
     LoggerStream(2, @"setMovieDecoder");
     
     if (!error && decoder) {
@@ -1322,7 +1327,6 @@ static NSMutableDictionary * gHistory;
             self.progressLabel.hidden   = NO;
             self.progressSlider.hidden  = NO;
             _leftLabel.hidden       = NO;
-            _infoButton.hidden      = NO;
             
             if (self.activityIndicatorView.isAnimating) {
                 
@@ -1431,7 +1435,7 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void) setupUserInteraction {
+- (void)setupUserInteraction {
     UIView * view = [self frameView];
     view.userInteractionEnabled = YES;
     
@@ -1452,13 +1456,13 @@ static NSMutableDictionary * gHistory;
     [view addGestureRecognizer:_panGestureRecognizer];
 }
 
-- (UIView *) frameView {
+- (UIView *)frameView {
     return _glView ? _glView : _imageView;
 }
 
-- (void) audioCallbackFillData: (float *) outData
-                     numFrames: (UInt32) numFrames
-                   numChannels: (UInt32) numChannels {
+- (void)audioCallbackFillData:(float *)outData
+                    numFrames:(UInt32)numFrames
+                  numChannels:(UInt32)numChannels {
     //fillSignalF(outData,numFrames,numChannels);
     //return;
     
@@ -1504,7 +1508,7 @@ static NSMutableDictionary * gHistory;
                             if (delta > 0.1 && count > 1) {
                                 
 #ifdef DEBUG
-                                LoggerStream(0, @"desync audio (lags) skip %.4f %.4f", _moviePosition, frame.position);
+                                LoggerStream(0, @"desync audio (lags) skip %.4f %.4f audioFrames count %ld", _moviePosition, frame.position, _audioFrames.count);
                                 _debugAudioStatus = 2;
                                 _debugAudioStatusTS = [NSDate date];
 #endif
@@ -1555,7 +1559,7 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void) enableAudio: (BOOL) on {
+- (void)enableAudio:(BOOL)on {
     id<HcdAudioManager> audioManager = [HcdAudioManager audioManager];
     
     if (on && _decoder.validAudio) {
@@ -1581,8 +1585,7 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (BOOL) addFrames: (NSArray *)frames
-{
+- (BOOL)addFrames:(NSArray *)frames {
     if (_decoder.validVideo) {
         
         @synchronized(_videoFrames) {
@@ -1629,7 +1632,7 @@ static NSMutableDictionary * gHistory;
     return self.playing && _bufferedDuration < _maxBufferedDuration;
 }
 
-- (BOOL) decodeFrames {
+- (BOOL)decodeFrames {
     //NSAssert(dispatch_get_current_queue() == _dispatchQueue, @"bugcheck");
     
     NSArray *frames = nil;
@@ -1710,7 +1713,7 @@ static NSMutableDictionary * gHistory;
     
     if (self.playing) {
         
-        NSLog(@"_videoFrames.count = %lu, _audioFrames.count = %lu", (unsigned long)_videoFrames.count, (unsigned long)_audioFrames.count);
+//        NSLog(@"_videoFrames.count = %lu, _audioFrames.count = %lu", (unsigned long)_videoFrames.count, (unsigned long)_audioFrames.count);
         
         const NSUInteger leftFrames =
         (_decoder.validVideo ? _videoFrames.count : 0) +
@@ -1796,7 +1799,7 @@ static NSMutableDictionary * gHistory;
                 frame = _videoFrames[0];
                 [_videoFrames removeObjectAtIndex:0];
                 _bufferedDuration -= frame.duration;
-                NSLog(@"_bufferedDuration=%lf", _bufferedDuration);
+//                NSLog(@"_bufferedDuration=%lf", _bufferedDuration);
             }
         }
         
@@ -1826,7 +1829,7 @@ static NSMutableDictionary * gHistory;
     return interval;
 }
 
-- (CGFloat) presentVideoFrame: (HcdVideoFrame *) frame {
+- (CGFloat)presentVideoFrame:(HcdVideoFrame *)frame {
     if (_glView) {
         [_glView render:frame];
     } else {
@@ -1835,12 +1838,12 @@ static NSMutableDictionary * gHistory;
     }
     
     _moviePosition = frame.position;
-    NSLog(@"_moviePosition=%lf", _moviePosition);
+//    NSLog(@"_moviePosition=%lf", _moviePosition);
     
     return frame.duration;
 }
 
-- (void) presentSubtitles {
+- (void)presentSubtitles {
     NSArray *actual, *outdated;
     
     if ([self subtitleForPosition:_moviePosition

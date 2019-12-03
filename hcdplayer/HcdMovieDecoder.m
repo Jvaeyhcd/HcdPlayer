@@ -17,11 +17,10 @@
 #import <UIKit/UIKit.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-NSString * HcdmovieErrorDomain = @"ru.kolyvan.Hcdmovie";
+NSString * HcdmovieErrorDomain = @"hplayer.github.io";
 static void FFLog(void* context, int level, const char* format, va_list args);
 
-static NSError * HcdmovieError (NSInteger code, id info)
-{
+static NSError * HcdmovieError (NSInteger code, id info) {
     NSDictionary *userInfo = nil;
     
     if ([info isKindOfClass: [NSDictionary class]]) {
@@ -38,8 +37,7 @@ static NSError * HcdmovieError (NSInteger code, id info)
                            userInfo:userInfo];
 }
 
-static NSString * errorMessage (HcdMovieError errorCode)
-{
+static NSString * errorMessage (HcdMovieError errorCode) {
     switch (errorCode) {
         case HcdMovieErrorNone:
             return @"";
@@ -75,8 +73,7 @@ static NSString * errorMessage (HcdMovieError errorCode)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-static BOOL audioCodecIsSupported(AVCodecContext *audio)
-{
+static BOOL audioCodecIsSupported(AVCodecContext *audio) {
     if (audio->sample_fmt == AV_SAMPLE_FMT_S16) {
         
         id<HcdAudioManager> audioManager = [HcdAudioManager audioManager];
@@ -87,8 +84,7 @@ static BOOL audioCodecIsSupported(AVCodecContext *audio)
 }
 
 #ifdef DEBUG
-static void fillSignal(SInt16 *outData,  UInt32 numFrames, UInt32 numChannels)
-{
+static void fillSignal(SInt16 *outData,  UInt32 numFrames, UInt32 numChannels) {
     static float phase = 0.0;
     
     for (int i=0; i < numFrames; ++i)
@@ -103,8 +99,7 @@ static void fillSignal(SInt16 *outData,  UInt32 numFrames, UInt32 numChannels)
     }
 }
 
-static void fillSignalF(float *outData,  UInt32 numFrames, UInt32 numChannels)
-{
+static void fillSignalF(float *outData,  UInt32 numFrames, UInt32 numChannels) {
     static float phase = 0.0;
     
     for (int i=0; i < numFrames; ++i)
@@ -119,8 +114,7 @@ static void fillSignalF(float *outData,  UInt32 numFrames, UInt32 numChannels)
     }
 }
 
-static void testConvertYUV420pToRGB(AVFrame * frame, uint8_t *outbuf, int linesize, int height)
-{
+static void testConvertYUV420pToRGB(AVFrame * frame, uint8_t *outbuf, int linesize, int height) {
     const int linesizeY = frame->linesize[0];
     const int linesizeU = frame->linesize[1];
     const int linesizeV = frame->linesize[2];
@@ -212,8 +206,7 @@ static void testConvertYUV420pToRGB(AVFrame * frame, uint8_t *outbuf, int linesi
 }
 #endif
 
-static void avStreamFPSTimeBase(AVStream *st, CGFloat defaultTimeBase, CGFloat *pFPS, CGFloat *pTimeBase)
-{
+static void avStreamFPSTimeBase(AVStream *st, CGFloat defaultTimeBase, CGFloat *pFPS, CGFloat *pTimeBase) {
     CGFloat fps, timebase;
     
     // ffmpeg提供了一个把AVRatioal结构转换成double的函数
@@ -244,8 +237,7 @@ static void avStreamFPSTimeBase(AVStream *st, CGFloat defaultTimeBase, CGFloat *
         *pTimeBase = timebase;
 }
 
-static NSArray *collectStreams(AVFormatContext *formatCtx, enum AVMediaType codecType)
-{
+static NSArray *collectStreams(AVFormatContext *formatCtx, enum AVMediaType codecType) {
     NSMutableArray *ma = [NSMutableArray array];
     for (NSInteger i = 0; i < formatCtx->nb_streams; ++i)
         if (codecType == formatCtx->streams[i]->codec->codec_type)
@@ -253,8 +245,7 @@ static NSArray *collectStreams(AVFormatContext *formatCtx, enum AVMediaType code
     return [ma copy];
 }
 
-static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height)
-{
+static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height) {
     width = MIN(linesize, width);
     NSMutableData *md = [NSMutableData dataWithLength: width * height];
     Byte *dst = md.mutableBytes;
@@ -266,8 +257,7 @@ static NSData * copyFrameData(UInt8 *src, int linesize, int width, int height)
     return md;
 }
 
-static BOOL isNetworkPath (NSString *path)
-{
+static BOOL isNetworkPath (NSString *path) {
     NSRange r = [path rangeOfString:@":"];
     if (r.location == NSNotFound)
         return NO;
@@ -313,8 +303,8 @@ static int interrupt_callback(void *ctx);
 
 @implementation HcdVideoFrameRGB
 - (HcdVideoFrameFormat) format { return HcdVideoFrameFormatRGB; }
-- (UIImage *) asImage
-{
+
+- (UIImage *)asImage {
     UIImage *image = nil;
     
     CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)(_rgb));
@@ -362,8 +352,7 @@ static int interrupt_callback(void *ctx);
 
 @implementation HcdArtworkFrame
 - (HcdMovieFrameType) type { return HcdMovieFrameTypeArtwork; }
-- (UIImage *) asImage
-{
+- (UIImage *)asImage {
     UIImage *image = nil;
     
     CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)(_picture));
@@ -382,7 +371,6 @@ static int interrupt_callback(void *ctx);
     }
     
     return image;
-    
 }
 @end
 
@@ -420,7 +408,7 @@ static int interrupt_callback(void *ctx);
     void                *_swrBuffer;
     NSUInteger          _swrBufferSize;
     NSDictionary        *_info;
-    HcdVideoFrameFormat  _videoFrameFormat;
+    HcdVideoFrameFormat _videoFrameFormat;
     NSUInteger          _artworkStream;
     NSInteger           _subtitleASSEvents;
 }
@@ -444,8 +432,7 @@ static int interrupt_callback(void *ctx);
 @dynamic videoStreamFormatName;
 @dynamic startTime;
 
-- (CGFloat) duration
-{
+- (CGFloat)duration {
     if (!_formatCtx)
         return 0;
     if (_formatCtx->duration == AV_NOPTS_VALUE)
@@ -453,13 +440,11 @@ static int interrupt_callback(void *ctx);
     return (CGFloat)_formatCtx->duration / AV_TIME_BASE;
 }
 
-- (CGFloat) position
-{
+- (CGFloat)position {
     return _position;
 }
 
-- (void) setPosition: (CGFloat)seconds
-{
+- (void)setPosition:(CGFloat)seconds {
     _position = seconds;
     _isEOF = NO;
     
@@ -476,41 +461,34 @@ static int interrupt_callback(void *ctx);
     }
 }
 
-- (NSUInteger) frameWidth
-{
+- (NSUInteger)frameWidth {
     return _videoCodecCtx ? _videoCodecCtx->width : 0;
 }
 
-- (NSUInteger) frameHeight
-{
+- (NSUInteger)frameHeight {
     return _videoCodecCtx ? _videoCodecCtx->height : 0;
 }
 
-- (CGFloat) sampleRate
-{
+- (CGFloat)sampleRate {
     return _audioCodecCtx ? _audioCodecCtx->sample_rate : 0;
 }
 
-- (NSUInteger) audioStreamsCount
-{
+- (NSUInteger)audioStreamsCount {
     return [_audioStreams count];
 }
 
-- (NSUInteger) subtitleStreamsCount
-{
+- (NSUInteger)subtitleStreamsCount {
     return [_subtitleStreams count];
 }
 
-- (NSInteger) selectedAudioStream
-{
+- (NSInteger)selectedAudioStream {
     if (_audioStream == -1)
         return -1;
     NSNumber *n = [NSNumber numberWithInteger:_audioStream];
     return [_audioStreams indexOfObject:n];
 }
 
-- (void) setSelectedAudioStream:(NSInteger)selectedAudioStream
-{
+- (void)setSelectedAudioStream:(NSInteger)selectedAudioStream {
     NSInteger audioStream = [_audioStreams[selectedAudioStream] integerValue];
     [self closeAudioStream];
     HcdMovieError errCode = [self openAudioStream: audioStream];
@@ -519,15 +497,13 @@ static int interrupt_callback(void *ctx);
     }
 }
 
-- (NSInteger) selectedSubtitleStream
-{
+- (NSInteger)selectedSubtitleStream {
     if (_subtitleStream == -1)
         return -1;
     return [_subtitleStreams indexOfObject:@(_subtitleStream)];
 }
 
-- (void) setSelectedSubtitleStream:(NSInteger)selected
-{
+- (void)setSelectedSubtitleStream:(NSInteger)selected {
     [self closeSubtitleStream];
     
     if (selected == -1) {
@@ -544,23 +520,19 @@ static int interrupt_callback(void *ctx);
     }
 }
 
-- (BOOL) validAudio
-{
+- (BOOL)validAudio {
     return _audioStream != -1;
 }
 
-- (BOOL) validVideo
-{
+- (BOOL)validVideo {
     return _videoStream != -1;
 }
 
-- (BOOL) validSubtitles
-{
+- (BOOL)validSubtitles {
     return _subtitleStream != -1;
 }
 
-- (NSDictionary *) info
-{
+- (NSDictionary *)info {
     if (!_info) {
         
         NSMutableDictionary *md = [NSMutableDictionary dictionary];
@@ -658,8 +630,7 @@ static int interrupt_callback(void *ctx);
     return _info;
 }
 
-- (NSString *) videoStreamFormatName
-{
+- (NSString *)videoStreamFormatName {
     if (!_videoCodecCtx)
         return nil;
     
@@ -670,8 +641,7 @@ static int interrupt_callback(void *ctx);
     return name ? [NSString stringWithCString:name encoding:NSUTF8StringEncoding] : @"?";
 }
 
-- (CGFloat) startTime
-{
+- (CGFloat)startTime {
     if (_videoStream != -1) {
         
         AVStream *st = _formatCtx->streams[_videoStream];
@@ -691,16 +661,14 @@ static int interrupt_callback(void *ctx);
     return 0;
 }
 
-+ (void)initialize
-{
++ (void)initialize {
     av_log_set_callback(FFLog);
     av_register_all();
     avformat_network_init();
 }
 
-+ (id) movieDecoderWithContentPath: (NSString *) path
-                             error: (NSError **) perror
-{
++ (id)movieDecoderWithContentPath: (NSString *)path
+                            error: (NSError **)perror {
     HcdMovieDecoder *mp = [[HcdMovieDecoder alloc] init];
     if (mp) {
         [mp openFile:path error:perror];
@@ -708,17 +676,15 @@ static int interrupt_callback(void *ctx);
     return mp;
 }
 
-- (void) dealloc
-{
+- (void)dealloc {
     LoggerStream(2, @"%@ dealloc", self);
     [self closeFile];
 }
 
 #pragma mark - private
 
-- (BOOL) openFile: (NSString *) path
-            error: (NSError **) perror
-{
+- (BOOL)openFile: (NSString *)path
+           error: (NSError **)perror {
     NSAssert(path, @"nil path");
     NSAssert(!_formatCtx, @"already open");
     
@@ -769,8 +735,7 @@ static int interrupt_callback(void *ctx);
     return YES;
 }
 
-- (HcdMovieError) openInput: (NSString *) path
-{
+- (HcdMovieError)openInput:(NSString *)path {
     AVFormatContext *formatCtx = NULL;
     
     if (_interruptCallback) {
@@ -807,8 +772,7 @@ static int interrupt_callback(void *ctx);
 }
 
 // 打开视频流
-- (HcdMovieError) openVideoStream
-{
+- (HcdMovieError)openVideoStream {
     HcdMovieError errCode = HcdMovieErrorStreamNotFound;
     _videoStream = -1;
     _artworkStream = -1;
@@ -833,8 +797,7 @@ static int interrupt_callback(void *ctx);
     return errCode;
 }
 
-- (HcdMovieError) openVideoStream: (NSInteger) videoStream
-{
+- (HcdMovieError)openVideoStream:(NSInteger)videoStream {
     // get a pointer to the codec context for the video stream
     AVCodecContext *codecCtx = _formatCtx->streams[videoStream]->codec;
     
@@ -879,8 +842,7 @@ static int interrupt_callback(void *ctx);
     return HcdMovieErrorNone;
 }
 
-- (HcdMovieError) openAudioStream
-{
+- (HcdMovieError)openAudioStream {
     HcdMovieError errCode = HcdMovieErrorStreamNotFound;
     _audioStream = -1;
     _audioStreams = collectStreams(_formatCtx, AVMEDIA_TYPE_AUDIO);
@@ -893,8 +855,7 @@ static int interrupt_callback(void *ctx);
     return errCode;
 }
 
-- (HcdMovieError) openAudioStream: (NSInteger) audioStream
-{
+- (HcdMovieError)openAudioStream:(NSInteger)audioStream {
     AVCodecContext *codecCtx = _formatCtx->streams[audioStream]->codec;
     SwrContext *swrContext = NULL;
     
@@ -955,8 +916,7 @@ static int interrupt_callback(void *ctx);
     return HcdMovieErrorNone;
 }
 
-- (HcdMovieError) openSubtitleStream: (NSInteger) subtitleStream
-{
+- (HcdMovieError)openSubtitleStream:(NSInteger)subtitleStream {
     AVCodecContext *codecCtx = _formatCtx->streams[subtitleStream]->codec;
     
     AVCodec *codec = avcodec_find_decoder(codecCtx->codec_id);
@@ -1001,8 +961,7 @@ static int interrupt_callback(void *ctx);
     return HcdMovieErrorNone;
 }
 
--(void) closeFile
-{
+- (void)closeFile {
     [self closeAudioStream];
     [self closeVideoStream];
     [self closeSubtitleStream];
@@ -1021,8 +980,8 @@ static int interrupt_callback(void *ctx);
     }
 }
 
-- (void) closeVideoStream
-{
+/// 关闭视频流
+- (void)closeVideoStream {
     _videoStream = -1;
     
     [self closeScaler];
@@ -1040,8 +999,8 @@ static int interrupt_callback(void *ctx);
     }
 }
 
-- (void) closeAudioStream
-{
+/// 关闭音频流
+- (void)closeAudioStream {
     _audioStream = -1;
     
     if (_swrBuffer) {
@@ -1070,8 +1029,8 @@ static int interrupt_callback(void *ctx);
     }
 }
 
-- (void) closeSubtitleStream
-{
+/// 关闭字幕
+- (void)closeSubtitleStream {
     _subtitleStream = -1;
     
     if (_subtitleCodecCtx) {
@@ -1081,8 +1040,8 @@ static int interrupt_callback(void *ctx);
     }
 }
 
-- (void) closeScaler
-{
+/// 关闭定标器
+- (void)closeScaler {
     if (_swsContext) {
         sws_freeContext(_swsContext);
         _swsContext = NULL;
@@ -1094,8 +1053,8 @@ static int interrupt_callback(void *ctx);
     }
 }
 
-- (BOOL) setupScaler
-{
+/// 设置定标器
+- (BOOL)setupScaler {
     [self closeScaler];
     
     _pictureValid = avpicture_alloc(&_picture,
@@ -1119,8 +1078,8 @@ static int interrupt_callback(void *ctx);
     return _swsContext != NULL;
 }
 
-- (HcdVideoFrame *) handleVideoFrame
-{
+/// 处理每一帧视频
+- (HcdVideoFrame *)handleVideoFrame {
     if (!_videoFrame->data[0])
         return nil;
     
@@ -1194,7 +1153,7 @@ static int interrupt_callback(void *ctx);
         frame.duration = 1.0 / _fps;
     }
     
-#if 0
+#if DEBUG
     LoggerVideo(2, @"VFD: %.4f %.4f | %lld ",
                 frame.position,
                 frame.duration,
@@ -1204,8 +1163,8 @@ static int interrupt_callback(void *ctx);
     return frame;
 }
 
-- (HcdAudioFrame *) handleAudioFrame
-{
+/// 处理每一帧音频
+- (HcdAudioFrame *)handleAudioFrame{
     if (!_audioFrame->data[0])
         return nil;
     
@@ -1281,7 +1240,7 @@ static int interrupt_callback(void *ctx);
         frame.duration = frame.samples.length / (sizeof(float) * numChannels * audioManager.samplingRate);
     }
     
-#if 0
+#if DEBUG
     LoggerAudio(2, @"AFD: %.4f %.4f | %.4f ",
                 frame.position,
                 frame.duration,
@@ -1291,8 +1250,9 @@ static int interrupt_callback(void *ctx);
     return frame;
 }
 
-- (HcdSubtitleFrame *) handleSubtitle: (AVSubtitle *)pSubtitle
-{
+/// 处理每一段字幕
+/// @param pSubtitle 字幕
+- (HcdSubtitleFrame *)handleSubtitle:(AVSubtitle *)pSubtitle {
     NSMutableString *ms = [NSMutableString string];
     
     for (NSUInteger i = 0; i < pSubtitle->num_rects; ++i) {
@@ -1329,7 +1289,7 @@ static int interrupt_callback(void *ctx);
     frame.position = pSubtitle->pts / AV_TIME_BASE + pSubtitle->start_display_time;
     frame.duration = (CGFloat)(pSubtitle->end_display_time - pSubtitle->start_display_time) / 1000.f;
     
-#if 0
+#if DEBUG
     LoggerStream(2, @"SUB: %.4f %.4f | %@",
                  frame.position,
                  frame.duration,
@@ -1339,8 +1299,8 @@ static int interrupt_callback(void *ctx);
     return frame;
 }
 
-- (BOOL) interruptDecoder
-{
+/// 暂停解码器
+- (BOOL)interruptDecoder {
     if (_interruptCallback)
         return _interruptCallback();
     return NO;
@@ -1348,8 +1308,9 @@ static int interrupt_callback(void *ctx);
 
 #pragma mark - public
 
-- (BOOL) setupVideoFrameFormat: (HcdVideoFrameFormat) format
-{
+/// 设置视频每帧格式
+/// @param format 视频格式
+- (BOOL)setupVideoFrameFormat:(HcdVideoFrameFormat)format {
     if (format == HcdVideoFrameFormatYUV &&
         _videoCodecCtx &&
         (_videoCodecCtx->pix_fmt == AV_PIX_FMT_YUV420P || _videoCodecCtx->pix_fmt == AV_PIX_FMT_YUVJ420P)) {
@@ -1362,7 +1323,7 @@ static int interrupt_callback(void *ctx);
     return _videoFrameFormat == format;
 }
 
-- (NSArray *) decodeFrames: (CGFloat) minDuration {
+- (NSArray *)decodeFrames:(CGFloat)minDuration {
     if (_videoStream == -1 &&
         _audioStream == -1)
         return nil;
@@ -1523,8 +1484,7 @@ static int interrupt_callback(void *ctx);
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-static int interrupt_callback(void *ctx)
-{
+static int interrupt_callback(void *ctx) {
     if (!ctx)
         return 0;
     __unsafe_unretained HcdMovieDecoder *p = (__bridge HcdMovieDecoder *)ctx;
@@ -1538,8 +1498,7 @@ static int interrupt_callback(void *ctx)
 
 @implementation HcdMovieSubtitleASSParser
 
-+ (NSArray *) parseEvents: (NSString *) events
-{
++ (NSArray *)parseEvents:(NSString *)events {
     NSRange r = [events rangeOfString:@"[Events]"];
     if (r.location != NSNotFound) {
         
@@ -1576,9 +1535,8 @@ static int interrupt_callback(void *ctx)
     return nil;
 }
 
-+ (NSArray *) parseDialogue: (NSString *) dialogue
-                  numFields: (NSUInteger) numFields
-{
++ (NSArray *)parseDialogue:(NSString *)dialogue
+                 numFields:(NSUInteger)numFields {
     if ([dialogue hasPrefix:@"Dialogue:"]) {
         
         NSMutableArray *ma = [NSMutableArray array];
@@ -1606,8 +1564,7 @@ static int interrupt_callback(void *ctx)
     return nil;
 }
 
-+ (NSString *) removeCommandsFromEventText: (NSString *) text
-{
++ (NSString *)removeCommandsFromEventText:(NSString *)text {
     NSMutableString *ms = [NSMutableString string];
     
     NSScanner *scanner = [NSScanner scannerWithString:text];

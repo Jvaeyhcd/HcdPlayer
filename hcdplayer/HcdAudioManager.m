@@ -23,7 +23,7 @@ static void sessionInterruptionListener(void *inClientData, UInt32 inInterruptio
 static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *ioActionFlags, const AudioTimeStamp * inTimeStamp, UInt32 inOutputBusNumber, UInt32 inNumberFrames, AudioBufferList* ioData);
 
 
-@interface HcdAudioManagerImpl : HcdAudioManager<HcdAudioManager> {
+@interface HcdAudioManagerImpl: HcdAudioManager<HcdAudioManager> {
     
     BOOL                        _initialized;
     BOOL                        _activated;
@@ -42,23 +42,22 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
 @property (readwrite, copy) HcdAudioManagerOutputBlock outputBlock;
 @property (readwrite) BOOL playAfterSessionEndInterruption;
 
-- (BOOL) activateAudioSession;
-- (void) deactivateAudioSession;
-- (BOOL) play;
-- (void) pause;
+- (BOOL)activateAudioSession;
+- (void)deactivateAudioSession;
+- (BOOL)play;
+- (void)pause;
 
-- (BOOL) checkAudioRoute;
-- (BOOL) setupAudio;
-- (BOOL) checkSessionProperties;
-- (BOOL) renderFrames: (UInt32) numFrames
-               ioData: (AudioBufferList *) ioData;
+- (BOOL)checkAudioRoute;
+- (BOOL)setupAudio;
+- (BOOL)checkSessionProperties;
+- (BOOL)renderFrames:(UInt32)numFrames
+              ioData:(AudioBufferList *)ioData;
 
 @end
 
 @implementation HcdAudioManager
 
-+ (id<HcdAudioManager>) audioManager
-{
++ (id<HcdAudioManager>)audioManager {
     static HcdAudioManagerImpl *audioManager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -71,8 +70,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
 
 @implementation HcdAudioManagerImpl
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         
@@ -82,8 +80,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     if (_outData) {
         
         free(_outData);
@@ -124,8 +121,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
 }
 
 // 检查音频线路属性
-- (BOOL) checkAudioRoute
-{
+- (BOOL)checkAudioRoute {
     // Check what the audio route is.
     UInt32 propertySize = sizeof(CFStringRef);
     CFStringRef route;
@@ -140,8 +136,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
     return YES;
 }
 
-- (BOOL) setupAudio
-{
+- (BOOL)setupAudio {
     // --- Audio Session Setup ---
     
     // 用于以语音为主的应用，使用这个category的应用不会随着静音键和屏幕关闭而静音。可在后台播放声音
@@ -273,8 +268,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
     return YES;
 }
 
-- (BOOL) checkSessionProperties
-{
+- (BOOL)checkSessionProperties {
     [self checkAudioRoute];
     
     // Check the number of output channels.
@@ -311,9 +305,8 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
     return YES;
 }
 
-- (BOOL) renderFrames: (UInt32) numFrames
-               ioData: (AudioBufferList *) ioData
-{
+- (BOOL)renderFrames:(UInt32)numFrames
+              ioData:(AudioBufferList *)ioData {
     for (int iBuffer=0; iBuffer < ioData->mNumberBuffers; ++iBuffer) {
         memset(ioData->mBuffers[iBuffer].mData, 0, ioData->mBuffers[iBuffer].mDataByteSize);
     }
@@ -372,8 +365,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
 
 #pragma mark - public
 
-- (BOOL) activateAudioSession
-{
+- (BOOL)activateAudioSession {
     if (!_activated) {
         
         if (!_initialized) {
@@ -402,8 +394,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
     return _activated;
 }
 
-- (void) deactivateAudioSession
-{
+- (void)deactivateAudioSession {
     if (_activated) {
         
         [self pause];
@@ -443,8 +434,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
     }
 }
 
-- (void) pause
-{
+- (void)pause {
     if (_playing) {
         
         _playing = checkError(AudioOutputUnitStop(_audioUnit),
@@ -452,8 +442,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
     }
 }
 
-- (BOOL) play
-{
+- (BOOL)play {
     if (!_playing) {
         
         if ([self activateAudioSession]) {
@@ -474,8 +463,8 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags    *i
 static void sessionPropertyListener(void *                  inClientData,
                                     AudioSessionPropertyID  inID,
                                     UInt32                  inDataSize,
-                                    const void *            inData)
-{
+                                    const void *            inData) {
+    
     HcdAudioManagerImpl *sm = (__bridge HcdAudioManagerImpl *)inClientData;
     
     if (inID == kAudioSessionProperty_AudioRouteChange) {
@@ -493,8 +482,8 @@ static void sessionPropertyListener(void *                  inClientData,
     }
 }
 
-static void sessionInterruptionListener(void *inClientData, UInt32 inInterruption)
-{
+static void sessionInterruptionListener(void *inClientData, UInt32 inInterruption) {
+    
     HcdAudioManagerImpl *sm = (__bridge HcdAudioManagerImpl *)inClientData;
     
     if (inInterruption == kAudioSessionBeginInterruption) {
@@ -518,14 +507,13 @@ static OSStatus renderCallback (void                        *inRefCon,
                                 const AudioTimeStamp         * inTimeStamp,
                                 UInt32                        inOutputBusNumber,
                                 UInt32                        inNumberFrames,
-                                AudioBufferList                * ioData)
-{
+                                AudioBufferList                * ioData) {
+    
     HcdAudioManagerImpl *sm = (__bridge HcdAudioManagerImpl *)inRefCon;
     return [sm renderFrames:inNumberFrames ioData:ioData];
 }
 
-static BOOL checkError(OSStatus error, const char *operation)
-{
+static BOOL checkError(OSStatus error, const char *operation) {
     if (error == noErr)
         return NO;
     

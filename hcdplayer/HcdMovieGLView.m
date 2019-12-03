@@ -183,24 +183,20 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
 
 @implementation HcdMovieGLRenderer_RGB
 
-- (BOOL) isValid
-{
+- (BOOL)isValid {
     return (_texture != 0);
 }
 
-- (NSString *) fragmentShader
-{
+- (NSString *)fragmentShader {
     return rgbFragmentShaderString;
 }
 
-- (void) resolveUniforms: (GLuint) program
-{
+- (void)resolveUniforms:(GLuint)program {
     _uniformSampler = glGetUniformLocation(program, "s_texture");
 }
 
 // 把frame转化成纹理
-- (void) setFrame: (HcdVideoFrame *) frame
-{
+- (void)setFrame:(HcdVideoFrame *)frame {
     
     HcdVideoFrameRGB *rgbFrame = (HcdVideoFrameRGB *)frame;
     
@@ -231,8 +227,7 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-- (BOOL) prepareRender
-{
+- (BOOL)prepareRender {
     if (_texture == 0)
         return NO;
     
@@ -254,8 +249,7 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
     return YES;
 }
 
-- (void) dealloc
-{
+- (void)dealloc {
     if (_texture) {
         glDeleteTextures(1, &_texture);
         _texture = 0;
@@ -273,25 +267,21 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
 
 @implementation HcdMovieGLRenderer_YUV
 
-- (BOOL) isValid
-{
+- (BOOL)isValid {
     return (_textures[0] != 0);
 }
 
-- (NSString *) fragmentShader
-{
+- (NSString *)fragmentShader {
     return yuvFragmentShaderString;
 }
 
-- (void) resolveUniforms: (GLuint) program
-{
+- (void)resolveUniforms:(GLuint)program {
     _uniformSamplers[0] = glGetUniformLocation(program, "s_texture_y");
     _uniformSamplers[1] = glGetUniformLocation(program, "s_texture_u");
     _uniformSamplers[2] = glGetUniformLocation(program, "s_texture_v");
 }
 
-- (void) setFrame: (HcdVideoFrame *) frame
-{
+- (void)setFrame:(HcdVideoFrame *)frame {
     HcdVideoFrameYUV *yuvFrame = (HcdVideoFrameYUV *)frame;
     
     assert(yuvFrame.luma.length == yuvFrame.width * yuvFrame.height);
@@ -331,8 +321,7 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
     }
 }
 
-- (BOOL) prepareRender
-{
+- (BOOL)prepareRender {
     if (_textures[0] == 0)
         return NO;
     
@@ -345,8 +334,7 @@ static void mat4f_LoadOrtho(float left, float right, float bottom, float top, fl
     return YES;
 }
 
-- (void) dealloc
-{
+- (void)dealloc {
     if (_textures[0])
         glDeleteTextures(3, _textures);
 }
@@ -377,14 +365,12 @@ enum {
     id<HcdMovieGLRenderer> _renderer;
 }
 
-+ (Class) layerClass
-{
++ (Class)layerClass {
     return [CAEAGLLayer class];
 }
 
-- (id) initWithFrame:(CGRect)frame
-             decoder: (HcdMovieDecoder *) decoder
-{
+- (id)initWithFrame:(CGRect)frame
+            decoder:(HcdMovieDecoder *)decoder {
     self = [super initWithFrame:frame];
     if (self) {
         
@@ -473,8 +459,7 @@ enum {
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     _renderer = nil;
     
     if (_framebuffer) {
@@ -499,8 +484,7 @@ enum {
     _context = nil;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
     [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.layer];
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &_backingWidth);
@@ -520,16 +504,14 @@ enum {
     [self render: nil];
 }
 
-- (void)setContentMode:(UIViewContentMode)contentMode
-{
+- (void)setContentMode:(UIViewContentMode)contentMode {
     [super setContentMode:contentMode];
     [self updateVertices];
     if (_renderer.isValid)
         [self render:nil];
 }
 
-- (BOOL)loadShaders
-{
+- (BOOL)loadShaders {
     BOOL result = NO;
     GLuint vertShader = 0, fragShader = 0;
     
@@ -582,8 +564,7 @@ exit:
     return result;
 }
 
-- (void)updateVertices
-{
+- (void)updateVertices {
     const BOOL fit      = (self.contentMode == UIViewContentModeScaleAspectFit);
     const float width   = _decoder.frameWidth;
     const float height  = _decoder.frameHeight;
@@ -603,8 +584,7 @@ exit:
     _vertices[7] =   h;
 }
 
-- (void)render: (HcdVideoFrame *) frame
-{
+- (void)render: (HcdVideoFrame *) frame {
     static const GLfloat texCoords[] = {
         0.0f, 1.0f,
         1.0f, 1.0f,
