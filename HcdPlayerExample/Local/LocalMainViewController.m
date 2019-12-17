@@ -661,7 +661,7 @@ typedef enum : NSUInteger {
                 [self pushViewController:vc animated:YES];
                 break;
             }
-            case FileType_vedio: {
+            case FileType_video: {
                 NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
                 if ([path.pathExtension isEqualToString:@"wmv"]) {
                     parameters[HcdMovieParameterMinBufferedDuration] = @(5.0);

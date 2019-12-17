@@ -201,6 +201,7 @@ static NSMutableDictionary * gHistory;
 
 @property (nonatomic, strong) MPVolumeView   *volumeView;             //音量控制控件
 @property (nonatomic, strong) UISlider       *volumeSlider;           //用这个来控制音量
+@property (nonatomic, assign) float          outputVolume;            //音量
 
 /**
  * DLNA manager
@@ -443,6 +444,15 @@ static NSMutableDictionary * gHistory;
     self.dlnaManager.delegate = self;
     
     [self makeServer];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePasscodeDismissed:) name:DISSMISS_PASSCODE_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDeviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(volumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
+    
+    id<HcdAudioManager> audioManager = [HcdAudioManager audioManager];
+    self.outputVolume = audioManager.outputVolume;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -478,17 +488,16 @@ static NSMutableDictionary * gHistory;
                                                  name:UIApplicationWillResignActiveNotification
                                                object:[UIApplication sharedApplication]];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleStatusBarOrientationChange:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePasscodeDismissed:) name:DISSMISS_PASSCODE_NOTIFICATION object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDeviceOrientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-    
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(volumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
 
 // 设备音量发生变化
 - (void)volumeChanged:(NSNotification *)notification {
-    [self.soundProgressView show];
-    self.soundProgressView.progress = self.volumeSlider.value;
+    float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
+    if (self.outputVolume != volume) {
+        [self.soundProgressView show];
+        self.soundProgressView.progress = self.volumeSlider.value;
+        self.outputVolume = volume;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -1045,6 +1054,8 @@ static NSMutableDictionary * gHistory;
 - (void)lockDidTouch:(id)sender {
     _locked = !_locked;
     [self setDeviceLocked:_locked];
+    // 点击锁定或则取消锁定，刷新界面显示效果
+    [self showHUD:!_hiddenHUD];
 }
 
 - (void)setLockedOrientation:(UIInterfaceOrientation)orientation {

@@ -271,6 +271,9 @@ static int interrupt_callback(void *ctx);
 
 ////////////////////////////////////////////////////////////////////////////////
 
+@implementation HcdMovieInfo
+@end
+
 @interface HcdMovieFrame()
 @property (readwrite, nonatomic) CGFloat position;
 @property (readwrite, nonatomic) CGFloat duration;
@@ -759,9 +762,21 @@ static int interrupt_callback(void *ctx);
     
     // 获取流信息
     if (avformat_find_stream_info(formatCtx, NULL) < 0) {
-        
         avformat_close_input(&formatCtx);
         return HcdMovieErrorStreamInfoNotFound;
+    }
+    
+    // 下面的代码是计算视频时长的代码
+    if (formatCtx->duration != AV_NOPTS_VALUE) {
+        int64_t hours, mins, secs, us;
+        int64_t duration = formatCtx->duration + 5000;
+        secs = duration / AV_TIME_BASE;
+        us = duration % AV_TIME_BASE;
+        mins = secs / 60;
+        secs %= 60;
+        hours = mins/ 60;
+        mins %= 60;
+        printf("%02lld:%02lld:%02lld.%02lld\n", hours, mins, secs, (100 * us) / AV_TIME_BASE);
     }
     
     // 打印有关数据
@@ -1477,6 +1492,67 @@ static int interrupt_callback(void *ctx);
     }
     
     return result;
+}
+
++ (HcdMovieInfo *)videoInfoWithContentPath:(NSString *)path {
+    HcdMovieDecoder *mp = [[HcdMovieDecoder alloc] init];
+    
+    HcdMovieInfo *info = [mp videoInfoWithPath:path];
+    if (info) {
+        // 获取视频中的一张缩略图
+    }
+    
+    return info;
+}
+
+- (HcdMovieInfo *)videoInfoWithPath:(NSString *)path {
+    
+    HcdMovieInfo *info = [[HcdMovieInfo alloc] init];
+    
+    AVFormatContext *formatCtx = NULL;
+    formatCtx = avformat_alloc_context();
+    if (!formatCtx) {
+        return nil;
+    }
+    
+    //  ffmpeg 自定义IO中断 AVFormatContext::interrupt_callback
+    AVIOInterruptCB cb = {interrupt_callback, (__bridge void *)(self)};
+    formatCtx->interrupt_callback = cb;
+    
+    // 打开文件流
+    if (avformat_open_input(&formatCtx, [path cStringUsingEncoding: NSUTF8StringEncoding], NULL, NULL) < 0) {
+        
+        if (formatCtx)
+            avformat_free_context(formatCtx);
+        return nil;
+    }
+    
+    // 获取流信息
+    if (avformat_find_stream_info(formatCtx, NULL) < 0) {
+        avformat_close_input(&formatCtx);
+        return nil;
+    }
+    
+    // 下面的代码是计算视频时长的代码
+    if (formatCtx->duration != AV_NOPTS_VALUE) {
+        int64_t hours, mins, secs, us;
+        int64_t duration = formatCtx->duration + 5000;
+        secs = duration / AV_TIME_BASE;
+        us = duration % AV_TIME_BASE;
+        mins = secs / 60;
+        secs %= 60;
+        hours = mins/ 60;
+        mins %= 60;
+        printf("%02lld:%02lld:%02lld.%02lld\n", hours, mins, secs, (100 * us) / AV_TIME_BASE);
+        NSString *durationStr = [NSString stringWithFormat:@"%02lld:%02lld:%02lld", hours, mins, secs];
+        info.durationStr = durationStr;
+        info.duration = duration / AV_TIME_BASE;
+    }
+    
+    // 打印有关数据
+    av_dump_format(formatCtx, 0, [path.lastPathComponent cStringUsingEncoding: NSUTF8StringEncoding], false);
+    
+    return info;
 }
 
 @end

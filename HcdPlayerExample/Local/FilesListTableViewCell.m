@@ -8,6 +8,7 @@
 
 #import "FilesListTableViewCell.h"
 #import "HcdFileManager.h"
+#import "HcdMovieDecoder.h"
 
 @interface FilesListTableViewCell() {
     UIImageView                 *_fileTypeImageView;
@@ -87,6 +88,11 @@
     FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
     if (fileType != FileType_unkonwn && fileType != FileType_file_dir) {
         [descArr addObject:suffix];
+    }
+    // 如果是视频文件，获取视频文件的时长
+    if (fileType == FileType_video) {
+        HcdMovieInfo *info = [HcdMovieDecoder videoInfoWithContentPath:path];
+        [descArr addObject:info.durationStr];
     }
     NSString *size = [[HcdFileManager defaultManager] getFileSizeStrByPath:path];
     if (size) {

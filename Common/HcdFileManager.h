@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, FileType) {
     FileType_txt,
     FileType_unkonwn,
     FileType_vcf,
-    FileType_vedio,
+    FileType_video,
     FileType_vsd,
     FileType_xls,
     FileType_zip,

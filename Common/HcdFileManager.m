@@ -184,7 +184,7 @@
             } else if ([@[@"vcf"] containsObject:suffix]) {
                 fileType = FileType_vcf;
             } else if ([@[@"mp4", @"avi", @"mov", @"asf", @"wmv", @"mkv", @"3gp", @"rmvb", @"webm"] containsObject:suffix]) {
-                fileType = FileType_vedio;
+                fileType = FileType_video;
             } else if ([@[@"vsd"] containsObject:suffix]) {
                 fileType = FileType_vsd;
             } else if ([@[@"xls", @"xlsx"] containsObject:suffix]) {
@@ -245,7 +245,7 @@
         case FileType_vcf:
             typeStr = @"vcf";
             break;
-        case FileType_vedio:
+        case FileType_video:
             typeStr = @"vedio";
             break;
         case FileType_vsd:

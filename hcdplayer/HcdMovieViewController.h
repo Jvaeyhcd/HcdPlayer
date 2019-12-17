@@ -29,12 +29,12 @@ extern NSString * const HcdMovieParameterDisableDeinterlacing;   // BOOL
 /**
  * 开始播放
  */
-- (void) play;
+- (void)play;
 
 /**
  * 暂停播放
  */
-- (void) pause;
+- (void)pause;
 
 @end
 

@@ -45,6 +45,18 @@ typedef enum {
     
 } HcdVideoFrameFormat;
 
+// 视频的信息
+@interface HcdMovieInfo : NSObject
+
+// 封面
+@property (nonatomic, strong) UIImage           *coverImage;
+// 字符串时长
+@property (nonatomic, strong) NSString          *durationStr;
+// 视频时长，单位秒
+@property (nonatomic, assign) CGFloat           duration;
+
+@end
+
 @interface HcdMovieFrame: NSObject
 @property (readonly, nonatomic) HcdMovieFrameType type;
 @property (readonly, nonatomic) CGFloat position;
@@ -114,11 +126,13 @@ typedef BOOL(^HcdMovieDecoderInterruptCallback)(void);
 - (BOOL)openFile:(NSString *)path
            error:(NSError **)perror;
 
--(void)closeFile;
+- (void)closeFile;
 
 - (BOOL)setupVideoFrameFormat:(HcdVideoFrameFormat)format;
 
 - (NSArray *)decodeFrames:(CGFloat)minDuration;
+
++ (HcdMovieInfo *)videoInfoWithContentPath:(NSString *)path;
 
 @end
 
