@@ -91,8 +91,8 @@
     }
     // 如果是视频文件，获取视频文件的时长
     if (fileType == FileType_video) {
-        HcdMovieInfo *info = [HcdMovieDecoder videoInfoWithContentPath:path];
-        [descArr addObject:info.durationStr];
+//        HcdMovieInfo *info = [HcdMovieDecoder videoInfoWithContentPath:path];
+//        [descArr addObject:info.durationStr];
     }
     NSString *size = [[HcdFileManager defaultManager] getFileSizeStrByPath:path];
     if (size) {

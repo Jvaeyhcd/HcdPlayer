@@ -81,6 +81,12 @@ typedef enum : NSUInteger {
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [UINavigationBar appearance].barTintColor = kNavBgColor;
+    [UINavigationBar appearance].backgroundColor = kNavBgColor;
+}
+
 - (void)initData {
     _isEdit = NO;
     _selectedAll = NO;
@@ -551,7 +557,9 @@ typedef enum : NSUInteger {
 }
 
 - (void)showiCloudDocumentPicker {
-    [UINavigationBar appearance].tintColor = kMainColor;
+    [UINavigationBar appearance].tintColor = [UIColor systemBlueColor];
+    [UINavigationBar appearance].barTintColor = [UIColor whiteColor];
+    [UINavigationBar appearance].backgroundColor = [UIColor whiteColor];
     UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.avi", @"public.3gpp", @"public.mpeg-4"] inMode:UIDocumentPickerModeOpen];
     picker.delegate = self;
     picker.modalPresentationStyle = UIModalPresentationFullScreen;
@@ -654,7 +662,9 @@ typedef enum : NSUInteger {
         FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
         switch (fileType) {
             case FileType_file_dir: {
+                NSString *folder = [path lastPathComponent];
                 FolderViewController *vc = [[FolderViewController alloc] init];
+                vc.titleStr = folder;
                 vc.hidesBottomBarWhenPushed = YES;
                 vc.currentPath = path;
                 vc.title = [path lastPathComponent];

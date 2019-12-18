@@ -770,6 +770,7 @@ static int interrupt_callback(void *ctx);
     if (formatCtx->duration != AV_NOPTS_VALUE) {
         int64_t hours, mins, secs, us;
         int64_t duration = formatCtx->duration + 5000;
+//        int64_t duration = formatCtx->duration;
         secs = duration / AV_TIME_BASE;
         us = duration % AV_TIME_BASE;
         mins = secs / 60;
@@ -1537,6 +1538,7 @@ static int interrupt_callback(void *ctx);
     if (formatCtx->duration != AV_NOPTS_VALUE) {
         int64_t hours, mins, secs, us;
         int64_t duration = formatCtx->duration + 5000;
+//        int64_t duration = formatCtx->duration;
         secs = duration / AV_TIME_BASE;
         us = duration % AV_TIME_BASE;
         mins = secs / 60;

@@ -12,7 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FolderViewController : BaseViewController<UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
-@property (nonatomic, strong) NSString *currentPath;
+@property (nonatomic, copy) NSString *currentPath;
+
+@property (nonatomic, copy) NSString *titleStr;
 
 @end
 
