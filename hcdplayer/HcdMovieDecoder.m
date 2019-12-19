@@ -16,6 +16,8 @@
 #import "HcdLogger.h"
 #import <UIKit/UIKit.h>
 
+#define LIMIT_ERROR 0.21
+
 ////////////////////////////////////////////////////////////////////////////////
 NSString * HcdmovieErrorDomain = @"hplayer.github.io";
 static void FFLog(void* context, int level, const char* format, va_list args);
@@ -769,8 +771,8 @@ static int interrupt_callback(void *ctx);
     // 下面的代码是计算视频时长的代码
     if (formatCtx->duration != AV_NOPTS_VALUE) {
         int64_t hours, mins, secs, us;
-        int64_t duration = formatCtx->duration + 5000;
-//        int64_t duration = formatCtx->duration;
+//        int64_t duration = formatCtx->duration + 5000;
+        int64_t duration = formatCtx->duration;
         secs = duration / AV_TIME_BASE;
         us = duration % AV_TIME_BASE;
         mins = secs / 60;
@@ -800,7 +802,7 @@ static int interrupt_callback(void *ctx);
         
         if (0 == (_formatCtx->streams[iStream]->disposition & AV_DISPOSITION_ATTACHED_PIC)) {
             
-            errCode = [self openVideoStream: iStream];
+            errCode = [self openVideoStream:iStream];
             if (errCode == HcdMovieErrorNone)
                 break;
             
@@ -846,9 +848,9 @@ static int interrupt_callback(void *ctx);
     AVStream *st = _formatCtx->streams[_videoStream];
     avStreamFPSTimeBase(st, 0.04, &_fps, &_videoTimeBase);
     
-    LoggerVideo(1, @"video codec size: %d:%d fps: %.3f tb: %f",
-                self.frameWidth,
-                self.frameHeight,
+    LoggerVideo(1, @"video codec size: %lu:%lu fps: %.3f tb: %f",
+                (unsigned long)self.frameWidth,
+                (unsigned long)self.frameHeight,
                 _fps,
                 _videoTimeBase);
     
@@ -1394,6 +1396,9 @@ static int interrupt_callback(void *ctx);
                         [result addObject:frame];
                         
                         _position = frame.position;
+                        #if DEBUG
+                            NSLog(@"HcdVideoFrame _position:%lf", _position);
+                        #endif
                         decodedDuration += frame.duration;
                         if (decodedDuration > minDuration)
                             finished = YES;
@@ -1489,6 +1494,12 @@ static int interrupt_callback(void *ctx);
             }
         }
         
+//        NSLog(@"-----position:%lf, duration:%lf", self.position, self.duration);
+        if (self.duration - self.position <= LIMIT_ERROR) {
+            _isEOF = YES;
+            break;
+        }
+        
         av_free_packet(&packet);
     }
     
@@ -1537,9 +1548,9 @@ static int interrupt_callback(void *ctx);
     // 下面的代码是计算视频时长的代码
     if (formatCtx->duration != AV_NOPTS_VALUE) {
         int64_t hours, mins, secs, us;
-        int64_t duration = formatCtx->duration + 5000;
-//        int64_t duration = formatCtx->duration;
-        secs = duration / AV_TIME_BASE;
+//        int64_t duration = formatCtx->duration + 5000;
+        int64_t duration = formatCtx->duration;
+//        secs = duration / AV_TIME_BASE;
         us = duration % AV_TIME_BASE;
         mins = secs / 60;
         secs %= 60;

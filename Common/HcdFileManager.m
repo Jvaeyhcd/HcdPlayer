@@ -161,13 +161,13 @@
         if ([type isEqualToString:NSFileTypeDirectory]) {
             fileType = FileType_file_dir;
         } else {
-            NSString *suffix = [path pathExtension];
+            NSString *suffix = [[path pathExtension] lowercaseString];
             
             if ([suffix isEqualToString:@"apk"]) {
                 fileType = FileType_apk;
             } else if ([suffix isEqualToString:@"ipa"]) {
                 fileType = FileType_ipa;
-            } else if ([@[@"doc", @"docx"] containsObject:suffix]) {
+            } else if ([@[@"doc", @"docx", @"pages"] containsObject:suffix]) {
                 fileType = FileType_doc;
             } else if ([@[@"html", @"htm"] containsObject:suffix]) {
                 fileType = FileType_html;
@@ -175,7 +175,7 @@
                 fileType = FileType_music;
             } else if ([@[@"pdf"] containsObject:suffix]) {
                 fileType = FileType_pdf;
-            } else if ([@[@"ppt", @"pptx"] containsObject:suffix]) {
+            } else if ([@[@"ppt", @"pptx", @"key"] containsObject:suffix]) {
                 fileType = FileType_ppt;
             } else if ([@[@"torrent"] containsObject:suffix]) {
                 fileType = FileType_torrent;
@@ -183,11 +183,11 @@
                 fileType = FileType_txt;
             } else if ([@[@"vcf"] containsObject:suffix]) {
                 fileType = FileType_vcf;
-            } else if ([@[@"mp4", @"avi", @"mov", @"asf", @"wmv", @"mkv", @"3gp", @"rmvb", @"webm"] containsObject:suffix]) {
+            } else if ([@[@"mp4", @"avi", @"mov", @"asf", @"wmv", @"mkv", @"3gp", @"rmvb", @"webm", @"hevc"] containsObject:suffix]) {
                 fileType = FileType_video;
             } else if ([@[@"vsd"] containsObject:suffix]) {
                 fileType = FileType_vsd;
-            } else if ([@[@"xls", @"xlsx"] containsObject:suffix]) {
+            } else if ([@[@"xls", @"xlsx", @"numbers"] containsObject:suffix]) {
                 fileType = FileType_xls;
             } else if ([@[@"jpg", @"jpeg", @"png", @"bmp", @"svg", @"psd", @"ai", @"webp", @"wmf", @"pcx"] containsObject:suffix]) {
                 fileType = FileType_img;

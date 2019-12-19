@@ -560,7 +560,8 @@ typedef enum : NSUInteger {
     [UINavigationBar appearance].tintColor = [UIColor systemBlueColor];
     [UINavigationBar appearance].barTintColor = [UIColor whiteColor];
     [UINavigationBar appearance].backgroundColor = [UIColor whiteColor];
-    UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.avi", @"public.3gpp", @"public.mpeg-4"] inMode:UIDocumentPickerModeOpen];
+    NSArray *documentTypes = @[@"public.content", @"public.text", @"public.source-code ", @"public.image", @"public.audiovisual-content", @"com.adobe.pdf", @"com.apple.keynote.key", @"com.microsoft.word.doc", @"com.microsoft.excel.xls", @"com.microsoft.powerpoint.ppt", @"public.avi", @"public.3gpp", @"public.mpeg-4", @"public.jpeg", @"public.png"];
+    UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
     picker.delegate = self;
     picker.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:picker animated:YES completion:nil];
@@ -688,6 +689,7 @@ typedef enum : NSUInteger {
             case FileType_pdf:
             case FileType_txt:
             case FileType_xls:
+            case FileType_ppt:
             {
                 DocumentViewController *vc = [[DocumentViewController alloc] init];
                 vc.documentPath = path;
@@ -781,7 +783,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)saveFileByURL:(NSURL *)url {
-    NSString *path = [url absoluteString];
+    NSString *path = [[url absoluteString] stringByRemovingPercentEncoding];
     NSString *fileName = [path lastPathComponent];
     NSString *currentPath = _currentPath;
     

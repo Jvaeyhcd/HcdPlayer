@@ -797,14 +797,14 @@ static NSMutableDictionary * gHistory;
     return _dlnaControlView;
 }
 
-#pragma mark - gesture recognizer
+#pragma mark - gesture recognizer 手势操作处理
 
 - (void)handleTap:(UITapGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateEnded) {
         
         if (sender == _tapGestureRecognizer) {
-
-            [self showHUD: _hiddenHUD];
+            
+            [self showHUD:_hiddenHUD];
             
         } else if (sender == _doubleTapGestureRecognizer) {
             
@@ -823,7 +823,7 @@ static NSMutableDictionary * gHistory;
 
 - (void)handlePan:(UIPanGestureRecognizer *)recognizer {
     
-    if (_locked) {
+    if (_locked || self.playFinished) {
         return;
     }
     
@@ -975,7 +975,7 @@ static NSMutableDictionary * gHistory;
     [self asyncDecodeFrames];
     [self updatePlayButton];
     
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC);
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.0 * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [self tick];
     });
@@ -1004,7 +1004,7 @@ static NSMutableDictionary * gHistory;
     _disableUpdateHUD = YES;
     [self enableAudio:NO];
     
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC);
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         
         [self updatePosition:position playMode:playMode];
@@ -1048,6 +1048,8 @@ static NSMutableDictionary * gHistory;
 }
 
 - (void)replayDidTouch:(id)sender {
+    self.playFinished = NO;
+    [self showHUD:_hiddenHUD];
     [self replay];
 }
 
@@ -1089,6 +1091,22 @@ static NSMutableDictionary * gHistory;
     NSAssert(_decoder.duration != MAXFLOAT, @"bugcheck");
     UISlider *slider = sender;
     [self setMoviePosition:slider.value * _decoder.duration];
+    
+    if (_decoder.duration != MAXFLOAT) {
+        self.progressLabel.text = formatTimeInterval(_decoder.duration * slider.value, NO);
+        self.leftLabel.text = formatTimeInterval(_decoder.duration * (1 - slider.value), YES);
+    }
+    NSLog(@"UISlider did change");
+}
+
+- (void)progressWillChange: (id)sender {
+//    [self pause];
+    NSLog(@"UISlider will change");
+}
+
+- (void)progressEndChange: (id)sender {
+//    [self play];
+    NSLog(@"UISlider end change");
 }
 
 #pragma mark - 全屏旋转处理
@@ -1425,6 +1443,8 @@ static NSMutableDictionary * gHistory;
         [self.progressSlider addTarget:self
                             action:@selector(progressDidChange:)
                   forControlEvents:UIControlEventValueChanged];
+        [self.progressSlider addTarget:self action:@selector(progressWillChange:) forControlEvents:UIControlEventTouchDown];
+        [self.progressSlider addTarget:self action:@selector(progressEndChange:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
     }
     
     if (_decoder.subtitleStreamsCount) {
@@ -1655,7 +1675,7 @@ static NSMutableDictionary * gHistory;
     }
     
     if (frames.count) {
-        return [self addFrames: frames];
+        return [self addFrames:frames];
     }
     return NO;
 }
@@ -1753,7 +1773,7 @@ static NSMutableDictionary * gHistory;
         }
         
         const NSTimeInterval correction = [self tickCorrection];
-        const NSTimeInterval time = MAX(interval + correction, 0.01);
+        const NSTimeInterval time = MAX(interval + correction, 0.0);
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, time * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -1761,7 +1781,7 @@ static NSMutableDictionary * gHistory;
         });
     }
     
-    if ((_tickCounter++ % 3) == 0) {
+    if ((_tickCounter++ % 1) == 0) {
         [self updateHUD];
     }
 }
@@ -1933,7 +1953,7 @@ static NSMutableDictionary * gHistory;
     return actual.count || outdated.count;
 }
 
-- (void) updateBottomToolView {
+- (void)updateBottomToolView {
 //    UIBarButtonItem *playPauseBtn = self.playing ? _pauseBtn : _playBtn;
 //    [_bottomBar setItems:@[_spaceItem, _rewindBtn, _fixedSpaceItem, playPauseBtn,
 //                           _fixedSpaceItem, _fforwardBtn, _spaceItem] animated:NO];
@@ -1946,7 +1966,7 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void) updatePlayButton {
+- (void)updatePlayButton {
     [self updateBottomToolView];
 }
 
@@ -1957,6 +1977,9 @@ static NSMutableDictionary * gHistory;
     
     const CGFloat duration = _decoder.duration;
     const CGFloat position = _moviePosition -_decoder.startTime;
+#ifdef DEBUG
+//    NSLog(@"duration:%lf, position: %lf, _moviePosition: %lf, startTime: %.lf", duration, position, _moviePosition, _decoder.startTime);
+#endif
     
     if (self.progressSlider.state == UIControlStateNormal) {
         self.progressSlider.value = position / duration;
@@ -1967,6 +1990,17 @@ static NSMutableDictionary * gHistory;
         self.leftLabel.text = formatTimeInterval(duration - position, YES);
     }
     self.replayButton.hidden = !self.playFinished;
+    
+    // 如果已完成，修改界面状态
+    if (self.playFinished) {
+        self.progressSlider.value = 1.0;
+        if (duration != MAXFLOAT) {
+            self.progressLabel.text = formatTimeInterval(duration, NO);
+            self.leftLabel.text = formatTimeInterval(0, YES);
+        }
+        // 隐藏操作按钮
+        [self showHUD:_hiddenHUD];
+    }
     
 #ifdef DEBUG
     const NSTimeInterval timeSinceStart = [NSDate timeIntervalSinceReferenceDate] - _debugStartTime;
@@ -2008,24 +2042,35 @@ static NSMutableDictionary * gHistory;
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
                      animations:^{
+        CGFloat alpha = weakSelf.hiddenHUD ? 0 : 1;
                          
-                         CGFloat alpha = weakSelf.hiddenHUD ? 0 : 1;
                          
-                         weakSelf.lockButton.alpha = alpha;
-                         weakSelf.unlockButton.alpha = alpha;
-                         
-                         if (self.locked) {
-                             weakSelf.topBar.alpha = 0;
-                             weakSelf.topHUD.alpha = 0;
-                             weakSelf.bottomView.alpha = 0;
-                             [UIApplication sharedApplication].statusBarHidden = YES;
-                         } else {
-                             weakSelf.topBar.alpha = alpha;
-                             weakSelf.topHUD.alpha = alpha;
-                             weakSelf.bottomView.alpha = alpha;
-                             [UIApplication sharedApplication].statusBarHidden = weakSelf.hiddenHUD;
-                         }
-                     }
+        if (weakSelf.playFinished) {
+            weakSelf.bottomView.alpha = 0;
+            weakSelf.doneButton.alpha = 1;
+            weakSelf.topHUD.alpha = 1;
+            weakSelf.airPlayButton.alpha = 0;
+            weakSelf.lockButton.alpha = 0;
+            weakSelf.unlockButton.alpha = 0;
+        } else {
+            weakSelf.airPlayButton.alpha = 1;
+            
+            weakSelf.lockButton.alpha = alpha;
+            weakSelf.unlockButton.alpha = alpha;
+            
+            if (weakSelf.locked) {
+                weakSelf.topBar.alpha = 0;
+                weakSelf.topHUD.alpha = 0;
+                weakSelf.bottomView.alpha = 0;
+                [UIApplication sharedApplication].statusBarHidden = YES;
+            } else {
+                weakSelf.topBar.alpha = alpha;
+                weakSelf.topHUD.alpha = alpha;
+                weakSelf.bottomView.alpha = alpha;
+                [UIApplication sharedApplication].statusBarHidden = weakSelf.hiddenHUD;
+            }
+        }
+    }
                      completion:nil];
     
 }
@@ -2057,8 +2102,8 @@ static NSMutableDictionary * gHistory;
     _disableUpdateHUD = NO;
 }
 
-- (void)updatePosition: (CGFloat)position
-              playMode: (BOOL)playMode {
+- (void)updatePosition:(CGFloat)position
+              playMode:(BOOL)playMode {
     [self freeBufferedFrames];
     position = MIN(_decoder.duration - 1, MAX(0, position));
     
@@ -2071,7 +2116,7 @@ static NSMutableDictionary * gHistory;
             {
                 __strong HcdMovieViewController *strongSelf = weakSelf;
                 if (!strongSelf) return;
-                [strongSelf setDecoderPosition: position];
+                [strongSelf setDecoderPosition:position];
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -2088,7 +2133,7 @@ static NSMutableDictionary * gHistory;
             {
                 __strong HcdMovieViewController *strongSelf = weakSelf;
                 if (!strongSelf) return;
-                [strongSelf setDecoderPosition: position];
+                [strongSelf setDecoderPosition:position];
                 [strongSelf decodeFrames];
             }
             
