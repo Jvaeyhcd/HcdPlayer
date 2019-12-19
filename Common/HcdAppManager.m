@@ -7,6 +7,7 @@
 //
 
 #import "HcdAppManager.h"
+#import "HcdFileManager.h"
 
 #define PLAYLIST @"playlist"
 
@@ -72,21 +73,33 @@
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"passcode"];
     }
     [[NSUserDefaults standardUserDefaults] setBool:needPasscode forKey:@"needPasscode"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @synthesize playList = _playList;
 - (void)setPlayList:(NSArray *)playList {
     _playList = playList;
     [[NSUserDefaults standardUserDefaults] setObject:_playList forKey:PLAYLIST];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSArray *)playList {
     NSArray *playList = [[NSUserDefaults standardUserDefaults] arrayForKey:PLAYLIST];
+    NSMutableArray *array = [NSMutableArray array];
+    
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    
     if (playList && [playList count] > 0) {
-        _playList = playList;
-    } else {
-        _playList = [NSArray array];
+        for (NSString *path in playList) {
+            NSString *fullPath = [NSString stringWithFormat:@"%@%@", documentPath, path];
+            if ([[HcdFileManager defaultManager] fileExists:fullPath]) {
+                [array addObject:path];
+            }
+        }
     }
+    _playList = [NSArray arrayWithArray:array];
+    [[NSUserDefaults standardUserDefaults] setObject:_playList forKey:PLAYLIST];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     return _playList;
 }
 
