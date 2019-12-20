@@ -94,11 +94,13 @@ typedef enum : NSUInteger {
     self.pathChidren = [[NSMutableArray alloc]initWithArray:[[NSFileManager defaultManager] contentsOfDirectoryAtPath:_currentPath error:nil]];
     self.pathChidren = [[HcdFileSortManager sharedInstance] sortArray:self.pathChidren inPath:_currentPath];
     self.selectedArr = [[NSMutableArray alloc] init];
+#if DEBUG
     for (NSString *str in self.pathChidren) {
         NSLog(@"%@", str);
         float size = [[HcdFileManager defaultManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", _currentPath, str]];
         NSLog(@"%lf", size);
     }
+#endif
     [self loadDataWithSelected:NO];
 }
 
