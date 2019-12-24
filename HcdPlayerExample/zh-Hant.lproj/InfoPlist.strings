@@ -5,3 +5,6 @@
   Created by Salvador on 2019/1/19.
   Copyright © 2019 Salvador. All rights reserved.
 */
+
+CFBundleDisplayName = "hPlayer";
+NSPhotoLibraryUsageDescription = "用於保存圖片到您的相冊中，請允許App獲得該權限！";

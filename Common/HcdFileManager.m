@@ -96,14 +96,43 @@
     NSMutableArray *folderPathList = [[NSMutableArray alloc] init];
     
     for (NSString *p in filePathList) {
-        NSString *subPath = [NSString stringWithFormat:@"%@/%@", path, p];
-        NSString *fileType = [[_fileManager attributesOfItemAtPath:subPath error:NULL] fileType];
+        NSString *fullPath = [NSString stringWithFormat:@"%@/%@", path, p];
+        NSString *fileType = [[_fileManager attributesOfItemAtPath:fullPath error:NULL] fileType];
         if ([fileType isEqualToString:NSFileTypeDirectory]) {
-            [folderPathList addObject: subPath];
+            [folderPathList addObject:fullPath];
         }
     }
     
     return folderPathList;
+}
+
+- (NSMutableArray *)getAllImagesByPath:(NSString *)path {
+    NSMutableArray *filePathList = [self getAllFileByPath:path];
+    NSMutableArray *imagesPathList = [[NSMutableArray alloc] init];
+    
+    for (NSString *p in filePathList) {
+        NSString *fullPath = [NSString stringWithFormat:@"%@/%@", path, p];
+        FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:fullPath];
+        if (fileType == FileType_img) {
+            [imagesPathList addObject:fullPath];
+        }
+    }
+    
+    return imagesPathList;
+}
+
+- (NSMutableArray *)getAllImagesInPathArray:(NSMutableArray *)array withPath:(NSString *)path {
+    NSMutableArray *imagesPathList = [[NSMutableArray alloc] init];
+    
+    for (NSString *p in array) {
+        NSString *fullPath = [NSString stringWithFormat:@"%@/%@", path, p];
+        FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:fullPath];
+        if (fileType == FileType_img) {
+            [imagesPathList addObject:fullPath];
+        }
+    }
+    
+    return imagesPathList;
 }
 
 - (float)sizeOfPath:(NSString *)path {

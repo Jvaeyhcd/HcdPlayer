@@ -24,6 +24,7 @@
 #import "HcdFileSortManager.h"
 #import "DocumentViewController.h"
 #import <StoreKit/StoreKit.h>
+#import <YBImageBrowser/YBImageBrowser.h>
 
 #define kEditBottomViewHeight 50
 
@@ -32,7 +33,7 @@ typedef enum : NSUInteger {
     ActionTypeMore
 } ActionType;
 
-@interface LocalMainViewController ()<UIDocumentPickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
+@interface LocalMainViewController ()<UIDocumentPickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, YBImageBrowserDelegate> {
     NSString            *_currentPath;
     NSInteger           _selectedIndex;
     BOOL                _isEdit;
@@ -40,7 +41,11 @@ typedef enum : NSUInteger {
 }
 @property (nonatomic, strong) EditBottomView *bottomView;
 @property (nonatomic, strong) UITableView    *tableView;
+
+/// 文件夹下的所有子路径
 @property (nonatomic, strong) NSMutableArray *pathChidren;
+
+/// 选中的文件路径
 @property (nonatomic, strong) NSMutableArray *selectedArr;
 @property (nonatomic, strong) HcdActionSheet *importActionSheet;
 @property (nonatomic, strong) HcdActionSheet *navMoreActionSheet;
@@ -674,6 +679,7 @@ typedef enum : NSUInteger {
                 [self pushViewController:vc animated:YES];
                 break;
             }
+            case FileType_music:
             case FileType_video: {
                 NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
                 if ([path.pathExtension isEqualToString:@"wmv"]) {
@@ -700,11 +706,38 @@ typedef enum : NSUInteger {
                 [self presentViewController:nav animated:YES completion:nil];
                 break;
             }
+            case FileType_img:
+            {
+                NSMutableArray *array = [[HcdFileManager defaultManager] getAllImagesInPathArray:self.pathChidren withPath:_currentPath];
+                NSLog(@"%@", array);
+                NSMutableArray *dataSourceArray = [NSMutableArray array];
+                NSInteger currentPage = 0;
+                if (array && [array count] > 0) {
+                    for (int i = 0; i < array.count; i++) {
+                        YBIBImageData *data1 = [YBIBImageData new];
+                        data1.imagePath = [array objectAtIndex:i];
+                        [dataSourceArray addObject:data1];
+                        if ([path isEqualToString:[array objectAtIndex:i]]) {
+                            currentPage = i;
+                        }
+                    }
+                }
+                YBImageBrowser *browser = [YBImageBrowser new];
+                browser.delegate = self;
+                browser.supportedOrientations = UIInterfaceOrientationMaskPortrait;
+                browser.dataSourceArray = dataSourceArray;
+                browser.currentPage = currentPage;
+                browser.defaultToolViewHandler.topView.operationType = YBIBTopViewOperationTypeSave;
+                [browser show];
+                browser.defaultToolViewHandler.topView.frame = CGRectMake(0, kStatusBarHeight, kScreenWidth, kNavHeight - kStatusBarHeight);
+                break;
+            }
                 
             default:
                 break;
         }
     }
+    
     
 }
 
@@ -831,6 +864,12 @@ typedef enum : NSUInteger {
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
     return [[NSAttributedString alloc]initWithString:HcdLocalized(@"import_file_tips", nil) attributes:attributes];
+}
+
+#pragma mark - YBImageBrowserDelegate
+
+- (void)yb_imageBrowser:(YBImageBrowser *)imageBrowser respondsToLongPressWithData:(id<YBIBDataProtocol>)data {
+    
 }
 
 /*

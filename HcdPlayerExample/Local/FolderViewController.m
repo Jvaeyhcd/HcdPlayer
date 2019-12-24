@@ -23,6 +23,7 @@
 #import "WifiTransferViewController.h"
 #import "HcdMovieViewController.h"
 #import "DocumentViewController.h"
+#import <YBImageBrowser/YBImageBrowser.h>
 
 #define kEditBottomViewHeight (50 + kTabbarSafeBottomMargin)
 
@@ -31,7 +32,7 @@ typedef enum : NSUInteger {
     ActionTypeMore
 } ActionType;
 
-@interface FolderViewController ()<UIDocumentPickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
+@interface FolderViewController ()<UIDocumentPickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, YBImageBrowserDelegate> {
     NSInteger           _selectedIndex;
     BOOL                _isEdit;
     BOOL                _selectedAll;
@@ -683,6 +684,32 @@ typedef enum : NSUInteger {
                 [self presentViewController:nav animated:YES completion:nil];
                 break;
             }
+            case FileType_img:
+            {
+                NSMutableArray *array = [[HcdFileManager defaultManager] getAllImagesInPathArray:self.pathChidren withPath:_currentPath];
+                NSLog(@"%@", array);
+                NSMutableArray *dataSourceArray = [NSMutableArray array];
+                NSInteger currentPage = 0;
+                if (array && [array count] > 0) {
+                    for (int i = 0; i < array.count; i++) {
+                        YBIBImageData *data1 = [YBIBImageData new];
+                        data1.imagePath = [array objectAtIndex:i];
+                        [dataSourceArray addObject:data1];
+                        if ([path isEqualToString:[array objectAtIndex:i]]) {
+                            currentPage = i;
+                        }
+                    }
+                }
+                YBImageBrowser *browser = [YBImageBrowser new];
+                browser.delegate = self;
+                browser.supportedOrientations = UIInterfaceOrientationMaskPortrait;
+                browser.dataSourceArray = dataSourceArray;
+                browser.currentPage = currentPage;
+                browser.defaultToolViewHandler.topView.operationType = YBIBTopViewOperationTypeSave;
+                [browser show];
+                browser.defaultToolViewHandler.topView.frame = CGRectMake(0, kStatusBarHeight, kScreenWidth, kNavHeight - kStatusBarHeight);
+                break;
+            }
             default:
                 break;
         }
@@ -821,6 +848,12 @@ typedef enum : NSUInteger {
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
     return [[NSAttributedString alloc]initWithString:HcdLocalized(@"import_file_tips", nil) attributes:attributes];
+}
+
+#pragma mark - YBImageBrowserDelegate
+
+- (void)yb_imageBrowser:(YBImageBrowser *)imageBrowser respondsToLongPressWithData:(id<YBIBDataProtocol>)data {
+    
 }
 
 /*

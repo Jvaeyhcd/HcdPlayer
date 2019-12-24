@@ -14,6 +14,7 @@ target 'HcdPlayer' do
     pod 'HcdActionSheet', :path => '../HcdActionSheet'
 #    pod 'MRDLNA'
     pod 'MBProgressHUD'
+    pod 'YBImageBrowser'
     # swift
     pod 'HcdSpecialField', :path => '../HcdSpecialField'
 end
