@@ -15,6 +15,7 @@
 		B96CF6FE22265BE200881CD4 /* HcdFileSortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */; };
 		B9896DC3237C05BE00A5A2DD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9896DC5237C05BE00A5A2DD /* LaunchScreen.storyboard */; };
 		B98F1A1223B209E700C6A2DE /* YBIBImageData+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1A1123B209E700C6A2DE /* YBIBImageData+Hcd.m */; };
+		B98F1A1523B2FA5A00C6A2DE /* UIImage+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1A1423B2FA5A00C6A2DE /* UIImage+Hcd.m */; };
 		B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */; };
 		B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A1DC252224091800F4C9C2 /* EditBottomView.m */; };
 		B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */; };
@@ -118,6 +119,8 @@
 		B9896DC9237C05C600A5A2DD /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B98F1A1023B209E700C6A2DE /* YBIBImageData+Hcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YBIBImageData+Hcd.h"; sourceTree = "<group>"; };
 		B98F1A1123B209E700C6A2DE /* YBIBImageData+Hcd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "YBIBImageData+Hcd.m"; sourceTree = "<group>"; };
+		B98F1A1323B2FA5A00C6A2DE /* UIImage+Hcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Hcd.h"; sourceTree = "<group>"; };
+		B98F1A1423B2FA5A00C6A2DE /* UIImage+Hcd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Hcd.m"; sourceTree = "<group>"; };
 		B99C189921FBFF4E002D4136 /* HcdValueTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdValueTableViewCell.h; sourceTree = "<group>"; };
 		B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdValueTableViewCell.m; sourceTree = "<group>"; };
 		B9A1DC242224091800F4C9C2 /* EditBottomView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditBottomView.h; sourceTree = "<group>"; };
@@ -691,6 +694,8 @@
 				B9AA90BE21F73A8E00F3C70E /* UITableView+Hcd.m */,
 				B98F1A1023B209E700C6A2DE /* YBIBImageData+Hcd.h */,
 				B98F1A1123B209E700C6A2DE /* YBIBImageData+Hcd.m */,
+				B98F1A1323B2FA5A00C6A2DE /* UIImage+Hcd.h */,
+				B98F1A1423B2FA5A00C6A2DE /* UIImage+Hcd.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -997,6 +1002,7 @@
 				B9E2F61B232E68AA0059662A /* RemoteControlView.m in Sources */,
 				B9FCE2D8223520B900E2B9E4 /* HcdPlayerDraggingProgressView.m in Sources */,
 				B9AA90B921F5F5B800F3C70E /* UIView+Hcd.m in Sources */,
+				B98F1A1523B2FA5A00C6A2DE /* UIImage+Hcd.m in Sources */,
 				B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */,
 				B9DF3EFE2324924400DDA47E /* GDataXMLNode.m in Sources */,
 				B9AA90B621F5EE3700F3C70E /* FilesListTableViewCell.m in Sources */,
@@ -1216,7 +1222,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/hcdplayer/HcdPlayer-Prefix.pch";
@@ -1244,7 +1250,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 				);
-				MARKETING_VERSION = 1.3.6;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1263,7 +1269,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/hcdplayer/HcdPlayer-Prefix.pch";
@@ -1291,7 +1297,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 				);
-				MARKETING_VERSION = 1.3.6;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

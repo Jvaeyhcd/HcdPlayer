@@ -9,6 +9,7 @@
 #import "MainViewController.h"
 
 #import "UIView+Hcd.h"
+#import "UIImage+Hcd.h"
 
 #import "SettingViewController.h"
 #import "PlaylistViewController.h"
@@ -54,10 +55,25 @@
     
     self.tabBar.backgroundColor = [UIColor colorWithRGBHex:0xfafafa];
     
-    [UITabBar appearance].shadowImage = [[UIImage alloc] init];
-    [UITabBar appearance].backgroundImage = [[UIImage alloc] init];
-    [UITabBar appearance].translucent = NO;
-    [[UITabBar appearance] setTintColor:kTabbarSelectedColor];
+    // 去除UITabbar上的黑线
+    if (@available(iOS 13.0, *)) {
+        UITabBarAppearance *standardAppearance = [[UITabBarAppearance alloc] init];
+        UITabBarItemAppearance *inlineLayoutAppearance = [[UITabBarItemAppearance  alloc] init];
+        [inlineLayoutAppearance.normal setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10], NSForegroundColorAttributeName:[UIColor color999]}];
+        [inlineLayoutAppearance.normal setIconColor:[UIColor color999]];
+        [inlineLayoutAppearance.selected setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10], NSForegroundColorAttributeName:kTabbarSelectedColor}];
+        [inlineLayoutAppearance.selected setIconColor:kTabbarSelectedColor];
+        standardAppearance.stackedLayoutAppearance = inlineLayoutAppearance;
+        standardAppearance.backgroundColor = [UIColor whiteColor];
+        standardAppearance.shadowImage = [UIImage imageWithColor:[UIColor clearColor]];
+        self.tabBar.standardAppearance = standardAppearance;
+    } else {
+        [UITabBar appearance].shadowImage = [[UIImage alloc] init];
+        [UITabBar appearance].backgroundImage = [[UIImage alloc] init];
+        [UITabBar appearance].translucent = NO;
+        [[UITabBar appearance] setTintColor:kTabbarSelectedColor];
+    }
+    
     [self.tabBar dropShadowWithOffset:CGSizeMake(0, -3) radius:10 color:[UIColor colorWithRGBHex:0xE0E0E0] opacity:0.8];
 }
 
