@@ -11,6 +11,8 @@
 #import "FilesListTableViewCell.h"
 #import "UITableView+Hcd.h"
 
+#define kWebServerPort 8011
+
 @interface WifiTransferViewController () {
     
     UITableView         *_tableView;
@@ -59,8 +61,9 @@
     _webServer.prologue = HcdLocalized(@"PROLOGUE", nil);
     _webServer.epilogue = HcdLocalized(@"EPILOGUE", nil);
     _webServer.htmlTemplate = HcdLocalized(@"html_template_name", nil);
+    _webServer.footer = @"Crafted by Jvaeyhcd";
     _webServer.allowHiddenItems = YES;
-    if ([_webServer start]) {
+    if ([_webServer startWithPort:kWebServerPort bonjourName:@""]) {
         NSLog(@"GCDWebServer running locally on port %lu", (unsigned long)_webServer.serverURL);
         _serverURL = [_webServer.serverURL absoluteString];
         [_tableView reloadData];
