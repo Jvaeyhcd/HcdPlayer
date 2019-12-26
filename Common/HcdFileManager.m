@@ -200,7 +200,7 @@
                 fileType = FileType_doc;
             } else if ([@[@"html", @"htm"] containsObject:suffix]) {
                 fileType = FileType_html;
-            } else if ([@[@"mp3", @"wma", @"wav", @"ape"] containsObject:suffix]) {
+            } else if ([@[@"mp3", @"wma", @"wav", @"ape", @"flac"] containsObject:suffix]) {
                 fileType = FileType_music;
             } else if ([@[@"pdf"] containsObject:suffix]) {
                 fileType = FileType_pdf;

@@ -659,6 +659,7 @@ typedef enum : NSUInteger {
                 [self pushViewController:vc animated:YES];
                 break;
             }
+            case FileType_music:
             case FileType_video: {
                 NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
                 if ([path.pathExtension isEqualToString:@"wmv"]) {
