@@ -7,6 +7,7 @@
 //
 
 #import "HcdLocalized.h"
+#import <YBImageBrowser/YBIBCopywriter.h>
 
 @implementation HcdLocalized
 + (HcdLocalized *)sharedInstance{
@@ -30,12 +31,16 @@
 - (NSString *)currentLanguageStr{
     NSString *languageCode=[[NSUserDefaults standardUserDefaults]objectForKey:AppLanguage];
     if ([languageCode hasPrefix:@"zh-Hans"]) {
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeSimplifiedChinese;
         return HcdLocalized(@"chineseSimple", nil);
     } else if ([languageCode hasPrefix:@"zh-Hant"]) {
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeSimplifiedChinese;
         return HcdLocalized(@"chineseTraditional", nil);
     } else if ([languageCode hasPrefix:@"en"]) {
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeEnglish;
         return HcdLocalized(@"english", nil);
     } else {
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeEnglish;
         return HcdLocalized(@"english", nil);
     }
 }
@@ -43,12 +48,16 @@
 - (HcdLanguage)currentLanguage {
     NSString *languageCode = [[NSUserDefaults standardUserDefaults]objectForKey:AppLanguage];
     if ([languageCode hasPrefix:@"zh-Hans"]) {
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeSimplifiedChinese;
         return HcdLanguageChineseSimple;
     } else if ([languageCode hasPrefix:@"zh-Hant"]) {
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeSimplifiedChinese;
         return HcdLanguageChineseTraditional;
     } else if ([languageCode hasPrefix:@"en"]) {
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeEnglish;
         return HcdLanguageEnglish;
     } else {
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeEnglish;
         return HcdLanguageEnglish;
     }
 }
@@ -63,7 +72,9 @@
     NSLog(@"系统语言:%@",languageCode);
     if([languageCode hasPrefix:@"zh-Hant"]){
         languageCode = @"zh-Hant";//繁体中文
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeSimplifiedChinese;
     }else if([languageCode hasPrefix:@"zh-Hans"]){
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeSimplifiedChinese;
         languageCode = @"zh-Hans";//简体中文
     }else if([languageCode hasPrefix:@"pt"]){
         languageCode = @"pt";//葡萄牙语
@@ -79,8 +90,10 @@
         languageCode = @"ja";//日语
     }else if([languageCode hasPrefix:@"en"]){
         languageCode = @"en";//英语
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeEnglish;
     }else{
         languageCode = @"en";//英语
+        [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeEnglish;
     }
     [self setLanguage:languageCode];
 }
