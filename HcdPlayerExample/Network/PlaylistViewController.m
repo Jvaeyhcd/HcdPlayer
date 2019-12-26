@@ -10,7 +10,7 @@
 #import "FilesListTableViewCell.h"
 #import "UITableView+Hcd.h"
 #import "HcdAppManager.h"
-#import "HcdMovieViewController.h"
+#import "HPlayerViewController.h"
 #import "HcdActionSheet.h"
 
 @interface PlaylistViewController ()<UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
@@ -82,17 +82,21 @@
     NSString *path = [[HcdAppManager sharedInstance].playList objectAtIndex:indexPath.row];
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    if ([path.pathExtension isEqualToString:@"wmv"]) {
-        parameters[HcdMovieParameterMinBufferedDuration] = @(5.0);
-    }
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        parameters[HcdMovieParameterDisableDeinterlacing] = @(YES);
-    }
-    if (path) {
-        HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:[NSString stringWithFormat:@"%@%@", documentPath, path] parameters:parameters];
-        movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
-        [self presentViewController:movieVc animated:YES completion:nil];
-    }
+//    if ([path.pathExtension isEqualToString:@"wmv"]) {
+//        parameters[HcdMovieParameterMinBufferedDuration] = @(5.0);
+//    }
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+//        parameters[HcdMovieParameterDisableDeinterlacing] = @(YES);
+//    }
+//    if (path) {
+//        HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:[NSString stringWithFormat:@"%@%@", documentPath, path] parameters:parameters];
+//        movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
+//        [self presentViewController:movieVc animated:YES completion:nil];
+//    }
+    HPlayerViewController *vc = [[HPlayerViewController alloc] init];
+    vc.url = [NSString stringWithFormat:@"file://%@%@", documentPath, path];
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

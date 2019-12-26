@@ -20,7 +20,7 @@
 #import "EditBottomView.h"
 #import "iCloudManager.h"
 #import "HcdImagePickerViewController.h"
-#import "HcdMovieViewController.h"
+//#import "HcdMovieViewController.h"
 #import "HcdFileSortManager.h"
 #import "DocumentViewController.h"
 #import <StoreKit/StoreKit.h>
@@ -681,16 +681,16 @@ typedef enum : NSUInteger {
             }
             case FileType_music:
             case FileType_video: {
-                NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-                if ([path.pathExtension isEqualToString:@"wmv"]) {
-                    parameters[HcdMovieParameterMinBufferedDuration] = @(5.0);
-                }
-                if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-                    parameters[HcdMovieParameterDisableDeinterlacing] = @(YES);
-                }
-                HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
-                movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
-                [self presentViewController:movieVc animated:YES completion:nil];
+//                NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+//                if ([path.pathExtension isEqualToString:@"wmv"]) {
+//                    parameters[HcdMovieParameterMinBufferedDuration] = @(5.0);
+//                }
+//                if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+//                    parameters[HcdMovieParameterDisableDeinterlacing] = @(YES);
+//                }
+//                HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
+//                movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
+//                [self presentViewController:movieVc animated:YES completion:nil];
                 break;
             }
             case FileType_doc:

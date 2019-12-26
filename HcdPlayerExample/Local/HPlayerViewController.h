@@ -1,17 +1,16 @@
 //
-//  HPlayerViewController.h
-//  HcdPlayer
+//  ViewController.h
+//  HCDPlayer
 //
-//  Created by Salvador on 2019/5/9.
-//  Copyright © 2019 Salvador. All rights reserved.
+//  Created by Jvaeyhcd on 29/11/2019.
+//  Copyright © 2016 Jvaeyhcd. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
 @interface HPlayerViewController : UIViewController
+
+@property (nonatomic) NSString *url;
 
 @end
 
-NS_ASSUME_NONNULL_END
