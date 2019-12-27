@@ -21,7 +21,7 @@ typedef enum : NSUInteger {
     HCDPlayerStatusClosed,
 } HCDPlayerStatus;
 
-@interface HCDPlayerViewController : UIViewController
+@interface HCDPlayerViewController : BaseViewController
 
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic) BOOL autoplay;

@@ -233,19 +233,24 @@
 - (void)startFrameReaderThread {
     if (self.frameReaderThread == nil) {
         self.frameReaderThread = [[NSThread alloc] initWithTarget:self selector:@selector(runFrameReader) object:nil];
+        self.frameReaderThread.name = @"read frame thread";
         [self.frameReaderThread start];
     }
 }
 
 - (void)runFrameReader {
+    NSLog(@"%@", [NSThread currentThread]);
     @autoreleasepool {
         while (self.playing) {
             [self readFrame];
             if (self.requestSeek) {
                 [self seekPositionInFrameReader];
             } else {
-                [NSThread sleepForTimeInterval:1.5];
+                [NSThread sleepForTimeInterval:1.0];
             }
+#if DEBUG
+            NSLog(@"current time:%@", [NSDate date]);
+#endif
         }
         self.frameReaderThread = nil;
     }
@@ -263,6 +268,9 @@
            && (self.bufferedDuration + tempDuration) < self.maxBufferDuration) {
         @autoreleasepool {
             NSArray *fs = [self.decoder readFrames];
+#if DEBUG
+            NSLog(@"read frames count:%ld, video frames count:%ld, audio frames count:%ld", [fs count], [self.vframes count], [self.aframes count]);
+#endif
             if (fs == nil) { break; }
             if (fs.count == 0) { continue; }
             

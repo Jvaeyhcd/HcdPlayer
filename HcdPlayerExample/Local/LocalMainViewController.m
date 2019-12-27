@@ -20,7 +20,7 @@
 #import "EditBottomView.h"
 #import "iCloudManager.h"
 #import "HcdImagePickerViewController.h"
-//#import "HcdMovieViewController.h"
+#import "HCDPlayerViewController.h"
 #import "HcdFileSortManager.h"
 #import "DocumentViewController.h"
 #import <StoreKit/StoreKit.h>
@@ -691,6 +691,10 @@ typedef enum : NSUInteger {
 //                HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
 //                movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
 //                [self presentViewController:movieVc animated:YES completion:nil];
+                HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
+                vc.url = [NSString stringWithFormat:@"file://%@", path];
+                vc.modalPresentationStyle = UIModalPresentationFullScreen;
+                [self presentViewController:vc animated:YES completion:nil];
                 break;
             }
             case FileType_doc:

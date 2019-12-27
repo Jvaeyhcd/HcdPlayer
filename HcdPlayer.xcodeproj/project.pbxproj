@@ -501,8 +501,8 @@
 		B98F1C4623B4A7F800C6A2DE /* view */ = {
 			isa = PBXGroup;
 			children = (
-				B98F1C4723B4A7F800C6A2DE /* HCDPlayerView.m */,
 				B98F1C4823B4A7F800C6A2DE /* HCDPlayerView.h */,
+				B98F1C4723B4A7F800C6A2DE /* HCDPlayerView.m */,
 			);
 			name = view;
 			path = HCDPlayer/view;

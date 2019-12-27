@@ -21,7 +21,7 @@
 #import "HcdImagePickerViewController.h"
 #import "HcdFileSortManager.h"
 #import "WifiTransferViewController.h"
-//#import "HcdMovieViewController.h"
+#import "HCDPlayerViewController.h"
 #import "DocumentViewController.h"
 #import <YBImageBrowser/YBImageBrowser.h>
 
@@ -671,6 +671,10 @@ typedef enum : NSUInteger {
 //                HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
 //                movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
 //                [self presentViewController:movieVc animated:YES completion:nil];
+                HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
+                vc.url = [NSString stringWithFormat:@"file://%@", path];
+                vc.modalPresentationStyle = UIModalPresentationFullScreen;
+                [self presentViewController:vc animated:YES completion:nil];
                 break;
             }
             case FileType_doc:

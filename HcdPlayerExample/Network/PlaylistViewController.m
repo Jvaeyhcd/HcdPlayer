@@ -81,7 +81,7 @@
     NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *path = [[HcdAppManager sharedInstance].playList objectAtIndex:indexPath.row];
     
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+//    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
 //    if ([path.pathExtension isEqualToString:@"wmv"]) {
 //        parameters[HcdMovieParameterMinBufferedDuration] = @(5.0);
 //    }

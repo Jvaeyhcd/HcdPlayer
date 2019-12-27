@@ -8,6 +8,7 @@
 
 #import "HCDPlayerViewController.h"
 #import "HCDPlayerUtils.h"
+#import "HcdAppManager.h"
 
 // 播放器状态
 typedef enum : NSUInteger {
@@ -34,6 +35,11 @@ typedef enum : NSUInteger {
 @property (nonatomic, weak) UILabel *lblPosition;
 @property (nonatomic, weak) UILabel *lblDuration;
 @property (nonatomic, weak) UISlider *sldPosition;
+@property (nonatomic, weak) UIButton *btnFull;
+@property (nonatomic, weak) UIButton *btnClose;
+@property (nonatomic, weak) UIButton *btnAirplay;
+
+@property (nonatomic) BOOL landscape;
 
 @property (nonatomic) UITapGestureRecognizer *grTap;
 
@@ -52,15 +58,19 @@ typedef enum : NSUInteger {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self initAll];
+    // auto play
+    [self play];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [HcdAppManager sharedInstance].isAllowAutorotate = YES;
     [self registerNotification];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [HcdAppManager sharedInstance].isAllowAutorotate = NO;
     [self unregisterNotification];
 }
 
@@ -109,6 +119,26 @@ typedef enum : NSUInteger {
     } else {
         [self play];
     }
+}
+
+- (void)onFullButtonTapped:(id)sender {
+    if (_landscape) {
+        [self setInterfaceOrientation:UIInterfaceOrientationPortrait];
+    } else {
+        [self setInterfaceOrientation:UIInterfaceOrientationLandscapeRight];
+    }
+}
+
+- (void)onCloseButtonTapped:(id)sender {
+    if (_landscape) {
+        [self setInterfaceOrientation:UIInterfaceOrientationPortrait];
+        return;
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)onAirplayButtonTapped:(id)sender {
+    
 }
 
 - (void)onSliderStartSlide:(id)sender {
@@ -171,7 +201,9 @@ typedef enum : NSUInteger {
     self.status = HCDPlayerStatusClosing;
     [UIApplication sharedApplication].idleTimerDisabled = NO;
     [self.player close];
-    [self.btnPlay setTitle:@"|>" forState:UIControlStateNormal];
+//    [self.btnPlay setTitle:@"|>" forState:UIControlStateNormal];
+    [self.btnPlay setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_play"] forState:UIControlStateNormal];
+    [self.btnPlay setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_play_hl"] forState:UIControlStateHighlighted];
 }
 
 - (void)play {
@@ -188,7 +220,9 @@ typedef enum : NSUInteger {
     self.status = HCDPlayerStatusPlaying;
     [UIApplication sharedApplication].idleTimerDisabled = self.preventFromScreenLock;
     [self.player play];
-    [self.btnPlay setTitle:@"||" forState:UIControlStateNormal];
+//    [self.btnPlay setTitle:@"||" forState:UIControlStateNormal];
+    [self.btnPlay setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_pause"] forState:UIControlStateNormal];
+    [self.btnPlay setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_pause"] forState:UIControlStateHighlighted];
 }
 
 - (void)replay {
@@ -205,7 +239,9 @@ typedef enum : NSUInteger {
     self.status = HCDPlayerStatusPaused;
     [UIApplication sharedApplication].idleTimerDisabled = NO;
     [self.player pause];
-    [self.btnPlay setTitle:@"|>" forState:UIControlStateNormal];
+//    [self.btnPlay setTitle:@"|>" forState:UIControlStateNormal];
+    [self.btnPlay setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_play"] forState:UIControlStateNormal];
+    [self.btnPlay setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_play_hl"] forState:UIControlStateHighlighted];
 }
 
 - (BOOL)doNextOperation {
@@ -358,25 +394,25 @@ typedef enum : NSUInteger {
 }
 
 - (void)initBuffering {
-    UIActivityIndicatorView *aiv = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    UIActivityIndicatorView *aiv = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     aiv.translatesAutoresizingMaskIntoConstraints = NO;
     aiv.hidesWhenStopped = YES;
     [self.view addSubview:aiv];
     
-    UIView *topbar = self.vTopBar;
+    UIView *view = self.view;
     
     // Add constraints
     NSLayoutConstraint *cx = [NSLayoutConstraint constraintWithItem:aiv
-                                                          attribute:NSLayoutAttributeRight
+                                                          attribute:NSLayoutAttributeCenterX
                                                           relatedBy:NSLayoutRelationEqual
-                                                             toItem:topbar
-                                                          attribute:NSLayoutAttributeRight
+                                                             toItem:view
+                                                          attribute:NSLayoutAttributeCenterX
                                                          multiplier:1
-                                                           constant:-8];
+                                                           constant:0];
     NSLayoutConstraint *cy = [NSLayoutConstraint constraintWithItem:aiv
                                                           attribute:NSLayoutAttributeCenterY
                                                           relatedBy:NSLayoutRelationEqual
-                                                             toItem:topbar
+                                                             toItem:view
                                                           attribute:NSLayoutAttributeCenterY
                                                          multiplier:1
                                                            constant:0];
@@ -386,7 +422,8 @@ typedef enum : NSUInteger {
 
 - (void)initTopBar {
     CGRect frame = self.view.bounds;
-    frame.size.height = 44;
+    CGFloat height = kNavHeight;
+    frame.size.height = height;
     UIView *v = [[UIView alloc] initWithFrame:frame];
     v.translatesAutoresizingMaskIntoConstraints = NO;
     v.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
@@ -396,7 +433,7 @@ typedef enum : NSUInteger {
                                                           options:0
                                                           metrics:nil
                                                             views:views];
-    NSArray *cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[v(==44)]"
+    NSArray *cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[v(==%f)]", height]
                                                           options:0
                                                           metrics:nil
                                                             views:views];
@@ -413,18 +450,49 @@ typedef enum : NSUInteger {
     lbltitle.textAlignment = NSTextAlignmentCenter;
     [v addSubview:lbltitle];
     views = NSDictionaryOfVariableBindings(lbltitle);
-    ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[lbltitle]-|" options:0 metrics:nil views:views];
-    [v addConstraints:ch];
-    cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[lbltitle]|" options:0 metrics:nil views:views];
+    cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[lbltitle]|", kStatusBarHeight] options:0 metrics:nil views:views];
     [v addConstraints:cv];
+    
+    // Close Button
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.translatesAutoresizingMaskIntoConstraints = NO;
+    closeBtn.backgroundColor = [UIColor clearColor];
+//    [button setTitle:@"|>" forState:UIControlStateNormal];
+    [closeBtn setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_close"] forState:UIControlStateNormal];
+    [closeBtn addTarget:self action:@selector(onCloseButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [v addSubview:closeBtn];
+    views = NSDictionaryOfVariableBindings(closeBtn);
+    cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[closeBtn]|", kStatusBarHeight] options:0 metrics:nil views:views];
+    [v addConstraints:cv];
+    
+    // Airplay Button
+    UIButton *airplayBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    airplayBtn.translatesAutoresizingMaskIntoConstraints = NO;
+    airplayBtn.backgroundColor = [UIColor clearColor];
+    [airplayBtn setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_tv"] forState:UIControlStateNormal];
+    [airplayBtn addTarget:self action:@selector(onAirplayButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [v addSubview:airplayBtn];
+    views = NSDictionaryOfVariableBindings(airplayBtn);
+    cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[airplayBtn]|", kStatusBarHeight] options:0 metrics:nil views:views];
+    [v addConstraints:cv];
+    
+    views = NSDictionaryOfVariableBindings(closeBtn, lbltitle, airplayBtn);
+    ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[closeBtn(==32)]-[lbltitle]-[airplayBtn(==32)]-|"
+                                                 options:0
+                                                 metrics:nil
+                                                   views:views];
+    [v addConstraints:ch];
     
     self.vTopBar = v;
     self.lblTitle = lbltitle;
+    self.btnClose = closeBtn;
+    self.btnAirplay = airplayBtn;
 }
 
 - (void)initBottomBar {
+    CGFloat height = 44 + kTabbarSafeBottomMargin;
     CGRect frame = self.view.bounds;
-    frame.size.height = 44;
+    frame.size.height = height;
     UIView *v = [[UIView alloc] initWithFrame:frame];
     v.translatesAutoresizingMaskIntoConstraints = NO;
     v.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
@@ -434,7 +502,7 @@ typedef enum : NSUInteger {
                                                           options:0
                                                           metrics:nil
                                                             views:views];
-    NSArray *cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[v(==44)]|"
+    NSArray *cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[v(==%f)]|", height]
                                                           options:0
                                                           metrics:nil
                                                             views:views];
@@ -445,11 +513,13 @@ typedef enum : NSUInteger {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.translatesAutoresizingMaskIntoConstraints = NO;
     button.backgroundColor = [UIColor clearColor];
-    [button setTitle:@"|>" forState:UIControlStateNormal];
+//    [button setTitle:@"|>" forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_play"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_play_hl"] forState:UIControlStateHighlighted];
     [button addTarget:self action:@selector(onPlayButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [v addSubview:button];
     views = NSDictionaryOfVariableBindings(button);
-    cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[button]|" options:0 metrics:nil views:views];
+    cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[button]-%f-|", kTabbarSafeBottomMargin] options:0 metrics:nil views:views];
     [v addConstraints:cv];
     
     // Position Label
@@ -462,19 +532,22 @@ typedef enum : NSUInteger {
     lblpos.textAlignment = NSTextAlignmentCenter;
     [v addSubview:lblpos];
     views = NSDictionaryOfVariableBindings(lblpos);
-    cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[lblpos]|" options:0 metrics:nil views:views];
+    cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[lblpos]-%f-|", kTabbarSafeBottomMargin] options:0 metrics:nil views:views];
     [v addConstraints:cv];
     
     UISlider *sldpos = [[UISlider alloc] init];
     sldpos.translatesAutoresizingMaskIntoConstraints = NO;
     sldpos.backgroundColor = [UIColor clearColor];
+    sldpos.minimumTrackTintColor = kMainColor;
+    sldpos.maximumTrackTintColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
     sldpos.continuous = YES;
     [sldpos addTarget:self action:@selector(onSliderStartSlide:) forControlEvents:UIControlEventTouchDown];
     [sldpos addTarget:self action:@selector(onSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     [sldpos addTarget:self action:@selector(onSliderEndSlide:) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside];
+    [sldpos setThumbImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_progress"] forState:UIControlStateNormal];
     [v addSubview:sldpos];
     views = NSDictionaryOfVariableBindings(sldpos);
-    cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[sldpos]|" options:0 metrics:nil views:views];
+    cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[sldpos]-%f-|", kTabbarSafeBottomMargin] options:0 metrics:nil views:views];
     [v addConstraints:cv];
     
     UILabel *lblduration = [[UILabel alloc] init];
@@ -486,11 +559,23 @@ typedef enum : NSUInteger {
     lblduration.textAlignment = NSTextAlignmentCenter;
     [v addSubview:lblduration];
     views = NSDictionaryOfVariableBindings(lblduration);
-    cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[lblduration]|" options:0 metrics:nil views:views];
+    cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[lblduration]-%f-|", kTabbarSafeBottomMargin] options:0 metrics:nil views:views];
     [v addConstraints:cv];
     
-    views = NSDictionaryOfVariableBindings(button, lblpos, sldpos, lblduration);
-    ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[button(==32)]-[lblpos(==72)]-[sldpos]-[lblduration(==72)]-|"
+    // Enter full or exit full button
+    UIButton *fullBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    fullBtn.translatesAutoresizingMaskIntoConstraints = NO;
+    fullBtn.backgroundColor = [UIColor clearColor];
+//    [button setTitle:@"|>" forState:UIControlStateNormal];
+    [fullBtn setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_fullscreen"] forState:UIControlStateNormal];
+    [fullBtn addTarget:self action:@selector(onFullButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [v addSubview:fullBtn];
+    views = NSDictionaryOfVariableBindings(fullBtn);
+    cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[fullBtn]-%f-|", kTabbarSafeBottomMargin] options:0 metrics:nil views:views];
+    [v addConstraints:cv];
+    
+    views = NSDictionaryOfVariableBindings(button, lblpos, sldpos, lblduration, fullBtn);
+    ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[button(==32)]-[lblpos(==72)]-[sldpos]-[lblduration(==72)]-[fullBtn(==32)]-|"
                                                  options:0
                                                  metrics:nil
                                                    views:views];
@@ -501,6 +586,7 @@ typedef enum : NSUInteger {
     self.lblPosition = lblpos;
     self.sldPosition = sldpos;
     self.lblDuration = lblduration;
+    self.btnFull = fullBtn;
 }
 
 - (void)initGestures {
@@ -578,6 +664,33 @@ typedef enum : NSUInteger {
         [self hideHUD];
         [self stopTimerForHideHUD];
     }
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    BOOL isLandscape = size.width > size.height;
+    [coordinator animateAlongsideTransition:nil
+                                 completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+                                     self.landscape = isLandscape;
+                                 }];
+}
+
+#pragma mark - Setter
+- (void)setLandscape:(BOOL)landscape {
+    _landscape = landscape;
+    [self updatePlayerFrame];
+}
+
+#pragma mark - Update Player Frame
+- (void)updatePlayerFrame {
+    if (_landscape) {
+        [self.btnClose setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_back"] forState:UIControlStateNormal];
+        [self.btnFull setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_fullscreen_exit"] forState:UIControlStateNormal];
+    } else {
+        [self.btnClose setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_close"] forState:UIControlStateNormal];
+        [self.btnFull setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_fullscreen"] forState:UIControlStateNormal];
+    }
+    self.btnAirplay.hidden = _landscape;
 }
 
 #pragma mark - Gesture
