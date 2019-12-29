@@ -10,7 +10,7 @@
 #import "FilesListTableViewCell.h"
 #import "UITableView+Hcd.h"
 #import "HcdAppManager.h"
-#import "HPlayerViewController.h"
+#import "HCDPlayerViewController.h"
 #import "HcdActionSheet.h"
 
 @interface PlaylistViewController ()<UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
@@ -93,7 +93,7 @@
 //        movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
 //        [self presentViewController:movieVc animated:YES completion:nil];
 //    }
-    HPlayerViewController *vc = [[HPlayerViewController alloc] init];
+    HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
     vc.url = [NSString stringWithFormat:@"file://%@%@", documentPath, path];
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:nil];

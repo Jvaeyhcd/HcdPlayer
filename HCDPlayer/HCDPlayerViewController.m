@@ -38,8 +38,10 @@ typedef enum : NSUInteger {
 @property (nonatomic, weak) UIButton *btnFull;
 @property (nonatomic, weak) UIButton *btnClose;
 @property (nonatomic, weak) UIButton *btnAirplay;
+@property (nonatomic, weak) UIButton *btnLock;
 
 @property (nonatomic) BOOL landscape;
+@property (nonatomic) BOOL locked;
 
 @property (nonatomic) UITapGestureRecognizer *grTap;
 
@@ -72,6 +74,7 @@ typedef enum : NSUInteger {
     [super viewWillDisappear:animated];
     [HcdAppManager sharedInstance].isAllowAutorotate = NO;
     [self unregisterNotification];
+    [self close];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -108,6 +111,7 @@ typedef enum : NSUInteger {
     [self initTopBar];
     [self initBottomBar];
     [self initBuffering];
+    [self initLock];
     [self initGestures];
     self.status = HCDPlayerStatusNone;
     self.nextOperation = HCDPlayerOperationNone;
@@ -135,6 +139,16 @@ typedef enum : NSUInteger {
         return;
     }
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)onLockButtonTapped:(id)sender {
+    self.locked = !self.locked;
+    [self setDevivceLocked:self.locked];
+    if (self.locked) {
+        [self hideHUD];
+    } else {
+        [self showHUD];
+    }
 }
 
 - (void)onAirplayButtonTapped:(id)sender {
@@ -264,6 +278,15 @@ typedef enum : NSUInteger {
     }
     self.nextOperation = HCDPlayerOperationNone;
     return YES;
+}
+
+- (void)setDevivceLocked:(BOOL)locked {
+    [HcdAppManager sharedInstance].isLocked = locked;
+    if (locked) {
+        [self.btnLock setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_lock"] forState:UIControlStateNormal];
+    } else {
+        [self.btnLock setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_unlock"] forState:UIControlStateNormal];
+    }
 }
 
 #pragma mark - Notifications
@@ -420,6 +443,43 @@ typedef enum : NSUInteger {
     self.aivBuffering = aiv;
 }
 
+- (void)initLock {
+    UIButton *lockBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    lockBtn.translatesAutoresizingMaskIntoConstraints = NO;
+    [lockBtn setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_unlock"] forState:UIControlStateNormal];
+    [lockBtn addTarget:self action:@selector(onLockButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    lockBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
+    lockBtn.layer.cornerRadius = 16;
+    lockBtn.clipsToBounds = YES;
+    [self.view addSubview:lockBtn];
+    
+    UIButton *closeBtn = self.btnClose;
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(lockBtn, closeBtn);
+    NSArray *ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[closeBtn]-[lockBtn(==32)]"
+                                                          options:0
+                                                          metrics:nil
+                                                            views:views];
+
+    NSArray *cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[lockBtn(==32)]"
+                                                          options:0
+                                                          metrics:nil
+                                                            views:views];
+    
+    NSLayoutConstraint *cc = [NSLayoutConstraint constraintWithItem:lockBtn
+                                               attribute:NSLayoutAttributeCenterY
+                                               relatedBy:NSLayoutRelationEqual
+                                                  toItem:self.view
+                                               attribute:NSLayoutAttributeCenterY
+                                              multiplier:1
+                                                constant:0];
+    [self.view addConstraints:ch];
+    [self.view addConstraints:cv];
+    [self.view addConstraint:cc];
+    
+    self.btnLock = lockBtn;
+}
+
 - (void)initTopBar {
     CGRect frame = self.view.bounds;
     CGFloat height = kNavHeight;
@@ -444,7 +504,7 @@ typedef enum : NSUInteger {
     UILabel *lbltitle = [[UILabel alloc] init];
     lbltitle.translatesAutoresizingMaskIntoConstraints = NO;
     lbltitle.backgroundColor = [UIColor clearColor];
-    lbltitle.text = @"HCDPlayer";
+    lbltitle.text = @"";
     lbltitle.font = [UIFont systemFontOfSize:15];
     lbltitle.textColor = [UIColor whiteColor];
     lbltitle.textAlignment = NSTextAlignmentCenter;
@@ -603,15 +663,22 @@ typedef enum : NSUInteger {
 
     [self syncHUD:YES];
     animatingHUD = YES;
-    self.vTopBar.hidden = NO;
-    self.vBottomBar.hidden = NO;
+    if (!self.locked) {
+        self.vTopBar.hidden = NO;
+        self.vBottomBar.hidden = NO;
+    }
+    
+    self.btnLock.hidden = NO;
 
     __weak typeof(self)weakSelf = self;
     [UIView animateWithDuration:0.5f
                      animations:^{
                          __strong typeof(weakSelf)strongSelf = weakSelf;
-                         strongSelf.vTopBar.alpha = 1.0f;
-                         strongSelf.vBottomBar.alpha = 1.0f;
+        if (!self.locked) {
+            strongSelf.vTopBar.alpha = 1.0f;
+            strongSelf.vBottomBar.alpha = 1.0f;
+        }
+                         strongSelf.btnLock.alpha = 1.0f;
                      }
                      completion:^(BOOL finished) {
                          animatingHUD = NO;
@@ -629,12 +696,14 @@ typedef enum : NSUInteger {
                          __strong typeof(weakSelf)strongSelf = weakSelf;
                          strongSelf.vTopBar.alpha = 0.0f;
                          strongSelf.vBottomBar.alpha = 0.0f;
+                         strongSelf.btnLock.alpha = 0.0f;
                      }
                      completion:^(BOOL finished) {
                          __strong typeof(weakSelf)strongSelf = weakSelf;
 
                          strongSelf.vTopBar.hidden = YES;
                          strongSelf.vBottomBar.hidden = YES;
+                         strongSelf.btnLock.hidden = YES;
 
                          animatingHUD = NO;
                      }];
@@ -667,6 +736,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     BOOL isLandscape = size.width > size.height;
     [coordinator animateAlongsideTransition:nil
@@ -720,6 +790,11 @@ typedef enum : NSUInteger {
     
     dispatch_cancel(self.timer);
     self.timer = nil;
+}
+
+- (BOOL)shouldAutorotate {
+
+    return !self.locked;
 }
 
 @end
