@@ -13,6 +13,7 @@
 		B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F6222627F600881CD4 /* iCloudManager.m */; };
 		B96CF6FB222649EB00881CD4 /* HcdImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */; };
 		B96CF6FE22265BE200881CD4 /* HcdFileSortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */; };
+		B9872C2223B9A4A400D8C107 /* RemoteControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9872C2123B9A4A400D8C107 /* RemoteControlView.m */; };
 		B9896DC3237C05BE00A5A2DD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9896DC5237C05BE00A5A2DD /* LaunchScreen.storyboard */; };
 		B98F1A1223B209E700C6A2DE /* YBIBImageData+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1A1123B209E700C6A2DE /* YBIBImageData+Hcd.m */; };
 		B98F1A1523B2FA5A00C6A2DE /* UIImage+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1A1423B2FA5A00C6A2DE /* UIImage+Hcd.m */; };
@@ -48,6 +49,9 @@
 		B98F1CFF23B4A9A100C6A2DE /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98F1CFE23B4A9A100C6A2DE /* CoreMedia.framework */; };
 		B98F1D0123B4A9B300C6A2DE /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98F1D0023B4A9B300C6A2DE /* VideoToolbox.framework */; };
 		B98F1D0423B4AC8100C6A2DE /* HPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1D0323B4AC8100C6A2DE /* HPlayerViewController.m */; };
+		B98F1D1023B8D53700C6A2DE /* HcdBrightnessProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1D0F23B8D53700C6A2DE /* HcdBrightnessProgressView.m */; };
+		B98F1D1323B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1D1223B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.m */; };
+		B98F1D1623B8D60900C6A2DE /* HcdSoundProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1D1523B8D60900C6A2DE /* HcdSoundProgressView.m */; };
 		B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */; };
 		B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A1DC252224091800F4C9C2 /* EditBottomView.m */; };
 		B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A6F2EB22199EAF0027D017 /* LanguageViewController.m */; };
@@ -129,6 +133,8 @@
 		B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdImagePickerViewController.m; sourceTree = "<group>"; };
 		B96CF6FC22265BE200881CD4 /* HcdFileSortManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdFileSortManager.h; sourceTree = "<group>"; };
 		B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdFileSortManager.m; sourceTree = "<group>"; };
+		B9872C2023B9A4A400D8C107 /* RemoteControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteControlView.h; sourceTree = "<group>"; };
+		B9872C2123B9A4A400D8C107 /* RemoteControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RemoteControlView.m; sourceTree = "<group>"; };
 		B9896DC4237C05BE00A5A2DD /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B9896DC7237C05C300A5A2DD /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B9896DC9237C05C600A5A2DD /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -298,6 +304,12 @@
 		B98F1D0223B4AC8100C6A2DE /* HPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPlayerViewController.h; sourceTree = "<group>"; };
 		B98F1D0323B4AC8100C6A2DE /* HPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPlayerViewController.m; sourceTree = "<group>"; };
 		B98F1D0523B4B36B00C6A2DE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/HCDPlayerStrings.strings"; sourceTree = "<group>"; };
+		B98F1D0E23B8D53700C6A2DE /* HcdBrightnessProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdBrightnessProgressView.h; sourceTree = "<group>"; };
+		B98F1D0F23B8D53700C6A2DE /* HcdBrightnessProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdBrightnessProgressView.m; sourceTree = "<group>"; };
+		B98F1D1123B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdPlayerDraggingProgressView.h; sourceTree = "<group>"; };
+		B98F1D1223B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdPlayerDraggingProgressView.m; sourceTree = "<group>"; };
+		B98F1D1423B8D60900C6A2DE /* HcdSoundProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdSoundProgressView.h; sourceTree = "<group>"; };
+		B98F1D1523B8D60900C6A2DE /* HcdSoundProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdSoundProgressView.m; sourceTree = "<group>"; };
 		B99C189921FBFF4E002D4136 /* HcdValueTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdValueTableViewCell.h; sourceTree = "<group>"; };
 		B99C189A21FBFF4E002D4136 /* HcdValueTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdValueTableViewCell.m; sourceTree = "<group>"; };
 		B9A1DC242224091800F4C9C2 /* EditBottomView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditBottomView.h; sourceTree = "<group>"; };
@@ -503,6 +515,14 @@
 			children = (
 				B98F1C4823B4A7F800C6A2DE /* HCDPlayerView.h */,
 				B98F1C4723B4A7F800C6A2DE /* HCDPlayerView.m */,
+				B98F1D0E23B8D53700C6A2DE /* HcdBrightnessProgressView.h */,
+				B98F1D0F23B8D53700C6A2DE /* HcdBrightnessProgressView.m */,
+				B98F1D1123B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.h */,
+				B98F1D1223B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.m */,
+				B98F1D1423B8D60900C6A2DE /* HcdSoundProgressView.h */,
+				B98F1D1523B8D60900C6A2DE /* HcdSoundProgressView.m */,
+				B9872C2023B9A4A400D8C107 /* RemoteControlView.h */,
+				B9872C2123B9A4A400D8C107 /* RemoteControlView.m */,
 			);
 			name = view;
 			path = HCDPlayer/view;
@@ -1166,6 +1186,7 @@
 				B9AA908821F2D21300F3C70E /* SettingViewController.m in Sources */,
 				B9A92B662245C02C002989B2 /* PasscodeViewController.m in Sources */,
 				B98F1C6923B4A7F900C6A2DE /* HCDPlayerFrame.m in Sources */,
+				B98F1D1023B8D53700C6A2DE /* HcdBrightnessProgressView.m in Sources */,
 				B9DF3F032324924400DDA47E /* StopAction.m in Sources */,
 				B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */,
 				B98F1C6A23B4A7F900C6A2DE /* HCDPlayerVideoYUVFrame.m in Sources */,
@@ -1200,6 +1221,7 @@
 				B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */,
 				B9E2F618232CC9B90059662A /* HcdPopSelectView.m in Sources */,
 				B9AA90A421F5631700F3C70E /* NSString+Hcd.m in Sources */,
+				B98F1D1623B8D60900C6A2DE /* HcdSoundProgressView.m in Sources */,
 				B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */,
 				B9DF3F002324924400DDA47E /* MRDLNA.m in Sources */,
 				B9DF3EFB2324924400DDA47E /* CLUPnPAVPositionInfo.m in Sources */,
@@ -1207,8 +1229,10 @@
 				B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */,
 				B96CF6FE22265BE200881CD4 /* HcdFileSortManager.m in Sources */,
 				B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */,
+				B9872C2223B9A4A400D8C107 /* RemoteControlView.m in Sources */,
 				B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */,
 				B98F1C5C23B4A7F900C6A2DE /* HCDPlayer.m in Sources */,
+				B98F1D1323B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.m in Sources */,
 				B9AA907421EDC04100F3C70E /* UIColor+Hcd.m in Sources */,
 				B9DF3EFC2324924400DDA47E /* CLUPnPAction.m in Sources */,
 				B9AA90AD21F5760F00F3C70E /* GCDWebUploader.m in Sources */,

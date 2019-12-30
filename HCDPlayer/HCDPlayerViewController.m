@@ -7,8 +7,22 @@
 //
 
 #import "HCDPlayerViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
+#import <QuartzCore/QuartzCore.h>
+#import <AVFoundation/AVFoundation.h>
 #import "HCDPlayerUtils.h"
 #import "HcdAppManager.h"
+#import "HcdPlayerDraggingProgressView.h"
+#import "HcdBrightnessProgressView.h"
+#import "HcdSoundProgressView.h"
+#import "MRDLNA.h"
+#import <GCDWebServer/GCDWebDAVServer.h>
+#import <GCDWebServer/GCDWebServerFileResponse.h>
+#import "HcdActionSheet.h"
+#import "HcdPopSelectView.h"
+#import "RemoteControlView.h"
+
+#define kLeastMoveDistance 15.0
 
 // 播放器状态
 typedef enum : NSUInteger {
@@ -19,10 +33,31 @@ typedef enum : NSUInteger {
     HCDPlayerOperationClose,
 } HCDPlayerOperation;
 
-@interface HCDPlayerViewController () {
+typedef enum : NSUInteger {
+    HCDPlayerControlTypeNone,
+    HCDPlayerControlTypeProgress,
+    HCDPlayerControlTypeVoice,
+    HCDPlayerControlTypeLight,
+} HCDPlayerControlType;
+
+@interface HCDPlayerViewController ()<DLNADelegate, GCDWebDAVServerDelegate, RemoteControlViewDelegate> {
     BOOL restorePlay;
     BOOL animatingHUD;
     NSTimeInterval showHUDTime;
+    
+    CGFloat _moviePosition;
+    //用来判断手势是否移动过
+    BOOL _hasMoved;
+    //判断是否已经判断出手势划的方向
+    BOOL _controlJudge;
+    //触摸开始触碰到的点
+    CGPoint _touchBeginPoint;
+    //记录触摸开始时的视频播放的时间
+    float _touchBeginValue;
+    //记录触摸开始亮度
+    float _touchBeginLightValue;
+    //记录触摸开始的音量
+    float _touchBeginVoiceValue;
 }
 
 @property (nonatomic, strong) HCDPlayer *player;
@@ -44,6 +79,13 @@ typedef enum : NSUInteger {
 @property (nonatomic) BOOL locked;
 
 @property (nonatomic) UITapGestureRecognizer *grTap;
+@property (nonatomic) UITapGestureRecognizer *dgrTap;
+@property (nonatomic) UIPanGestureRecognizer *panGesture;
+
+@property (nonatomic, assign) HCDPlayerControlType controlType;
+@property (nonatomic, strong) HcdPlayerDraggingProgressView *draggingProgressView;
+@property (nonatomic, strong) HcdBrightnessProgressView *brightnessProgressView;
+@property (nonatomic, strong) HcdSoundProgressView *soundProgressView;
 
 @property (nonatomic) dispatch_source_t timer;
 @property (nonatomic) BOOL updateHUD;
@@ -51,6 +93,26 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, readwrite) HCDPlayerStatus status;
 @property (nonatomic) HCDPlayerOperation nextOperation;
+
+@property (nonatomic, strong) MPVolumeView   *volumeView;             //音量控制控件
+@property (nonatomic, strong) UISlider       *volumeSlider;           //用这个来控制音量
+@property (nonatomic, assign) float          outputVolume;            //音量
+
+@property (nonatomic, strong) RemoteControlView *dlnaControlView;
+/**
+ * DLNA manager
+ */
+@property (nonatomic, strong) MRDLNA *dlnaManager;
+
+/**
+ * 附近支持DLNA的设备
+ */
+@property (nonatomic, strong) NSArray *deviceArr;
+
+/**
+ * 服务器
+ */
+@property (nonatomic, strong) GCDWebDAVServer* davServer;
 
 @end
 
@@ -98,6 +160,13 @@ typedef enum : NSUInteger {
     [nc addObserver:self selector:@selector(notifyPlayerEOF:) name:HCDPlayerNotificationEOF object:self.player];
     [nc addObserver:self selector:@selector(notifyPlayerBufferStateChanged:) name:HCDPlayerNotificationBufferStateChanged object:self.player];
     [nc addObserver:self selector:@selector(notifyPlayerError:) name:HCDPlayerNotificationError object:self.player];
+    
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    float volume = session.outputVolume;
+    [session setActive:YES error:nil];
+    self.outputVolume = volume;
+    self.soundProgressView.progress = volume;
+    [nc addObserver:self selector:@selector(notifyVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
 
 - (void)unregisterNotification {
@@ -108,10 +177,15 @@ typedef enum : NSUInteger {
 #pragma mark - Init
 - (void)initAll {
     [self initPlayer];
+    [self initDLNAManager];
+    [self initGCDWebServer];
     [self initTopBar];
     [self initBottomBar];
     [self initBuffering];
     [self initLock];
+    [self initDraggingProgressView];
+    [self initSoundView];
+    [self initBrightnessView];
     [self initGestures];
     self.status = HCDPlayerStatusNone;
     self.nextOperation = HCDPlayerOperationNone;
@@ -141,7 +215,7 @@ typedef enum : NSUInteger {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)onLockButtonTapped:(id)sender {
+- (void)onLockButtonTapped {
     self.locked = !self.locked;
     [self setDevivceLocked:self.locked];
     if (self.locked) {
@@ -151,8 +225,38 @@ typedef enum : NSUInteger {
     }
 }
 
-- (void)onAirplayButtonTapped:(id)sender {
+- (void)onAirplayButtonTapped {
     
+    // 锁屏
+    self.locked = YES;
+    [self setDevivceLocked:self.locked];
+    
+    // 暂停播放
+    [self pause];
+
+    if (!self.deviceArr || self.deviceArr.count == 0) {
+        [self.dlnaManager startSearch];
+    }
+
+    NSMutableArray *deviceNameArr = [NSMutableArray array];
+    for (CLUPnPDevice *device in self.deviceArr) {
+        [deviceNameArr addObject:device.friendlyName];
+    }
+
+    HcdPopSelectView *selectDeviceView = [[HcdPopSelectView alloc] initWithDataArray:deviceNameArr title:@"请选择要投屏的设备"];
+
+    selectDeviceView.seletedIndex = ^(NSInteger index) {
+        
+        CLUPnPDevice *device = [self.deviceArr objectAtIndex:index];
+        self.dlnaControlView.deviceLbl.text = device.friendlyName;
+        [self.dlnaManager endDLNA];
+        self.dlnaManager.device = device;
+        self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", self.davServer.serverURL.absoluteString];
+        [self.dlnaManager startDLNA];
+    };
+
+    [[UIApplication sharedApplication].keyWindow addSubview:selectDeviceView];
+    [selectDeviceView show];
 }
 
 - (void)onSliderStartSlide:(id)sender {
@@ -169,9 +273,7 @@ typedef enum : NSUInteger {
 - (void)onSliderEndSlide:(id)sender {
     UISlider *slider = sender;
     float position = slider.value;
-    self.player.position = position;
-    self.updateHUD = YES;
-    self.grTap.enabled = YES;
+    [self setPlayerPosition:position];
 }
 
 - (void)syncHUD {
@@ -395,6 +497,15 @@ typedef enum : NSUInteger {
     [[NSNotificationCenter defaultCenter] postNotificationName:HCDPlayerNotificationError object:self userInfo:notif.userInfo];
 }
 
+- (void)notifyVolumeChanged:(NSNotification *)notif {
+    float volume = [[[notif userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
+    if (self.outputVolume != volume) {
+        [self.soundProgressView show];
+        self.soundProgressView.progress = volume;
+        self.outputVolume = volume;
+    }
+}
+
 #pragma mark - UI
 - (void)initPlayer {
     self.player = [[HCDPlayer alloc] init];
@@ -414,6 +525,29 @@ typedef enum : NSUInteger {
                                                                                 metrics:nil
                                                                                   views:views];
     [self.view addConstraints:cv];
+}
+
+- (void)initDLNAManager {
+    self.dlnaManager = [MRDLNA sharedMRDLNAManager];
+    self.dlnaManager.delegate = self;
+    
+    [self.dlnaManager startSearch];
+}
+
+/**
+ 开启服务器
+ */
+- (void)initGCDWebServer {
+    __weak typeof(self) weakSelf = self;
+    NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    self.davServer = [[GCDWebDAVServer alloc] initWithUploadDirectory:documentsPath];
+    self.davServer.delegate =  self;
+    [self.davServer addHandlerForMethod:@"GET" pathRegex:@"/video.mov" requestClass:[GCDWebServerRequest class] asyncProcessBlock:^(__kindof GCDWebServerRequest * _Nonnull request, GCDWebServerCompletionBlock  _Nonnull completionBlock) {
+        NSString *path = [weakSelf.url stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+        GCDWebServerFileResponse *res = [GCDWebServerFileResponse responseWithFile:path byteRange:request.byteRange];
+        completionBlock(res);
+    }];
+    [self.davServer start];
 }
 
 - (void)initBuffering {
@@ -447,7 +581,7 @@ typedef enum : NSUInteger {
     UIButton *lockBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     lockBtn.translatesAutoresizingMaskIntoConstraints = NO;
     [lockBtn setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_unlock"] forState:UIControlStateNormal];
-    [lockBtn addTarget:self action:@selector(onLockButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [lockBtn addTarget:self action:@selector(onLockButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     lockBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
     lockBtn.layer.cornerRadius = 16;
     lockBtn.clipsToBounds = YES;
@@ -456,7 +590,7 @@ typedef enum : NSUInteger {
     UIButton *closeBtn = self.btnClose;
     
     NSDictionary *views = NSDictionaryOfVariableBindings(lockBtn, closeBtn);
-    NSArray *ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[closeBtn]-[lockBtn(==32)]"
+    NSArray *ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[lockBtn(==32)]"
                                                           options:0
                                                           metrics:nil
                                                             views:views];
@@ -466,18 +600,149 @@ typedef enum : NSUInteger {
                                                           metrics:nil
                                                             views:views];
     
-    NSLayoutConstraint *cc = [NSLayoutConstraint constraintWithItem:lockBtn
+    NSLayoutConstraint *cy = [NSLayoutConstraint constraintWithItem:lockBtn
                                                attribute:NSLayoutAttributeCenterY
                                                relatedBy:NSLayoutRelationEqual
                                                   toItem:self.view
                                                attribute:NSLayoutAttributeCenterY
                                               multiplier:1
                                                 constant:0];
+    
+    NSLayoutConstraint *cx = [NSLayoutConstraint constraintWithItem:lockBtn
+                                                          attribute:NSLayoutAttributeLeft
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:closeBtn
+                                                          attribute:NSLayoutAttributeLeft
+                                                         multiplier:1
+                                                           constant:8];
+    
+    
     [self.view addConstraints:ch];
     [self.view addConstraints:cv];
-    [self.view addConstraint:cc];
+    [self.view addConstraint:cx];
+    [self.view addConstraint:cy];
     
     self.btnLock = lockBtn;
+}
+
+- (void)initDraggingProgressView {
+    HcdPlayerDraggingProgressView *progressView = [HcdPlayerDraggingProgressView new];
+    progressView.hidden = YES;
+    progressView.translatesAutoresizingMaskIntoConstraints = NO;
+    progressView.layer.cornerRadius = 8;
+    [self.view addSubview:progressView];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(progressView);
+    NSArray *ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[progressView(==150)]"
+                                                          options:0
+                                                          metrics:nil
+                                                            views:views];
+
+    NSArray *cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[progressView(==80)]"
+                                                          options:0
+                                                          metrics:nil
+                                                            views:views];
+    
+    NSLayoutConstraint *cx = [NSLayoutConstraint constraintWithItem:progressView
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1
+                                                           constant:0];
+    
+    NSLayoutConstraint *cy = [NSLayoutConstraint constraintWithItem:progressView
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1
+                                                           constant:0];
+    [self.view addConstraints:@[cx, cy]];
+    [self.view addConstraints:ch];
+    [self.view addConstraints:cv];
+    self.draggingProgressView = progressView;
+}
+
+- (void)initSoundView {
+    HcdSoundProgressView *soundView = [HcdSoundProgressView getInstance];
+    soundView.layer.cornerRadius = 16;
+    soundView.translatesAutoresizingMaskIntoConstraints = NO;
+    soundView.hidden = YES;
+
+    [self.view addSubview:soundView];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(soundView);
+    NSArray *ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[soundView(==32)]"
+                                                          options:0
+                                                          metrics:nil
+                                                            views:views];
+
+    NSArray *cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[soundView(==140)]"
+                                                          options:0
+                                                          metrics:nil
+                                                            views:views];
+    
+    NSLayoutConstraint *cx = [NSLayoutConstraint constraintWithItem:soundView
+                                                          attribute:NSLayoutAttributeRight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.btnFull
+                                                          attribute:NSLayoutAttributeRight
+                                                         multiplier:1
+                                                           constant:-kBasePadding];
+    
+    NSLayoutConstraint *cy = [NSLayoutConstraint constraintWithItem:soundView
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1
+                                                           constant:0];
+    [self.view addConstraints:@[cx, cy]];
+    [self.view addConstraints:ch];
+    [self.view addConstraints:cv];
+    
+    self.soundProgressView = soundView;
+}
+
+- (void)initBrightnessView {
+    HcdBrightnessProgressView *brightnessView = [[HcdBrightnessProgressView alloc] initWithFrame:CGRectMake(kBasePadding, (kScreenHeight - 140) / 2, 32, 140)];
+    brightnessView.translatesAutoresizingMaskIntoConstraints = NO;
+    brightnessView.layer.cornerRadius = 16;
+    brightnessView.hidden = YES;
+    [self.view addSubview:brightnessView];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(brightnessView);
+    NSArray *ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[brightnessView(==32)]"
+                                                          options:0
+                                                          metrics:nil
+                                                            views:views];
+
+    NSArray *cv = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[brightnessView(==140)]"
+                                                          options:0
+                                                          metrics:nil
+                                                            views:views];
+    
+    NSLayoutConstraint *cx = [NSLayoutConstraint constraintWithItem:brightnessView
+                                                          attribute:NSLayoutAttributeLeft
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.btnPlay
+                                                          attribute:NSLayoutAttributeLeft
+                                                         multiplier:1
+                                                           constant:kBasePadding];
+    
+    NSLayoutConstraint *cy = [NSLayoutConstraint constraintWithItem:brightnessView
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1
+                                                           constant:0];
+    [self.view addConstraints:@[cx, cy]];
+    [self.view addConstraints:ch];
+    [self.view addConstraints:cv];
+    
+    self.brightnessProgressView = brightnessView;
 }
 
 - (void)initTopBar {
@@ -530,7 +795,7 @@ typedef enum : NSUInteger {
     airplayBtn.translatesAutoresizingMaskIntoConstraints = NO;
     airplayBtn.backgroundColor = [UIColor clearColor];
     [airplayBtn setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_tv"] forState:UIControlStateNormal];
-    [airplayBtn addTarget:self action:@selector(onAirplayButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [airplayBtn addTarget:self action:@selector(onAirplayButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     [v addSubview:airplayBtn];
     views = NSDictionaryOfVariableBindings(airplayBtn);
     cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[airplayBtn]|", kStatusBarHeight] options:0 metrics:nil views:views];
@@ -650,11 +915,24 @@ typedef enum : NSUInteger {
 }
 
 - (void)initGestures {
+    
+    // double tap gesture
+    UITapGestureRecognizer *dTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGesutreRecognizer:)];
+    dTap.numberOfTapsRequired = 2;
+    [self.view addGestureRecognizer:dTap];
+    self.dgrTap = dTap;
+    
+    // single tap gesture
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapGesutreRecognizer:)];
     tap.numberOfTapsRequired = 1;
-    tap.numberOfTouchesRequired = 1;
     [self.view addGestureRecognizer:tap];
     self.grTap = tap;
+    
+    // pan gesture
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPanGesutreRecognizer:)];
+    pan.enabled = YES;
+    [self.view addGestureRecognizer:pan];
+    self.panGesture = pan;
 }
 
 #pragma mark - Show/Hide HUD
@@ -766,8 +1044,120 @@ typedef enum : NSUInteger {
 #pragma mark - Gesture
 - (void)onTapGesutreRecognizer:(UITapGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateEnded) {
-        if (self.vTopBar.hidden) [self showHUD];
-        else [self hideHUD];
+        if (recognizer == self.grTap) {
+            if (self.vTopBar.hidden) [self showHUD];
+            else [self hideHUD];
+        } else if (recognizer == self.dgrTap) {
+            
+            if (self.status == HCDPlayerStatusEOF) {
+                return;
+            }
+            
+            if (self.status == HCDPlayerStatusPlaying) {
+                [self pause];
+            } else if (self.status == HCDPlayerStatusPaused) {
+                [self play];
+            }
+        }
+    }
+}
+
+- (void)onPanGesutreRecognizer:(UITapGestureRecognizer *)recognizer {
+    if (self.locked) {
+        return;
+    }
+    
+    CGPoint touchPoint = [recognizer locationInView:self.view];
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        _hasMoved = NO;
+        _controlJudge = NO;
+        _touchBeginValue = self.player.position;
+        _touchBeginVoiceValue = self.outputVolume;
+        _touchBeginLightValue = [UIScreen mainScreen].brightness;
+        _touchBeginPoint = touchPoint;
+    }
+    if (recognizer.state == UIGestureRecognizerStateChanged) {
+        if (fabs(touchPoint.x - _touchBeginPoint.x) < kLeastMoveDistance && fabs(touchPoint.y - _touchBeginPoint.y) < kLeastMoveDistance) {
+            return;
+        }
+        _hasMoved = YES;
+        
+        // 如果还没有判断出是什么手势就进行判断
+        if (!_controlJudge) {
+            // 根据滑动角度的tan值来进行判断
+            float tan = fabs(touchPoint.y - _touchBeginPoint.y) / fabs(touchPoint.x - _touchBeginPoint.x);
+            
+            // 当滑动角度小于30度的时候, 进度手势
+            if (tan < 1 / sqrt(3)) {
+                _controlType = HCDPlayerControlTypeProgress;
+                _controlJudge = YES;
+            } else if (tan > sqrt(3)) {
+                if (_touchBeginPoint.x < self.view.frame.size.width / 2) {
+                    _controlType = HCDPlayerControlTypeVoice;
+                } else {
+                    _controlType = HCDPlayerControlTypeLight;
+                }
+                _controlJudge = YES;
+            } else {
+                _controlType = HCDPlayerControlTypeNone;
+                return;
+            }
+        }
+        if (_controlType == HCDPlayerControlTypeProgress) {
+            float value = [self moveProgressControlWithTempPoint:touchPoint];
+            [self timeValueChangingWithValue:value];
+        } else if (HCDPlayerControlTypeLight == _controlType) {
+            
+            CGFloat brightness = [UIScreen mainScreen].brightness;
+            brightness -= ((touchPoint.y - _touchBeginPoint.y) / 10000);
+            [UIScreen mainScreen].brightness = brightness;
+            
+            [self.brightnessProgressView show];
+            self.brightnessProgressView.progress = brightness;
+            
+        } else if (HCDPlayerControlTypeVoice == _controlType) {
+            self.volumeView.frame = CGRectMake(-1000, -100, 100, 100);
+            [self.view addSubview:self.volumeView];
+            // 根据触摸开始时的音量和触摸开始时的点去计算出现在滑动到的音量
+            float voiceValue = _touchBeginVoiceValue - ((touchPoint.y - _touchBeginPoint.y) / CGRectGetHeight(self.view.frame));
+            //判断控制一下, 不能超出 0~1
+            if (voiceValue < 0) {
+                self.volumeSlider.value = 0;
+            } else if(voiceValue > 1) {
+                self.volumeSlider.value = 1;
+            } else {
+                self.volumeSlider.value = voiceValue;
+            }
+            
+            [self.soundProgressView show];
+            self.soundProgressView.progress = voiceValue;
+        }
+    }
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        
+//        const CGPoint vt = [recognizer velocityInView:self.view];
+//        const CGPoint pt = [recognizer translationInView:self.view];
+//        const CGFloat sp = MAX(0.1, log10(fabs(vt.x)) - 1.0);
+//        const CGFloat sc = fabs(pt.x) * 0.33 * sp;
+//        if (sc > 10) {
+//
+//            const CGFloat ff = pt.x > 0 ? 1.0 : -1.0;
+//            [self setMoviePosition: _moviePosition + ff * MIN(sc, 600.0)];
+//        }
+        _controlJudge = NO;
+        if (_hasMoved) {
+            if (_controlType == HCDPlayerControlTypeProgress) {
+//                self.draggingProgressView.hidden = YES;
+                float value = [self moveProgressControlWithTempPoint:touchPoint];
+                [self setPlayerPosition:value];
+            } else if (_controlType == HCDPlayerControlTypeLight) {
+//                self.brightnessProgressView.hidden = YES;
+            } else if (_controlType == HCDPlayerControlTypeVoice) {
+//                self.soundProgressView.hidden = YES;
+            }
+        }
+        //LoggerStream(2, @"pan %.2f %.2f %.2f sec", pt.x, vt.x, sc);
     }
 }
 
@@ -795,6 +1185,111 @@ typedef enum : NSUInteger {
 - (BOOL)shouldAutorotate {
 
     return !self.locked;
+}
+
+#pragma mark - private
+- (float)moveProgressControlWithTempPoint:(CGPoint)tempPoint {
+    float tempValue = _touchBeginValue + 90 * ((tempPoint.x - _touchBeginPoint.x) / kScreenWidth);
+    if (tempValue > self.player.duration) {
+        tempValue = self.player.duration;
+    }else if (tempValue < 0){
+        tempValue = 0.0f;
+    }
+    return tempValue;
+}
+
+-(void)timeValueChangingWithValue:(float)value{
+    if (value > _touchBeginValue) {
+        self.draggingProgressView.directionImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_fast"];
+    } else if (value < _touchBeginValue) {
+        self.draggingProgressView.directionImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_forward"];
+    }
+    
+#if DEBUG
+    NSLog(@"_touchBeginValue:%f value:%f", _touchBeginValue, value);
+#endif
+    
+    CGFloat duration = self.player.duration;
+    self.draggingProgressView.durationTimeLabel.text = [HCDPlayerUtils durationStringFromSeconds:duration];
+    self.draggingProgressView.shiftTimeLabel.text = [HCDPlayerUtils durationStringFromSeconds:value];
+    [self.draggingProgressView show];
+}
+
+- (void)setPlayerPosition: (float)position {
+    self.player.position = position;
+    self.updateHUD = YES;
+    self.grTap.enabled = YES;
+}
+
+#pragma mark - lazy load
+- (MPVolumeView *)volumeView {
+    if (!_volumeView) {
+        _volumeView = [[MPVolumeView alloc] init];
+        _volumeView.hidden = NO;
+        [_volumeView setShowsRouteButton:YES];
+        [_volumeView setFrame:CGRectMake(-100, -100, 40, 40)];
+        [_volumeView setShowsVolumeSlider:YES];
+        for (UIView * view in _volumeView.subviews) {
+            if ([NSStringFromClass(view.class) isEqualToString:@"MPVolumeSlider"]) {
+                self.volumeSlider = (UISlider *)view;
+                break;
+            }
+        }
+    }
+    return _volumeView;
+}
+
+- (RemoteControlView *)dlnaControlView {
+    if (!_dlnaControlView) {
+        _dlnaControlView = [[RemoteControlView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+        _dlnaControlView.delegate = self;
+    }
+    return _dlnaControlView;
+}
+
+#pragma mark - RemoteControlViewDelegate
+
+- (void)didClickChangeDevice {
+    
+    [self onAirplayButtonTapped];
+}
+
+- (void)didClickQuitDLNAPlay {
+    // 停止endDLNA播放
+    [self.dlnaManager endDLNA];
+    // 隐藏播放控制界面
+    [self.dlnaControlView hide];
+    
+    // 重新开始播放
+    if (self.status == HCDPlayerStatusEOF) {
+        [self replay];
+    } else {
+        [self play];
+    }
+}
+
+#pragma mark - DLNADelegate
+
+- (void)searchDLNAResult:(NSArray *)devicesArray {
+    self.deviceArr = [[NSArray alloc] initWithArray:devicesArray];
+}
+
+- (void)dlnaStartPlay {
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // dlna开始播放了回调
+        [self.dlnaControlView show];
+    });
+    
+}
+
+#pragma mark - other
+- (BOOL)prefersStatusBarHidden {
+    return NO;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 @end
