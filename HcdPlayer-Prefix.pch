@@ -30,8 +30,10 @@
 #define kSelectedCellBgColor [UIColor colorWithRGBHex:0xF9F9F9]
 #define kCellHeaderBgColor [UIColor colorWithRGBHex:0xF7F7F7]
 
-#define kBarButtonItemTitleFont [UIFont systemFontOfSize:16]
-#define kBaseFont [UIFont systemFontOfSize:14]
+#define kFont(A) [UIFont systemFontOfSize:A]
+#define kBoldFont(A) [UIFont boldSystemFontOfSize:A]
+#define kBarButtonItemTitleFont kFont(16)
+#define kBaseFont kFont(14)
 #define kBasePadding 16
 #define kHeaderHeight 40
 #define kScreenBottomPadding

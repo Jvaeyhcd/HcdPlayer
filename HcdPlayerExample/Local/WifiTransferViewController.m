@@ -159,7 +159,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kHeaderHeight)];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, 0, kScreenWidth - 2 * kBasePadding, kHeaderHeight)];
-    label.font = [UIFont systemFontOfSize:14];
+    label.font = kFont(14);
     label.textColor = [UIColor color666];
     view.backgroundColor = kCellHeaderBgColor;
     [view addSubview:label];

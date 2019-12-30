@@ -170,12 +170,12 @@ typedef enum : NSUInteger {
 
 - (void)showEditTableView {
     [UIView animateWithDuration:0.5 animations:^{
-        self.bottomView.frame = CGRectMake(0, self.view.bounds.size.height - kEditBottomViewHeight, kScreenWidth, kEditBottomViewHeight);
+        self.bottomView.frame = CGRectMake(0, self.view.bounds.size.height - kEditBottomViewHeight - kTabbarHeight, kScreenWidth, kEditBottomViewHeight);
     } completion:^(BOOL finished) {
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
             make.right.mas_equalTo(0);
-            make.bottom.mas_equalTo(-kEditBottomViewHeight);
+            make.bottom.mas_equalTo(-kEditBottomViewHeight-kTabbarHeight);
             make.left.mas_equalTo(0);
         }];
     }];

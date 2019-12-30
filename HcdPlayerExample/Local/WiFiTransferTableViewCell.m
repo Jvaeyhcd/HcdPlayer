@@ -34,12 +34,12 @@
     tipsLbl.textColor = [UIColor color999];
     tipsLbl.textAlignment = NSTextAlignmentCenter;
     tipsLbl.numberOfLines = 2;
-    tipsLbl.font = [UIFont systemFontOfSize:12];
+    tipsLbl.font = kFont(12);
     tipsLbl.text = HcdLocalized(@"wifiTransferTips", nil);
     [self addSubview:tipsLbl];
     
     _addressLbl = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, CGRectGetMaxY(tipsLbl.frame) + kBasePadding, kScreenWidth - 2 * kBasePadding, 20)];
-    _addressLbl.font = [UIFont systemFontOfSize:18];
+    _addressLbl.font = kFont(18);
     _addressLbl.textColor = [UIColor color333];
     _addressLbl.textAlignment = NSTextAlignmentCenter;
     _addressLbl.numberOfLines = 1;

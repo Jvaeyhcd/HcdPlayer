@@ -11,6 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AVFoundation/AVFoundation.h>
 #import "HCDPlayerUtils.h"
+#import "HcdFileManager.h"
 #import "HcdAppManager.h"
 #import "HcdPlayerDraggingProgressView.h"
 #import "HcdBrightnessProgressView.h"
@@ -124,6 +125,13 @@ typedef enum : NSUInteger {
     [self initAll];
     // auto play
     [self play];
+    
+    // 添加到播放记录中
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *relativePath = [self.url mutableCopy];
+    relativePath = [relativePath  stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+    relativePath = [relativePath stringByReplacingOccurrencesOfString:documentPath withString:@""];
+    [[HcdAppManager sharedInstance] addPathToPlaylist:relativePath];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -800,6 +808,12 @@ typedef enum : NSUInteger {
     views = NSDictionaryOfVariableBindings(airplayBtn);
     cv = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[airplayBtn]|", kStatusBarHeight] options:0 metrics:nil views:views];
     [v addConstraints:cv];
+    
+    NSString *path = [[self.url mutableCopy] stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+    FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
+    if (fileType != FileType_video) {
+        airplayBtn.hidden = YES;
+    }
     
     views = NSDictionaryOfVariableBindings(closeBtn, lbltitle, airplayBtn);
     ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[closeBtn(==32)]-[lbltitle]-[airplayBtn(==32)]-|"

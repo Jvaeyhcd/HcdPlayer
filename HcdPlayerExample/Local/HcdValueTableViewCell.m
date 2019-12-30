@@ -29,13 +29,13 @@
     
     if (!_titleLbl) {
         _titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, 0, kScreenWidth / 2 - kBasePadding, 50)];
-        _titleLbl.font = [UIFont systemFontOfSize:16];
+        _titleLbl.font = [UIFont systemFontOfSize:15];
         _titleLbl.textColor = [UIColor color333];
         [self addSubview:_titleLbl];
     }
     if (!_contentLbl) {
         _contentLbl = [[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth / 2, 0, kScreenWidth / 2 - 2 * kBasePadding, 50)];
-        _contentLbl.font = [UIFont systemFontOfSize:16];
+        _contentLbl.font = [UIFont systemFontOfSize:15];
         _contentLbl.textColor = [UIColor color999];
         _contentLbl.textAlignment = NSTextAlignmentRight;
         [self addSubview:_contentLbl];

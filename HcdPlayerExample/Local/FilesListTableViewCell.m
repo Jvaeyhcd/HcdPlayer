@@ -50,7 +50,7 @@
     
     if (!_titleLbl) {
         _titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(_fileTypeImageView.frame.origin.x + _fileTypeImageView.frame.size.width + kBasePadding, _fileTypeImageView.frame.origin.y, kScreenWidth - (_fileTypeImageView.frame.origin.x + _fileTypeImageView.frame.size.width + 3 * kBasePadding), scaleFromiPhoneXDesign(30))];
-        _titleLbl.font = [UIFont boldSystemFontOfSize:16];
+        _titleLbl.font = kBoldFont(15);
         _titleLbl.textAlignment = NSTextAlignmentLeft;
         _titleLbl.textColor = [UIColor color333];
         _titleLbl.text = HcdLocalized(@"local", nil);
@@ -62,7 +62,7 @@
     if (!_descLbl) {
         _descLbl = [[UILabel alloc] init];
         _descLbl.frame = CGRectMake(_fileTypeImageView.frame.origin.x + _fileTypeImageView.frame.size.width + kBasePadding, _titleLbl.frame.origin.y + _titleLbl.frame.size.height, kScreenWidth - (_fileTypeImageView.frame.origin.x + _fileTypeImageView.frame.size.width + 3 * kBasePadding), scaleFromiPhoneXDesign(20));
-        _descLbl.font = [UIFont systemFontOfSize:12];
+        _descLbl.font = kFont(12);
         _descLbl.textAlignment = NSTextAlignmentLeft;
         _descLbl.textColor = [UIColor color666];
         _descLbl.text = HcdLocalized(@"local", nil);
