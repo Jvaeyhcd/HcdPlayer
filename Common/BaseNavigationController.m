@@ -23,7 +23,7 @@
     [UINavigationBar appearance].tintColor = kNavBgColor;
     [UINavigationBar appearance].barTintColor = kNavBgColor;
     [UINavigationBar appearance].backgroundColor = kNavBgColor;
-    [UINavigationBar appearance].titleTextAttributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18], NSForegroundColorAttributeName: kNavTitleColor};
+    [UINavigationBar appearance].titleTextAttributes = @{NSForegroundColorAttributeName: kNavTitleColor};
 }
 
 - (void)viewDidAppear:(BOOL)animated {

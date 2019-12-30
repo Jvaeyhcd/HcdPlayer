@@ -152,6 +152,15 @@ typedef enum : NSUInteger {
     [self showHUD];
 }
 
+- (void)dealloc {
+    [self pause];
+    
+    [self.davServer stop];
+    self.davServer = nil;
+    
+    [self.dlnaManager endDLNA];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

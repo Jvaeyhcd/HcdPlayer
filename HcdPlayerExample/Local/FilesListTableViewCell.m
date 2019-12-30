@@ -45,6 +45,7 @@
         _fileTypeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(kBasePadding, kBasePadding, scaleFromiPhoneXDesign(50), scaleFromiPhoneXDesign(50))];
         _fileTypeImageView.backgroundColor = [UIColor colorWithRGBHex:0xFFFFFF];
         _fileTypeImageView.contentMode = UIViewContentModeScaleAspectFit;
+        _fileTypeImageView.clipsToBounds = YES;
         [self.contentView addSubview:_fileTypeImageView];
     }
     
@@ -98,8 +99,11 @@
     if (size) {
         [descArr addObject:size];
     }
-    
-    _fileTypeImageView.image = [[HcdFileManager defaultManager] getFileTypeImageByPath:path];
+    if (fileType == FileType_img) {
+        _fileTypeImageView.image = [UIImage imageWithContentsOfFile:path];
+    } else {
+        _fileTypeImageView.image = [[HcdFileManager defaultManager] getFileTypeImageByPath:path];
+    }
     _titleLbl.text = fileName;
     _descLbl.text = [descArr componentsJoinedByString:@" | "];
 }
