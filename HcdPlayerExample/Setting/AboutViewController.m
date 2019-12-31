@@ -52,6 +52,11 @@ enum {
     self.title = HcdLocalized(@"about", nil);
     [self showBarButtonItemWithImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_back"] position:LEFT];
     [self.view addSubview:self.versionView];
+    [self.versionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.mas_equalTo(0);
+        make.height.mas_equalTo(scaleFromiPhoneXDesign(140) + 40);
+    }];
+    
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];

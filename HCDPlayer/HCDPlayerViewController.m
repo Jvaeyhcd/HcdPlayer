@@ -126,6 +126,8 @@ typedef enum : NSUInteger {
     // auto play
     [self play];
     
+    self.landscape = self.view.frame.size.width > self.view.frame.size.height;
+    
     // 添加到播放记录中
     NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *relativePath = [self.url mutableCopy];
@@ -225,6 +227,9 @@ typedef enum : NSUInteger {
 }
 
 - (void)onCloseButtonTapped:(id)sender {
+    if (IS_PAD) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
     if (_landscape) {
         [self setInterfaceOrientation:UIInterfaceOrientationPortrait];
         return;
@@ -1055,13 +1060,24 @@ typedef enum : NSUInteger {
 #pragma mark - Update Player Frame
 - (void)updatePlayerFrame {
     if (_landscape) {
-        [self.btnClose setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_back"] forState:UIControlStateNormal];
+        if (IS_PAD) {
+            [self.btnClose setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_close"] forState:UIControlStateNormal];
+        } else {
+            [self.btnClose setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_back"] forState:UIControlStateNormal];
+        }
         [self.btnFull setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_fullscreen_exit"] forState:UIControlStateNormal];
     } else {
         [self.btnClose setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_close"] forState:UIControlStateNormal];
         [self.btnFull setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_fullscreen"] forState:UIControlStateNormal];
     }
+    
+    // 播放音频不显示AirPlay
     self.btnAirplay.hidden = _landscape;
+    NSString *path = [[self.url mutableCopy] stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+    FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
+    if (fileType != FileType_video) {
+        self.btnAirplay.hidden = YES;
+    }
 }
 
 #pragma mark - Gesture

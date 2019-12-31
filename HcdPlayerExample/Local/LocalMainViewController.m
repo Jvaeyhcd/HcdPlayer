@@ -78,6 +78,35 @@ typedef enum : NSUInteger {
     
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    if (_isEdit) {
+        [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(kEditBottomViewHeight);
+            make.bottom.mas_equalTo(0);
+        }];
+        [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+            make.bottom.mas_equalTo(-kEditBottomViewHeight);
+            make.left.mas_equalTo(0);
+        }];
+    } else {
+        [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(0);
+            make.right.mas_equalTo(0);
+            make.bottom.mas_equalTo(0);
+            make.left.mas_equalTo(0);
+        }];
+        [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(kEditBottomViewHeight);
+            make.top.mas_equalTo(self.view.bounds.size.height);
+        }];
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     if (!_isEdit) {
         [self reloadDatas];
@@ -170,12 +199,17 @@ typedef enum : NSUInteger {
 
 - (void)showEditTableView {
     [UIView animateWithDuration:0.5 animations:^{
-        self.bottomView.frame = CGRectMake(0, self.view.bounds.size.height - kEditBottomViewHeight - kTabbarHeight, kScreenWidth, kEditBottomViewHeight);
+        [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(kEditBottomViewHeight);
+            make.bottom.mas_equalTo(0);
+        }];
     } completion:^(BOOL finished) {
+        
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
             make.right.mas_equalTo(0);
-            make.bottom.mas_equalTo(-kEditBottomViewHeight-kTabbarHeight);
+            make.bottom.mas_equalTo(-kEditBottomViewHeight);
             make.left.mas_equalTo(0);
         }];
     }];
@@ -191,7 +225,11 @@ typedef enum : NSUInteger {
             make.bottom.mas_equalTo(0);
             make.left.mas_equalTo(0);
         }];
-        self.bottomView.frame = CGRectMake(0, self.view.bounds.size.height, kScreenWidth, kEditBottomViewHeight);
+        [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.height.mas_equalTo(kEditBottomViewHeight);
+            make.top.mas_equalTo(self.view.bounds.size.height);
+        }];
     } completion:^(BOOL finished) {
 //        [self.bottomView removeFromSuperview];
         [self.bottomView.allBtn setSelected:NO];
@@ -457,6 +495,9 @@ typedef enum : NSUInteger {
 }
 
 - (void)setTableViewEdit: (BOOL)edit {
+    if (!self.pathChidren || self.pathChidren.count == 0) {
+        return;
+    }
     _isEdit = edit;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     [self.tableView setEditing:edit animated:YES];

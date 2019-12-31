@@ -20,6 +20,24 @@
         [self addSubview:self.lineView];
         [self addSubview:self.deleteBtn];
         [self addSubview:self.moveBtn];
+        
+        NSString *str = HcdLocalized(@"delete", nil);
+        CGFloat width = [str widthWithConstainedWidth:kScreenWidth font:[UIFont systemFontOfSize:14]] + 32;
+        [self.deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-kBasePadding);
+            make.height.mas_equalTo(30);
+            make.width.mas_equalTo(width);
+            make.top.mas_equalTo(10);
+        }];
+        
+        str = HcdLocalized(@"move", nil);
+        width = [str widthWithConstainedWidth:kScreenWidth font:[UIFont systemFontOfSize:14]] + 32;
+        [self.moveBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.deleteBtn.mas_left).offset(-8);
+            make.height.mas_equalTo(30);
+            make.width.mas_equalTo(width);
+            make.top.mas_equalTo(10);
+        }];
     }
     return self;
 }

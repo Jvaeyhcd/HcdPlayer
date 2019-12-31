@@ -33,6 +33,12 @@
         _titleLbl.font = [UIFont systemFontOfSize:15];
         _titleLbl.textColor = [UIColor color333];
         [self addSubview:_titleLbl];
+        [_titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(50);
+            make.left.mas_equalTo(kBasePadding);
+            make.top.mas_equalTo(0);
+            make.right.mas_equalTo(-kScreenWidth / 2);
+        }];
     }
     if (!_contentLbl) {
         _contentLbl = [[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth / 2, 0, kScreenWidth / 2 - 2 * kBasePadding, 50)];
@@ -40,6 +46,12 @@
         _contentLbl.textColor = [UIColor color999];
         _contentLbl.textAlignment = NSTextAlignmentRight;
         [self addSubview:_contentLbl];
+        [_contentLbl mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(50);
+            make.left.mas_equalTo(kScreenWidth / 2);
+            make.top.mas_equalTo(0);
+            make.right.mas_equalTo(-2 * kBasePadding);
+        }];
     }
 }
 

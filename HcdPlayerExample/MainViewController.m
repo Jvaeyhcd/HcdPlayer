@@ -31,6 +31,11 @@
     [self createTabbar];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self.tabBar dropShadowWithOffset:CGSizeMake(0, -3) radius:10 color:[UIColor colorWithRGBHex:0xE0E0E0] opacity:0.8];
+}
+
 - (void)createTabbar {
     LocalMainViewController *localVc = [[LocalMainViewController alloc] init];
     localVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_folder"];
@@ -70,11 +75,9 @@
     } else {
         [UITabBar appearance].shadowImage = [[UIImage alloc] init];
         [UITabBar appearance].backgroundImage = [[UIImage alloc] init];
-        [UITabBar appearance].translucent = NO;
-        [[UITabBar appearance] setTintColor:kTabbarSelectedColor];
     }
-    
-    [self.tabBar dropShadowWithOffset:CGSizeMake(0, -3) radius:10 color:[UIColor colorWithRGBHex:0xE0E0E0] opacity:0.8];
+    [UITabBar appearance].translucent = NO;
+    [[UITabBar appearance] setTintColor:kTabbarSelectedColor];
 }
 
 

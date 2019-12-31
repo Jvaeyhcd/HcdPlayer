@@ -78,6 +78,12 @@
 }
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    
+    if (IS_PAD) {
+        // is ipad
+        return UIInterfaceOrientationMaskAll;
+    }
+    
     BOOL isAllowAutorotate = [HcdAppManager sharedInstance].isAllowAutorotate;
     BOOL isLocked = [HcdAppManager sharedInstance].isLocked;
     UIInterfaceOrientationMask supportedInterfaceOrientationsForWindow = [HcdAppManager sharedInstance].supportedInterfaceOrientationsForWindow;
@@ -91,6 +97,23 @@
         }
     }
     
+}
+
+- (BOOL)getIsIpad {
+
+    NSString *deviceType = [UIDevice currentDevice].model;
+    if([deviceType isEqualToString:@"iPhone"]) {
+        // iPhone
+        return NO;
+    } else if([deviceType isEqualToString:@"iPod touch"]) {
+        //iPod Touch
+        return NO;
+    } else if([deviceType isEqualToString:@"iPad"]) {
+        //iPad
+        return YES;
+    }
+
+    return NO;
 }
 
 
