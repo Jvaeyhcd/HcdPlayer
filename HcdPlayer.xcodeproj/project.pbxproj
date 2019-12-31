@@ -15,11 +15,12 @@
 		B96CF6FE22265BE200881CD4 /* HcdFileSortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */; };
 		B9872C2223B9A4A400D8C107 /* RemoteControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9872C2123B9A4A400D8C107 /* RemoteControlView.m */; };
 		B9896DC3237C05BE00A5A2DD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9896DC5237C05BE00A5A2DD /* LaunchScreen.storyboard */; };
+		B989B2F323BB371600C34308 /* HCDPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C4D23B4A7F900C6A2DE /* HCDPlayerViewController.m */; };
+		B989B2F423BB372F00C34308 /* HCDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C3B23B4A7F800C6A2DE /* HCDPlayer.m */; };
 		B98F1A1223B209E700C6A2DE /* YBIBImageData+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1A1123B209E700C6A2DE /* YBIBImageData+Hcd.m */; };
 		B98F1A1523B2FA5A00C6A2DE /* UIImage+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1A1423B2FA5A00C6A2DE /* UIImage+Hcd.m */; };
 		B98F1C5A23B4A7F900C6A2DE /* HCDPlayerAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C3823B4A7F800C6A2DE /* HCDPlayerAudioManager.m */; };
 		B98F1C5B23B4A7F900C6A2DE /* HCDPlayerDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C3923B4A7F800C6A2DE /* HCDPlayerDecoder.m */; };
-		B98F1C5C23B4A7F900C6A2DE /* HCDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C3B23B4A7F800C6A2DE /* HCDPlayer.m */; };
 		B98F1C5D23B4A7F900C6A2DE /* HCDPlayerStrings.strings in Resources */ = {isa = PBXBuildFile; fileRef = B98F1C3D23B4A7F800C6A2DE /* HCDPlayerStrings.strings */; };
 		B98F1C5E23B4A7F900C6A2DE /* HCDPlayerRotationScaleVertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = B98F1C4023B4A7F800C6A2DE /* HCDPlayerRotationScaleVertexShader.glsl */; };
 		B98F1C5F23B4A7F900C6A2DE /* HCDPlayerRotationVertexShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = B98F1C4223B4A7F800C6A2DE /* HCDPlayerRotationVertexShader.glsl */; };
@@ -28,7 +29,6 @@
 		B98F1C6223B4A7F900C6A2DE /* HCDPlayerYUVFragmentShader.glsl in Resources */ = {isa = PBXBuildFile; fileRef = B98F1C4523B4A7F800C6A2DE /* HCDPlayerYUVFragmentShader.glsl */; };
 		B98F1C6323B4A7F900C6A2DE /* HCDPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C4723B4A7F800C6A2DE /* HCDPlayerView.m */; };
 		B98F1C6423B4A7F900C6A2DE /* HCDPlayerUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C4B23B4A7F900C6A2DE /* HCDPlayerUtils.m */; };
-		B98F1C6523B4A7F900C6A2DE /* HCDPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C4D23B4A7F900C6A2DE /* HCDPlayerViewController.m */; };
 		B98F1C6623B4A7F900C6A2DE /* HCDPlayerVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C5123B4A7F900C6A2DE /* HCDPlayerVideoFrame.m */; };
 		B98F1C6723B4A7F900C6A2DE /* HCDPlayerVideoRGBFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C5323B4A7F900C6A2DE /* HCDPlayerVideoRGBFrame.m */; };
 		B98F1C6823B4A7F900C6A2DE /* HCDPlayerAudioFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C5523B4A7F900C6A2DE /* HCDPlayerAudioFrame.m */; };
@@ -1168,6 +1168,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B989B2F423BB372F00C34308 /* HCDPlayer.m in Sources */,
 				B9DF3F022324924400DDA47E /* CLUPnPRenderer.m in Sources */,
 				B9A6F2F2221C41730027D017 /* UIScrollView+EmptyDataSet.m in Sources */,
 				B9FCE2DB223BF10800E2B9E4 /* HcdProgressView.m in Sources */,
@@ -1177,6 +1178,7 @@
 				B9DF3EFE2324924400DDA47E /* GDataXMLNode.m in Sources */,
 				B9AA90B621F5EE3700F3C70E /* FilesListTableViewCell.m in Sources */,
 				B9AA90A721F56B4200F3C70E /* WifiTransferViewController.m in Sources */,
+				B989B2F323BB371600C34308 /* HCDPlayerViewController.m in Sources */,
 				B98F1C6423B4A7F900C6A2DE /* HCDPlayerUtils.m in Sources */,
 				B9AA90BF21F73A8E00F3C70E /* UITableView+Hcd.m in Sources */,
 				B9AA90A121F5612200F3C70E /* UIViewController+Hcd.m in Sources */,
@@ -1217,7 +1219,6 @@
 				B98F1C6823B4A7F900C6A2DE /* HCDPlayerAudioFrame.m in Sources */,
 				B9AA908221F2D1F100F3C70E /* PlaylistViewController.m in Sources */,
 				B9AA90B321F5B2C400F3C70E /* HcdFileManager.m in Sources */,
-				B98F1C6523B4A7F900C6A2DE /* HCDPlayerViewController.m in Sources */,
 				B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */,
 				B9E2F618232CC9B90059662A /* HcdPopSelectView.m in Sources */,
 				B9AA90A421F5631700F3C70E /* NSString+Hcd.m in Sources */,
@@ -1231,7 +1232,6 @@
 				B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */,
 				B9872C2223B9A4A400D8C107 /* RemoteControlView.m in Sources */,
 				B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */,
-				B98F1C5C23B4A7F900C6A2DE /* HCDPlayer.m in Sources */,
 				B98F1D1323B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.m in Sources */,
 				B9AA907421EDC04100F3C70E /* UIColor+Hcd.m in Sources */,
 				B9DF3EFC2324924400DDA47E /* CLUPnPAction.m in Sources */,
@@ -1411,7 +1411,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/HcdPlayer-Prefix.pch";
@@ -1439,7 +1439,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1458,7 +1458,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/HcdPlayer-Prefix.pch";
@@ -1486,7 +1486,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
