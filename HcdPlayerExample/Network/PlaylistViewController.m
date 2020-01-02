@@ -27,10 +27,25 @@
     self.title = HcdLocalized(@"playlist", nil);
     self.view.backgroundColor = kMainBgColor;
     [self.view addSubview:self.tableView];
+    [self updateButtonItem];
+}
+
+- (void)rightNavBarButtonClicked {
+    [self showClearActionSheet];
+}
+
+- (void)updateButtonItem {
+    NSArray *playList = [HcdAppManager sharedInstance].playList;
+    if (playList && [playList count] > 0) {
+        [self showBarButtonItemWithStr:HcdLocalized(@"clear", nil) position:RIGHT];
+    } else {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [self.tableView reloadData];
+    [self updateButtonItem];
 }
 
 - (UITableView *)tableView {
@@ -145,6 +160,29 @@
                 if (weakSelf.selectedIndex < [playlist count]) {
                     [playlist removeObjectAtIndex:weakSelf.selectedIndex];
                 }
+                [HcdAppManager sharedInstance].playList = playlist;
+                [weakSelf.tableView reloadData];
+                break;
+            }
+            default:
+                break;
+        }
+    };
+    [[UIApplication sharedApplication].keyWindow addSubview:deleteSheet];
+    [deleteSheet showHcdActionSheet];
+}
+
+- (void)showClearActionSheet {
+    
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:HcdLocalized(@"confirm_clear_playlist", nil)];
+    
+    __weak PlaylistViewController *weakSelf = self;
+    deleteSheet.seletedButtonIndex = ^(NSInteger index) {
+        switch (index) {
+            case 1:
+            {
+                NSMutableArray *playlist = [[NSMutableArray alloc] initWithArray:[HcdAppManager sharedInstance].playList];
+                [playlist removeAllObjects];
                 [HcdAppManager sharedInstance].playList = playlist;
                 [weakSelf.tableView reloadData];
                 break;

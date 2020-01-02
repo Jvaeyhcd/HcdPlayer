@@ -15,6 +15,7 @@ target 'HcdPlayer' do
 #    pod 'MRDLNA'
     pod 'MBProgressHUD'
     pod 'YBImageBrowser'
+    pod 'TOSMBClient', '1.0.8'
     # swift
     pod 'HcdSpecialField', :path => '../HcdSpecialField'
 end

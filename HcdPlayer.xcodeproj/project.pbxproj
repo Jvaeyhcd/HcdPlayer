@@ -17,6 +17,8 @@
 		B9896DC3237C05BE00A5A2DD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9896DC5237C05BE00A5A2DD /* LaunchScreen.storyboard */; };
 		B989B2F323BB371600C34308 /* HCDPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C4D23B4A7F900C6A2DE /* HCDPlayerViewController.m */; };
 		B989B2F423BB372F00C34308 /* HCDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C3B23B4A7F800C6A2DE /* HCDPlayer.m */; };
+		B989B2FA23BDDB3200C34308 /* SMBDeviceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B989B2F923BDDB3200C34308 /* SMBDeviceListViewController.m */; };
+		B989B3B923BDEE1200C34308 /* HcdInputTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B989B3B823BDEE1200C34308 /* HcdInputTableViewCell.m */; };
 		B98F1A1223B209E700C6A2DE /* YBIBImageData+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1A1123B209E700C6A2DE /* YBIBImageData+Hcd.m */; };
 		B98F1A1523B2FA5A00C6A2DE /* UIImage+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1A1423B2FA5A00C6A2DE /* UIImage+Hcd.m */; };
 		B98F1C5A23B4A7F900C6A2DE /* HCDPlayerAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B98F1C3823B4A7F800C6A2DE /* HCDPlayerAudioManager.m */; };
@@ -138,6 +140,10 @@
 		B9896DC4237C05BE00A5A2DD /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B9896DC7237C05C300A5A2DD /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B9896DC9237C05C600A5A2DD /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		B989B2F823BDDB3200C34308 /* SMBDeviceListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMBDeviceListViewController.h; sourceTree = "<group>"; };
+		B989B2F923BDDB3200C34308 /* SMBDeviceListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMBDeviceListViewController.m; sourceTree = "<group>"; };
+		B989B3B723BDEE1200C34308 /* HcdInputTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdInputTableViewCell.h; sourceTree = "<group>"; };
+		B989B3B823BDEE1200C34308 /* HcdInputTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdInputTableViewCell.m; sourceTree = "<group>"; };
 		B98F1A1023B209E700C6A2DE /* YBIBImageData+Hcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YBIBImageData+Hcd.h"; sourceTree = "<group>"; };
 		B98F1A1123B209E700C6A2DE /* YBIBImageData+Hcd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "YBIBImageData+Hcd.m"; sourceTree = "<group>"; };
 		B98F1A1323B2FA5A00C6A2DE /* UIImage+Hcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Hcd.h"; sourceTree = "<group>"; };
@@ -482,6 +488,17 @@
 				0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B989B2F723BDD44600C34308 /* SMB */ = {
+			isa = PBXGroup;
+			children = (
+				B989B2F823BDDB3200C34308 /* SMBDeviceListViewController.h */,
+				B989B2F923BDDB3200C34308 /* SMBDeviceListViewController.m */,
+				B989B3B723BDEE1200C34308 /* HcdInputTableViewCell.h */,
+				B989B3B823BDEE1200C34308 /* HcdInputTableViewCell.m */,
+			);
+			path = SMB;
 			sourceTree = "<group>";
 		};
 		B98F1C3623B4A7F800C6A2DE /* codec */ = {
@@ -942,6 +959,7 @@
 			children = (
 				B9AA908321F2D20400F3C70E /* BrowserViewController.h */,
 				B9AA908421F2D20400F3C70E /* BrowserViewController.m */,
+				B989B2F723BDD44600C34308 /* SMB */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -1068,7 +1086,7 @@
 		B9AA8FC521ED785000F3C70E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = Salvador;
 				TargetAttributes = {
 					B9AA8FCC21ED785000F3C70E = {
@@ -1177,6 +1195,7 @@
 				B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */,
 				B9DF3EFE2324924400DDA47E /* GDataXMLNode.m in Sources */,
 				B9AA90B621F5EE3700F3C70E /* FilesListTableViewCell.m in Sources */,
+				B989B2FA23BDDB3200C34308 /* SMBDeviceListViewController.m in Sources */,
 				B9AA90A721F56B4200F3C70E /* WifiTransferViewController.m in Sources */,
 				B989B2F323BB371600C34308 /* HCDPlayerViewController.m in Sources */,
 				B98F1C6423B4A7F900C6A2DE /* HCDPlayerUtils.m in Sources */,
@@ -1226,6 +1245,7 @@
 				B9A6F2EC22199EAF0027D017 /* LanguageViewController.m in Sources */,
 				B9DF3F002324924400DDA47E /* MRDLNA.m in Sources */,
 				B9DF3EFB2324924400DDA47E /* CLUPnPAVPositionInfo.m in Sources */,
+				B989B3B923BDEE1200C34308 /* HcdInputTableViewCell.m in Sources */,
 				B9A6F2F9221E6D8F0027D017 /* Reachability.m in Sources */,
 				B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */,
 				B96CF6FE22265BE200881CD4 /* HcdFileSortManager.m in Sources */,
@@ -1414,6 +1434,10 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Vender",
+				);
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/HcdPlayer-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/FFmpeg-iOS/include",
@@ -1438,6 +1462,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
+					"$(PROJECT_DIR)/Vender/TOSMBClient/libdsm",
 				);
 				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
@@ -1461,6 +1486,10 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Vender",
+				);
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/HcdPlayer-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/FFmpeg-iOS/include",
@@ -1485,6 +1514,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
+					"$(PROJECT_DIR)/Vender/TOSMBClient/libdsm",
 				);
 				MARKETING_VERSION = 1.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;

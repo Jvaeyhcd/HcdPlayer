@@ -6,6 +6,7 @@
   Copyright © 2019 Salvador. All rights reserved.
 */
 "local"="Local";
+"nearby"="Nearby";
 "network"="Network";
 "browser"="Browser";
 "setting"="Setting";
@@ -19,6 +20,7 @@
 "new_folder"="New Folder";
 "new_folder_placeholder"="Please input folder name";
 "cancel"="Cancel";
+"save"="Save";
 "move"="Move";
 "rename"="Rename";
 "lock"="Lock";
@@ -81,9 +83,18 @@
 "switch_device"="Switch TV";
 "quit"="Quit";
 "is_playing"="Playing";
+"clear"="Clear";
 
 "html_template_name" = "index";
+"confirm_clear_playlist" = "Are you sure to clear the playlist?";
 
 "PROLOGUE" = "<p style='color: #EEEEEE;'>Drag &amp; drop files on this window or use the \"Upload Files&hellip;\" button to upload new files.</p>";
 "EPILOGUE" = "";
 "FOOTER_FORMAT" = "%@ %@";
+
+"server_smb" = "SMB/CIFS";
+"server_ftp" = "FTP";
+"server_sftp" = "SFTP";
+"server_webdav" = "WebDAV";
+
+"smb_devices" = "SMB Devices";

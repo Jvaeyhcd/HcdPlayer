@@ -42,6 +42,11 @@
     localVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_folder"];
     localVc.tabBarItem.title = HcdLocalized(@"local", nil);
     
+    BrowserViewController *nearVc = [[BrowserViewController alloc] init];
+    nearVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_near"];
+    nearVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_near"];
+    nearVc.tabBarItem.title = HcdLocalized(@"network", nil);
+    
     PlaylistViewController *playListVc = [[PlaylistViewController alloc] init];
     playListVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_playlist"];
     playListVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_playlist"];
@@ -53,10 +58,11 @@
     settingVc.tabBarItem.title = HcdLocalized(@"setting", nil);
     
     UINavigationController *nvc1 = [[BaseNavigationController alloc] initWithRootViewController:localVc];
-    UINavigationController *nvc2 = [[BaseNavigationController alloc] initWithRootViewController:playListVc];
+    UINavigationController *nvc2 = [[BaseNavigationController alloc] initWithRootViewController:nearVc];
+    UINavigationController *nvc3 = [[BaseNavigationController alloc] initWithRootViewController:playListVc];
     UINavigationController *nvc4 = [[BaseNavigationController alloc] initWithRootViewController:settingVc];
     
-    [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc2, nvc4, nil]];
+    [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc2, nvc3, nvc4, nil]];
     
     self.tabBar.backgroundColor = [UIColor colorWithRGBHex:0xfafafa];
     

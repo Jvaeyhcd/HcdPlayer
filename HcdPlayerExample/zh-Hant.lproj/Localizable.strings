@@ -6,6 +6,7 @@
   Copyright © 2019 Salvador. All rights reserved.
 */
 "local"="本地";
+"nearby"="附近資源";
 "network"="網絡";
 "browser"="瀏覽器";
 "setting"="設置";
@@ -19,6 +20,7 @@
 "new_folder"="新建文件夾";
 "new_folder_placeholder"="請輸入文件夾名稱";
 "cancel"="取消";
+"save"="保存";
 "move"="移動";
 "rename"="重命名";
 "lock"="加鎖";
@@ -69,7 +71,7 @@
 "set-passcode-tip"="請設置密碼";
 "repeat-passcode-tip"="請重複密碼";
 "n-times-failed-passcode"="%d次密碼輸入錯誤";
-"playlist"="播放列表";
+"playlist"="播放清單";
 "copyright"="版權信息";
 "contact_us"="聯繫我們";
 "praise"="給個好評";
@@ -81,9 +83,18 @@
 "switch_device"="切換設備";
 "quit"="退出投屏";
 "is_playing"="正在播放";
+"clear"="清空";
 
 "html_template_name" = "index.zh.hant";
+"confirm_clear_playlist" = "你確定要清空播放清單嗎？";
 
 "PROLOGUE" = "<p style='color: #EEEEEE;'>拖動文件到本窗口，或者點擊\"上傳文件\"按鈕選擇文件上傳</p>";
 "EPILOGUE" = "";
 "FOOTER_FORMAT" = "%@ %@";
+
+"server_smb" = "SMB/CIFS";
+"server_ftp" = "FTP";
+"server_sftp" = "SFTP";
+"server_webdav" = "WebDAV";
+
+"smb_devices" = "SMB服務器";
