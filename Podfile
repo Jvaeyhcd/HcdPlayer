@@ -12,9 +12,12 @@ target 'HcdPlayer' do
     pod 'CocoaAsyncSocket'
     pod 'FDFullscreenPopGesture', '~> 1.1'
     pod 'HcdActionSheet', :path => '../HcdActionSheet'
+    pod 'HKit', :path => '../HKit'
 #    pod 'MRDLNA'
     pod 'MBProgressHUD'
     pod 'YBImageBrowser'
+    pod 'FMDB'
+    pod 'MJExtension'
     pod 'TOSMBClient', '1.0.8'
     # swift
     pod 'HcdSpecialField', :path => '../HcdSpecialField'

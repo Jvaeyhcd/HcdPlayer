@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NetworkService.h"
+#import "TOSMBClient.h"
 
 #define kCellIdFilesList @"FilesListTableViewCell"
 
@@ -15,7 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FilesListTableViewCell : UITableViewCell
 
 - (void)setFilePath:(NSString *)path;
+
 - (void)setFaterFolder:(NSString *)path;
+
+- (void)setNetworkService:(NetworkService *)service;
+
+- (void)setTOSMBSessionFile:(TOSMBSessionFile *)file;
 
 + (CGFloat)cellHeight;
 

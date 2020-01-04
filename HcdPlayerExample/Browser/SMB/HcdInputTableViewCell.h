@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, retain) UILabel *titleLbl;
 @property (nonatomic, retain) UITextField *inputTF;
 
+@property (nonatomic, assign) BOOL required;
+
 
 @end
 

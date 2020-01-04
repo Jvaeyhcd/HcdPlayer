@@ -11,6 +11,7 @@
 #import "MainViewController.h"
 #import "HcdAppManager.h"
 #import "PasscodeViewController.h"
+#import "NetworkServiceDao.h"
 
 @interface AppDelegate ()
 
@@ -25,7 +26,24 @@
     // Override point for customization after application launch.
     
     [[HcdLocalized sharedInstance] initLanguage];
+    [self initRootViewController];
+    [self initDataBase];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissPasscode) name:@"dismissPasscode" object:nil];
+    
+    return YES;
+}
+
+- (void)dismissPasscode {
+    self.window.rootViewController = [HcdAppManager sharedInstance].mainVc;
+    [self.window makeKeyAndVisible];
+}
+
+- (void)initDataBase {
+    [[NetworkServiceDao sharedNetworkServiceDao] createOrUpgradeTable];
+}
+
+- (void)initRootViewController {
     PasscodeViewController *vc = [[PasscodeViewController alloc] init];
     vc.type = PasscodeTypeUnLock;
     _passcodeVc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -38,18 +56,7 @@
         self.window.rootViewController = [HcdAppManager sharedInstance].mainVc;
     }
     [self.window makeKeyAndVisible];
-
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissPasscode) name:@"dismissPasscode" object:nil];
-    
-    return YES;
 }
-
-- (void)dismissPasscode {
-    self.window.rootViewController = [HcdAppManager sharedInstance].mainVc;
-    [self.window makeKeyAndVisible];
-}
-
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

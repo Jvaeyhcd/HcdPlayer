@@ -117,6 +117,31 @@
     }
 }
 
+- (void)setNetworkService:(NetworkService *)service {
+    
+    if (!service) {
+        return;
+    }
+    
+    if (service.type == NetworkServiceTypeSMB) {
+        _fileTypeImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/icon_server_smb"];
+    }
+    _titleLbl.text = service.title;
+    _descLbl.text = service.host;
+    
+}
+
+- (void)setTOSMBSessionFile:(TOSMBSessionFile *)file {
+    _titleLbl.text = file.name;
+    if (file.directory) {
+        _descLbl.text = @"Directory";
+        _fileTypeImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/barcode_result_page_type_file_dir_icon.png"];
+    } else {
+        _descLbl.text = [NSString stringWithFormat:@"File | Size: %ld", (long)file.fileSize];
+    }
+    self.accessoryType = file.directory ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+}
+
 + (CGFloat)cellHeight {
     return scaleFromiPhoneXDesign(50) + kBasePadding * 2;
 }

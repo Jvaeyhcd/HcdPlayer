@@ -59,6 +59,7 @@
 "close"="Close";
 "ok"="Ok";
 "sureDelete"="Are you sure to delete this %@ file or folder?";
+"sure_delete_network"="Are you sure to delete this %@ network server?";
 "select_all"="Select all";
 "sure_delete_selected"="Are you sure to delete the selected item(s)?";
 "import_tips"="Please select import way";
@@ -79,6 +80,8 @@
 "please_select_device"="Please select the device to project";
 "playlist_empty_tips"="No played video";
 "select_a_video_to_play"="Please select a video to play in local folder";
+"network_empty_tips"="No network service";
+"add_network_service"="Please tap + button to add a network service";
 "select_a_device"="Select Device";
 "switch_device"="Switch TV";
 "quit"="Quit";
@@ -98,3 +101,15 @@
 "server_webdav" = "WebDAV";
 
 "smb_devices" = "SMB Devices";
+"user_name" = "User Name";
+"password" = "Password";
+"host" = "Host";
+"title" = "Title";
+"path" = "Path";
+"port" = "Port";
+"optional" = "Optional";
+"required" = "Required";
+"smb_information" = "SMB Device Information";
+"nearby_smb_devices" = "Nearby SMB Devices";
+
+"toast_no_host"="The host can't be empty";

@@ -59,6 +59,7 @@
 "close"="關閉";
 "ok"="確定";
 "sureDelete"="你確定要刪除 %@ 該文件/文件夾嗎？";
+"sure_delete_network"="你確定要刪除 %@ 該網路服務嗎？";
 "select_all"="全選";
 "sure_delete_selected"="您確定要刪除選中的內容嗎？";
 "import_tips"="請選擇導入方式";
@@ -79,6 +80,8 @@
 "please_select_device"="請選擇要投屏的設備";
 "playlist_empty_tips"="您還未播放過視頻";
 "select_a_video_to_play"="請在本地選擇一個視頻進行播放";
+"network_empty_tips"="沒有可用的網絡服務";
+"add_network_service"="請點擊+按鈕新增網絡服務";
 "select_a_device"="選擇投屏設備";
 "switch_device"="切換設備";
 "quit"="退出投屏";
@@ -98,3 +101,15 @@
 "server_webdav" = "WebDAV";
 
 "smb_devices" = "SMB服務器";
+"user_name" = "用戶名";
+"password" = "密碼";
+"host" = "主機";
+"title" = "標題";
+"path" = "路徑";
+"port" = "端口";
+"optional" = "可選項";
+"required" = "必填項";
+"smb_information" = "SMB設備資訊";
+"nearby_smb_devices" = "附近的SMB設備";
+
+"toast_no_host"="主機不能為空";
