@@ -106,6 +106,7 @@
     }
     _titleLbl.text = fileName;
     _descLbl.text = [descArr componentsJoinedByString:@" | "];
+    self.accessoryType = fileType == FileType_file_dir ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
 }
 
 - (void)setFaterFolder:(NSString *)path {
@@ -137,9 +138,16 @@
         _descLbl.text = @"Directory";
         _fileTypeImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/barcode_result_page_type_file_dir_icon.png"];
     } else {
-        _descLbl.text = [NSString stringWithFormat:@"File | Size: %ld", (long)file.fileSize];
+        NSString *size = [[HcdFileManager defaultManager] formatSizeToStr:file.fileSize];
+        _descLbl.text = [NSString stringWithFormat:@"File | Size: %@", size];
+
+        NSString *suffix = [[file.filePath pathExtension] lowercaseString];
+        FileType fileType = [[HcdFileManager defaultManager] getFileTypeBySuffix:suffix];
+        
+        _fileTypeImageView.image = [[HcdFileManager defaultManager] getFileTypeImageByFileType:fileType];
     }
     self.accessoryType = file.directory ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+    
 }
 
 + (CGFloat)cellHeight {

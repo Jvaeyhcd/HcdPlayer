@@ -74,9 +74,17 @@ typedef NS_ENUM(NSInteger, FileType) {
 /// @param path 文件类型
 - (FileType)getFileTypeByPath:(NSString *)path;
 
+/// 根据文件的扩展名获得文章类型
+/// @param suffix 扩展名
+- (FileType)getFileTypeBySuffix:(NSString *)suffix;
+
 - (UIImage *)getFileTypeImageByPath:(NSString *)path;
 
+- (UIImage *)getFileTypeImageByFileType:(FileType)type;
+
 - (NSString *)getFileSizeStrByPath:(NSString *)path;
+
+- (NSString *)formatSizeToStr:(double)size;
 
 - (NSDictionary *)getFileInfoByPath:(NSString *)path;
 

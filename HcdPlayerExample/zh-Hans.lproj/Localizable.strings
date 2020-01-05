@@ -113,3 +113,7 @@
 "nearby_smb_devices" = "附近的SMB设备";
 
 "toast_no_host"="主机不能为空";
+
+/*空数据页面提示*/
+"filelist_empty_tips"="暂无数据";
+"filelist_empty_tips_2"="这个文件夹下什么都没有~";

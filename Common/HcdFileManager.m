@@ -192,47 +192,59 @@
         } else {
             NSString *suffix = [[path pathExtension] lowercaseString];
             
-            if ([suffix isEqualToString:@"apk"]) {
-                fileType = FileType_apk;
-            } else if ([suffix isEqualToString:@"ipa"]) {
-                fileType = FileType_ipa;
-            } else if ([@[@"doc", @"docx", @"pages"] containsObject:suffix]) {
-                fileType = FileType_doc;
-            } else if ([@[@"html", @"htm"] containsObject:suffix]) {
-                fileType = FileType_html;
-            } else if ([@[@"mp3", @"wma", @"wav", @"ape", @"flac"] containsObject:suffix]) {
-                fileType = FileType_music;
-            } else if ([@[@"pdf"] containsObject:suffix]) {
-                fileType = FileType_pdf;
-            } else if ([@[@"ppt", @"pptx", @"key"] containsObject:suffix]) {
-                fileType = FileType_ppt;
-            } else if ([@[@"torrent"] containsObject:suffix]) {
-                fileType = FileType_torrent;
-            } else if ([@[@"txt"] containsObject:suffix]) {
-                fileType = FileType_txt;
-            } else if ([@[@"vcf"] containsObject:suffix]) {
-                fileType = FileType_vcf;
-            } else if ([@[@"mp4", @"avi", @"mov", @"asf", @"asx", @"wmv", @"mkv", @"3gp", @"rmvb", @"vob", @"dat", @"webm", @"hevc", @"m4v", @"flv", @"ogv", @"ts", @"mpg", @"mpeg", @"rm", @"ram", @"swf", @"mpe", @"mpa", @"m15", @"m1v", @"mp2", @"dmv", @"amv", @"mtv"] containsObject:suffix]) {
-                fileType = FileType_video;
-            } else if ([@[@"vsd"] containsObject:suffix]) {
-                fileType = FileType_vsd;
-            } else if ([@[@"xls", @"xlsx", @"numbers"] containsObject:suffix]) {
-                fileType = FileType_xls;
-            } else if ([@[@"jpg", @"jpeg", @"png", @"bmp", @"svg", @"psd", @"ai", @"webp", @"wmf", @"pcx"] containsObject:suffix]) {
-                fileType = FileType_img;
-            } else if ([@[@"zip", @"rar", @"7z", @"jar", @"kz", @"zipx", @"zz", @"exe"] containsObject:suffix]) {
-                fileType = FileType_zip;
-            }
+            fileType = [self getFileTypeBySuffix:suffix];
         }
     }
     
     return fileType;
 }
 
+- (FileType)getFileTypeBySuffix:(NSString *)suffix {
+    FileType fileType = FileType_unkonwn;
+    if ([suffix isEqualToString:@"apk"]) {
+        fileType = FileType_apk;
+    } else if ([suffix isEqualToString:@"ipa"]) {
+        fileType = FileType_ipa;
+    } else if ([@[@"doc", @"docx", @"pages"] containsObject:suffix]) {
+        fileType = FileType_doc;
+    } else if ([@[@"html", @"htm"] containsObject:suffix]) {
+        fileType = FileType_html;
+    } else if ([@[@"mp3", @"wma", @"wav", @"ape", @"flac"] containsObject:suffix]) {
+        fileType = FileType_music;
+    } else if ([@[@"pdf"] containsObject:suffix]) {
+        fileType = FileType_pdf;
+    } else if ([@[@"ppt", @"pptx", @"key"] containsObject:suffix]) {
+        fileType = FileType_ppt;
+    } else if ([@[@"torrent"] containsObject:suffix]) {
+        fileType = FileType_torrent;
+    } else if ([@[@"txt"] containsObject:suffix]) {
+        fileType = FileType_txt;
+    } else if ([@[@"vcf"] containsObject:suffix]) {
+        fileType = FileType_vcf;
+    } else if ([@[@"mp4", @"avi", @"mov", @"asf", @"asx", @"wmv", @"mkv", @"3gp", @"rmvb", @"vob", @"dat", @"webm", @"hevc", @"m4v", @"flv", @"ogv", @"ts", @"mpg", @"mpeg", @"rm", @"ram", @"swf", @"mpe", @"mpa", @"m15", @"m1v", @"mp2", @"dmv", @"amv", @"mtv"] containsObject:suffix]) {
+        fileType = FileType_video;
+    } else if ([@[@"vsd"] containsObject:suffix]) {
+        fileType = FileType_vsd;
+    } else if ([@[@"xls", @"xlsx", @"numbers"] containsObject:suffix]) {
+        fileType = FileType_xls;
+    } else if ([@[@"jpg", @"jpeg", @"png", @"bmp", @"svg", @"psd", @"ai", @"webp", @"wmf", @"pcx"] containsObject:suffix]) {
+        fileType = FileType_img;
+    } else if ([@[@"zip", @"rar", @"7z", @"jar", @"kz", @"zipx", @"zz", @"exe"] containsObject:suffix]) {
+        fileType = FileType_zip;
+    }
+    return fileType;
+}
+
 - (UIImage *)getFileTypeImageByPath:(NSString *)path {
-    NSString *typeStr = @"unkonwn";
     
     FileType type = [self getFileTypeByPath:path];
+    
+    return [self getFileTypeImageByFileType:type];
+}
+
+- (UIImage *)getFileTypeImageByFileType:(FileType)type {
+    
+    NSString *typeStr = @"unkonwn";
     
     switch (type) {
         case FileType_unkonwn:
@@ -295,8 +307,12 @@
 }
 
 - (NSString *)getFileSizeStrByPath:(NSString *)path {
-    float size = [self sizeOfPath:path];
+    double size = [self sizeOfPath:path];
     
+    return [self formatSizeToStr:size];
+}
+
+- (NSString *)formatSizeToStr:(double)size {
     NSArray *sizeArr = @[@"B", @"KB", @"MB", @"GB"];
     
     NSString *str = nil;

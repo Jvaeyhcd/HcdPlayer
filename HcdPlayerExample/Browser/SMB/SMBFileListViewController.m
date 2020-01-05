@@ -9,6 +9,7 @@
 #import "SMBFileListViewController.h"
 #import "UITableView+Hcd.h"
 #import "FilesListTableViewCell.h"
+#import "HcdFileManager.h"
 
 @interface SMBFileListViewController ()<UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
@@ -68,21 +69,94 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     TOSMBSessionFile *file = self.files[indexPath.row];
-    if (file.directory == NO) {
-        return;
+    if (file.directory == YES) {
+        __weak typeof(self) weakSelf = self;
+        [self.session requestContentsOfDirectoryAtFilePath:file.filePath success:^(NSArray *files) {
+            
+            NSLog(@"");
+            SMBFileListViewController *controller = [[SMBFileListViewController alloc] initWithSession:self.session title:file.name];
+            controller.files = files;
+            [weakSelf.navigationController pushViewController:controller animated:YES];
+            
+        } error:^(NSError *error) {
+            
+        }];
+    } else {
+        NSString *suffix = [[file.filePath pathExtension] lowercaseString];
+        FileType fileType = [[HcdFileManager defaultManager] getFileTypeBySuffix:suffix];
+        switch (fileType) {
+            case FileType_music:
+            case FileType_video: {
+                HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
+                vc.url = [NSString stringWithFormat:@"file://%@", path];
+                vc.modalPresentationStyle = UIModalPresentationFullScreen;
+                [self presentViewController:vc animated:YES completion:nil];
+                break;
+            }
+            case FileType_doc:
+            case FileType_pdf:
+            case FileType_txt:
+            case FileType_xls:
+            case FileType_ppt:
+            {
+                DocumentViewController *vc = [[DocumentViewController alloc] init];
+                vc.documentPath = path;
+                UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+                nav.modalPresentationStyle = UIModalPresentationFullScreen;
+                [self presentViewController:nav animated:YES completion:nil];
+                break;
+            }
+            case FileType_img:
+            {
+                NSMutableArray *array = [[HcdFileManager defaultManager] getAllImagesInPathArray:self.pathChidren withPath:_currentPath];
+                NSLog(@"%@", array);
+                NSMutableArray *dataSourceArray = [NSMutableArray array];
+                NSInteger currentPage = 0;
+                if (array && [array count] > 0) {
+                    for (int i = 0; i < array.count; i++) {
+                        YBIBImageData *data1 = [YBIBImageData new];
+                        data1.imagePath = [array objectAtIndex:i];
+                        [dataSourceArray addObject:data1];
+                        if ([path isEqualToString:[array objectAtIndex:i]]) {
+                            currentPage = i;
+                        }
+                    }
+                }
+                YBImageBrowser *browser = [YBImageBrowser new];
+                browser.delegate = self;
+                browser.supportedOrientations = UIInterfaceOrientationMaskPortrait;
+                browser.dataSourceArray = dataSourceArray;
+                browser.currentPage = currentPage;
+                browser.defaultToolViewHandler.topView.operationType = YBIBTopViewOperationTypeSave;
+                [browser show];
+                browser.defaultToolViewHandler.topView.frame = CGRectMake(0, kStatusBarHeight, kScreenWidth, kNavHeight - kStatusBarHeight);
+                break;
+            }
+                
+            default:
+                break;
+        }
     }
-    
-    __weak typeof(self) weakSelf = self;
-    [self.session requestContentsOfDirectoryAtFilePath:file.filePath success:^(NSArray *files) {
-        
-        NSLog(@"");
-        SMBFileListViewController *controller = [[SMBFileListViewController alloc] initWithSession:self.session title:file.name];
-        controller.files = files;
-        [weakSelf.navigationController pushViewController:controller animated:YES];
-        
-    } error:^(NSError *error) {
-        
-    }];
+}
+
+#pragma mark - DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
+
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView {
+    return YES;
+}
+
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
+    return [UIImage imageNamed:@"hcdplayer.bundle/pic_post_null"];
+}
+
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:16], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
+    return [[NSAttributedString alloc]initWithString:HcdLocalized(@"filelist_empty_tips", nil) attributes:attributes];
+}
+
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
+    return [[NSAttributedString alloc]initWithString:HcdLocalized(@"filelist_empty_tips_2", nil) attributes:attributes];
 }
 
 - (UITableView *)tableView {
