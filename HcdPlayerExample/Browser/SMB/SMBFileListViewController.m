@@ -10,8 +10,20 @@
 #import "UITableView+Hcd.h"
 #import "FilesListTableViewCell.h"
 #import "HcdFileManager.h"
+#import "HCDPlayerViewController.h"
+#import "DocumentViewController.h"
+#import "YBImageBrowser.h"
 
-@interface SMBFileListViewController ()<UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+typedef enum : NSUInteger {
+    ActionTypeDelete,
+    ActionTypeMore
+} ActionType;
+
+@interface SMBFileListViewController ()<UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, YBImageBrowserDelegate, YBImageBrowserDataSource> {
+    NSInteger           _selectedIndex;
+    BOOL                _isEdit;
+    BOOL                _selectedAll;
+}
 
 @property (nonatomic, strong) UITableView *tableView;
 
@@ -84,11 +96,15 @@
     } else {
         NSString *suffix = [[file.filePath pathExtension] lowercaseString];
         FileType fileType = [[HcdFileManager defaultManager] getFileTypeBySuffix:suffix];
+        
+        // smb://{user}:{password}@{host}/{path}
+        NSString *path = [self smbFilePath:file];
+        
         switch (fileType) {
             case FileType_music:
             case FileType_video: {
                 HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
-                vc.url = [NSString stringWithFormat:@"file://%@", path];
+                vc.url = [NSString stringWithFormat:@"%@", path];//@"http://image.govlan.com/Flutter%20Go%20%E5%AE%98%E6%96%B9.mp4";
                 vc.modalPresentationStyle = UIModalPresentationFullScreen;
                 [self presentViewController:vc animated:YES completion:nil];
                 break;
@@ -108,20 +124,33 @@
             }
             case FileType_img:
             {
-                NSMutableArray *array = [[HcdFileManager defaultManager] getAllImagesInPathArray:self.pathChidren withPath:_currentPath];
-                NSLog(@"%@", array);
                 NSMutableArray *dataSourceArray = [NSMutableArray array];
                 NSInteger currentPage = 0;
-                if (array && [array count] > 0) {
-                    for (int i = 0; i < array.count; i++) {
-                        YBIBImageData *data1 = [YBIBImageData new];
-                        data1.imagePath = [array objectAtIndex:i];
-                        [dataSourceArray addObject:data1];
-                        if ([path isEqualToString:[array objectAtIndex:i]]) {
-                            currentPage = i;
+                NSInteger j = 0;
+                if (self.files && [self.files count] > 0) {
+                    for (int i = 0; i < self.files.count; i++) {
+                        TOSMBSessionFile *file = [self.files objectAtIndex:i];
+                        NSString *suffix = [[file.filePath pathExtension] lowercaseString];
+                        FileType fileType = [[HcdFileManager defaultManager] getFileTypeBySuffix:suffix];
+                        if (fileType == FileType_img) {
+                            NSString *p = [self smbFilePath:file];
+                            YBIBImageData *data = [YBIBImageData new];
+                            data.imageURL = [NSURL URLWithString:p];
+                            [dataSourceArray addObject:data];
+                            if ([p isEqualToString:path]) {
+                                currentPage = j;
+                            }
+                            j++;
                         }
+//                        data1.imagePath = [self.files objectAtIndex:i];
+//                        [dataSourceArray addObject:data1];
+//                        if ([path isEqualToString:[array objectAtIndex:i]]) {
+//                            currentPage = i;
+//                        }
                     }
                 }
+                
+                
                 YBImageBrowser *browser = [YBImageBrowser new];
                 browser.delegate = self;
                 browser.supportedOrientations = UIInterfaceOrientationMaskPortrait;
@@ -136,6 +165,58 @@
             default:
                 break;
         }
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSMutableArray *array = [NSMutableArray array];
+    __weak typeof(self) weakSelf = self;
+    
+    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:HcdLocalized(@"delete", nil) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        [weakSelf tapRowAction:indexPath.row type:ActionTypeDelete];
+    }];
+    deleteAction.backgroundColor = kMainColor;
+    [array addObject:deleteAction];
+    
+    UITableViewRowAction *moreAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:HcdLocalized(@"more", nil) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        [self tapRowAction:indexPath.row type:ActionTypeMore];
+    }];
+    [array addObject:moreAction];
+    
+    return array;
+}
+
+- (void)tapRowAction:(NSInteger)row type:(ActionType)type {
+    switch (type) {
+        case ActionTypeDelete:
+        {
+            if (_selectedIndex != row) {
+                _selectedIndex = row;
+            }
+            [self showDeleteActionSheet];
+            break;
+        }
+        case ActionTypeMore:
+        {
+            // more actions
+            [self showCellMoreActionSheet:row];
+            break;
+        }
+            
+        default:
+            break;
     }
 }
 
@@ -157,6 +238,12 @@
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
     return [[NSAttributedString alloc]initWithString:HcdLocalized(@"filelist_empty_tips_2", nil) attributes:attributes];
+}
+
+#pragma mark - YBImageBrowserDelegate
+
+- (void)yb_imageBrowser:(YBImageBrowser *)imageBrowser respondsToLongPressWithData:(id<YBIBDataProtocol>)data {
+    
 }
 
 - (UITableView *)tableView {
@@ -183,6 +270,70 @@
 
 - (void)leftNavBarButtonClicked {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - private
+
+- (NSString *)smbFilePath:(TOSMBSessionFile *)file {
+    
+    // smb://{user}:{password}@{host}/{path}
+    NSMutableString *path = [NSMutableString stringWithString:@"smb://"];
+    if (self.session.userName) {
+        [path appendString:self.session.userName];
+        if (self.session.password) {
+            [path appendString:@":"];
+            [path appendString:self.session.password];
+        }
+        [path appendString:@"@"];
+    }
+    [path appendString:self.session.ipAddress];
+    [path appendString:file.filePath];
+    
+    return [NSString stringWithFormat:@"%@", path];
+}
+
+// 显示删除按钮
+- (void)showDeleteActionSheet {
+    TOSMBSessionFile *file = [self.files objectAtIndex:_selectedIndex];
+    NSString *fileNmae = [file.filePath lastPathComponent];
+    
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:[NSString stringWithFormat:HcdLocalized(@"sureDelete", nil), fileNmae]];
+    
+    __weak typeof(self) weakSelf = self;
+    deleteSheet.seletedButtonIndex = ^(NSInteger index) {
+        switch (index) {
+            case 1:
+//                [weakSelf deleteFileIndex];
+                break;
+            default:
+                break;
+        }
+    };
+    [[UIApplication sharedApplication].keyWindow addSubview:deleteSheet];
+    [deleteSheet showHcdActionSheet];
+}
+
+- (void)showCellMoreActionSheet:(NSInteger)index {
+    
+    if (_selectedIndex != index) {
+        _selectedIndex = index;
+    }
+    
+    NSArray *otherButtonTitles = @[HcdLocalized(@"select", nil), HcdLocalized(@"download", nil), HcdLocalized(@"delete", nil)];
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
+        
+        __weak typeof(self) weakSelf = self;
+        deleteSheet.seletedButtonIndex = ^(NSInteger index) {
+            switch (index) {
+            case 1:
+//                [weakSelf deleteFileIndex];
+                break;
+            default:
+                break;
+        }
+    };
+    [[UIApplication sharedApplication].keyWindow addSubview:deleteSheet];
+    [deleteSheet showHcdActionSheet];
 }
 
 @end

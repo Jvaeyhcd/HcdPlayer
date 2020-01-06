@@ -19,6 +19,7 @@ target 'HcdPlayer' do
     pod 'FMDB'
     pod 'MJExtension'
     pod 'TOSMBClient', '1.0.8'
+    pod 'LxFTPRequest', '1.1.2'
     # swift
     pod 'HcdSpecialField', :path => '../HcdSpecialField'
 end

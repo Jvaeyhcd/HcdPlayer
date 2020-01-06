@@ -465,6 +465,7 @@ typedef enum : NSUInteger {
             if (a != nil) title = [title stringByAppendingFormat:@" - %@", a];
         }
         if (title == nil) title = [strongSelf.url lastPathComponent];
+        title = [title stringByRemovingPercentEncoding];
 
         strongSelf.lblTitle.text = title;
         double duration = strongSelf.player.duration;

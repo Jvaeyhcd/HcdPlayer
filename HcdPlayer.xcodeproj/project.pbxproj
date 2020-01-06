@@ -13,6 +13,7 @@
 		B90B955C23BED226003031DC /* BaseDao.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B955B23BED226003031DC /* BaseDao.m */; };
 		B90B955F23BEDA66003031DC /* NetworkServiceDao.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B955E23BEDA66003031DC /* NetworkServiceDao.m */; };
 		B90B956B23C03011003031DC /* SMBFileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B956A23C03011003031DC /* SMBFileListViewController.m */; };
+		B90B959723C32585003031DC /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B959623C32585003031DC /* DownloadViewController.m */; };
 		B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F3222627AA00881CD4 /* HcdDocument.m */; };
 		B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F6222627F600881CD4 /* iCloudManager.m */; };
 		B96CF6FB222649EB00881CD4 /* HcdImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */; };
@@ -138,6 +139,8 @@
 		B90B955E23BEDA66003031DC /* NetworkServiceDao.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkServiceDao.m; sourceTree = "<group>"; };
 		B90B956923C03011003031DC /* SMBFileListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMBFileListViewController.h; sourceTree = "<group>"; };
 		B90B956A23C03011003031DC /* SMBFileListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMBFileListViewController.m; sourceTree = "<group>"; };
+		B90B959523C32585003031DC /* DownloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
+		B90B959623C32585003031DC /* DownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
 		B96CF6F2222627AA00881CD4 /* HcdDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdDocument.h; sourceTree = "<group>"; };
 		B96CF6F3222627AA00881CD4 /* HcdDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdDocument.m; sourceTree = "<group>"; };
 		B96CF6F5222627F600881CD4 /* iCloudManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudManager.h; sourceTree = "<group>"; };
@@ -531,6 +534,15 @@
 			path = Bean;
 			sourceTree = "<group>";
 		};
+		B90B959423C32568003031DC /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				B90B959523C32585003031DC /* DownloadViewController.h */,
+				B90B959623C32585003031DC /* DownloadViewController.m */,
+			);
+			path = Download;
+			sourceTree = "<group>";
+		};
 		B989B2F723BDD44600C34308 /* SMB */ = {
 			isa = PBXGroup;
 			children = (
@@ -855,9 +867,10 @@
 		B9AA8FCF21ED785000F3C70E /* HcdPlayerExample */ = {
 			isa = PBXGroup;
 			children = (
+				B90B959423C32568003031DC /* Download */,
 				B9AA907C21F2D1C400F3C70E /* Setting */,
 				B9AA907B21F2D1B100F3C70E /* Browser */,
-				B9AA907A21F2D1A900F3C70E /* Network */,
+				B9AA907A21F2D1A900F3C70E /* Playlist */,
 				B9AA907921F2D19000F3C70E /* Local */,
 				B9AA8FD021ED785000F3C70E /* AppDelegate.h */,
 				B9AA8FD121ED785000F3C70E /* AppDelegate.m */,
@@ -989,13 +1002,13 @@
 			path = Local;
 			sourceTree = "<group>";
 		};
-		B9AA907A21F2D1A900F3C70E /* Network */ = {
+		B9AA907A21F2D1A900F3C70E /* Playlist */ = {
 			isa = PBXGroup;
 			children = (
 				B9AA908021F2D1F100F3C70E /* PlaylistViewController.h */,
 				B9AA908121F2D1F100F3C70E /* PlaylistViewController.m */,
 			);
-			path = Network;
+			path = Playlist;
 			sourceTree = "<group>";
 		};
 		B9AA907B21F2D1B100F3C70E /* Browser */ = {
@@ -1240,6 +1253,7 @@
 				B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */,
 				B9DF3EFE2324924400DDA47E /* GDataXMLNode.m in Sources */,
 				B9AA90B621F5EE3700F3C70E /* FilesListTableViewCell.m in Sources */,
+				B90B959723C32585003031DC /* DownloadViewController.m in Sources */,
 				B989B2FA23BDDB3200C34308 /* SMBDeviceListViewController.m in Sources */,
 				B9AA90A721F56B4200F3C70E /* WifiTransferViewController.m in Sources */,
 				B989B2F323BB371600C34308 /* HCDPlayerViewController.m in Sources */,

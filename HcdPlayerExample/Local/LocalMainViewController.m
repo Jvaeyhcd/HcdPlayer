@@ -35,10 +35,12 @@ typedef enum : NSUInteger {
 
 @interface LocalMainViewController ()<UIDocumentPickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, YBImageBrowserDelegate> {
     NSString            *_currentPath;
-    NSInteger           _selectedIndex;
     BOOL                _isEdit;
     BOOL                _selectedAll;
 }
+
+@property (nonatomic, assign) NSInteger      selectedIndex;
+
 @property (nonatomic, strong) EditBottomView *bottomView;
 @property (nonatomic, strong) UITableView    *tableView;
 
@@ -362,7 +364,7 @@ typedef enum : NSUInteger {
 
 -(HcdActionSheet *)fileCellMoreActionSheet {
     if (!_fileCellMoreActionSheet) {
-        NSArray *otherButtonTitles = @[HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"delete", nil)];
+        NSArray *otherButtonTitles = @[HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"select", nil), HcdLocalized(@"delete", nil)];
         _fileCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
         
         __weak LocalMainViewController *weakSelf = self;
@@ -375,7 +377,12 @@ typedef enum : NSUInteger {
                     [weakSelf showRenameAlterView];
                     break;
                 }
-                case 3:
+                case 3: {
+                    [weakSelf setTableViewEdit:YES];
+                    [weakSelf updateEditSelectedCell:weakSelf.selectedIndex];
+                    break;
+                }
+                case 4:
                     [weakSelf showDeleteActionSheet];
                     break;
                 default:

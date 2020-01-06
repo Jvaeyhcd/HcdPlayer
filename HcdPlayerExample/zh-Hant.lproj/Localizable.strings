@@ -15,6 +15,7 @@
 "more"="更多";
 "delete"="刪除";
 "select"="選擇";
+"download"="下載";
 "sort"="排序";
 "import"="導入";
 "new_folder"="新建文件夾";
@@ -113,6 +114,9 @@
 "nearby_smb_devices" = "附近的SMB設備";
 
 "toast_no_host"="主機不能為空";
+"file"="檔案";
+"size"="大小";
+"directory"="資料夾";
 
 /*空数据页面提示*/
 "filelist_empty_tips"="暫無數據";

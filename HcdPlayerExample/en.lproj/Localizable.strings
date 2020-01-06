@@ -15,6 +15,7 @@
 "more"="More";
 "delete"="Delete";
 "select"="Select";
+"download"="Download";
 "sort"="Sort";
 "import"="Import";
 "new_folder"="New Folder";
@@ -113,6 +114,9 @@
 "nearby_smb_devices" = "Nearby SMB Devices";
 
 "toast_no_host"="The host can't be empty";
+"file"="File";
+"size"="Size";
+"directory"="Directory";
 
 /*空数据页面提示*/
 "filelist_empty_tips"="There is no file";

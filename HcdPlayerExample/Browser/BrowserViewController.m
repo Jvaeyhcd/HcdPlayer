@@ -240,7 +240,15 @@
 
 - (HcdActionSheet *)addActionSheet {
     if (!_addActionSheet) {
-        _addActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"server_smb", nil), HcdLocalized(@"server_ftp", nil), HcdLocalized(@"server_sftp", nil), HcdLocalized(@"server_webdav", nil)] attachTitle:nil];
+        
+        NSArray *titleArray = @[
+            HcdLocalized(@"server_smb", nil),
+            HcdLocalized(@"server_ftp", nil),
+            HcdLocalized(@"server_sftp", nil)
+//            HcdLocalized(@"server_webdav", nil)
+        ];
+        
+        _addActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:titleArray attachTitle:nil];
         __weak BrowserViewController *weakSelf = self;
         _addActionSheet.seletedButtonIndex = ^(NSInteger index) {
             switch (index) {

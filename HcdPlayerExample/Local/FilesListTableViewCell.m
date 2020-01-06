@@ -135,11 +135,11 @@
 - (void)setTOSMBSessionFile:(TOSMBSessionFile *)file {
     _titleLbl.text = file.name;
     if (file.directory) {
-        _descLbl.text = @"Directory";
+        _descLbl.text = HcdLocalized(@"directory", nil);
         _fileTypeImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/barcode_result_page_type_file_dir_icon.png"];
     } else {
         NSString *size = [[HcdFileManager defaultManager] formatSizeToStr:file.fileSize];
-        _descLbl.text = [NSString stringWithFormat:@"File | Size: %@", size];
+        _descLbl.text = [NSString stringWithFormat:@"%@ | %@: %@", HcdLocalized(@"file", nil), HcdLocalized(@"size", nil), size];
 
         NSString *suffix = [[file.filePath pathExtension] lowercaseString];
         FileType fileType = [[HcdFileManager defaultManager] getFileTypeBySuffix:suffix];

@@ -15,6 +15,7 @@
 #import "PlaylistViewController.h"
 #import "LocalMainViewController.h"
 #import "BrowserViewController.h"
+#import "DownloadViewController.h"
 
 @interface MainViewController ()
 
@@ -52,6 +53,11 @@
     playListVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_playlist"];
     playListVc.tabBarItem.title = HcdLocalized(@"playlist", nil);
     
+    DownloadViewController *downloadVc = [[DownloadViewController alloc] init];
+    downloadVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_download"];
+    downloadVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_download"];
+    downloadVc.tabBarItem.title = HcdLocalized(@"download", nil);
+    
     SettingViewController *settingVc = [[SettingViewController alloc] init];
     settingVc.tabBarItem.image = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_settings"];
     settingVc.tabBarItem.selectedImage = [UIImage imageNamed:@"hcdplayer.bundle/tabbar_settings"];
@@ -60,9 +66,10 @@
     UINavigationController *nvc1 = [[BaseNavigationController alloc] initWithRootViewController:localVc];
     UINavigationController *nvc2 = [[BaseNavigationController alloc] initWithRootViewController:nearVc];
     UINavigationController *nvc3 = [[BaseNavigationController alloc] initWithRootViewController:playListVc];
-    UINavigationController *nvc4 = [[BaseNavigationController alloc] initWithRootViewController:settingVc];
+    UINavigationController *nvc4 = [[BaseNavigationController alloc] initWithRootViewController:downloadVc];
+    UINavigationController *nvc5 = [[BaseNavigationController alloc] initWithRootViewController:settingVc];
     
-    [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc2, nvc3, nvc4, nil]];
+    [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc2, nvc3, nvc4, nvc5, nil]];
     
     self.tabBar.backgroundColor = [UIColor colorWithRGBHex:0xfafafa];
     
