@@ -150,6 +150,13 @@
     
 }
 
+- (void)addLongGes:(id)target action:(SEL)action {
+    UILongPressGestureRecognizer *longGes = [[UILongPressGestureRecognizer alloc]initWithTarget:target action:action];
+    //设定最小的长按时间 按不够这个时间不响应手势
+    longGes.minimumPressDuration = 1;
+    [self.contentView addGestureRecognizer:longGes];
+}
+
 + (CGFloat)cellHeight {
     return scaleFromiPhoneXDesign(50) + kBasePadding * 2;
 }

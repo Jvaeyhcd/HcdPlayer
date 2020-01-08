@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTOSMBSessionFile:(TOSMBSessionFile *)file;
 
+- (void)addLongGes:(id)target action:(SEL)action;;
+
 + (CGFloat)cellHeight;
 
 @end

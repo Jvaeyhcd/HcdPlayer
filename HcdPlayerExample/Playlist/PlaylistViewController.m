@@ -162,6 +162,7 @@
                 }
                 [HcdAppManager sharedInstance].playList = playlist;
                 [weakSelf.tableView reloadData];
+                [weakSelf updateButtonItem];
                 break;
             }
             default:

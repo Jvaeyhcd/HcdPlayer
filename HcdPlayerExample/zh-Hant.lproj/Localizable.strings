@@ -121,3 +121,5 @@
 /*空数据页面提示*/
 "filelist_empty_tips"="暫無數據";
 "filelist_empty_tips_2"="這個資料夾下什麼都沒有~";
+"download_empty_tips"="暫無數據";
+"download_empty_tips_2"="沒有下載，快去下載吧！";

@@ -21,7 +21,7 @@
 #import "HcdLocalized.h"
 #import "UIScrollView+EmptyDataSet.h"
 
-#define kMainColor [UIColor colorWithRGBHex:0xFC622F]
+#define kMainColor [UIColor colorWithRGBHex:0xec7258]
 #define kMainBgColor [UIColor colorWithRGBHex:0xFFFFFF]
 #define kNavBgColor [UIColor colorWithRGBHex:0xFC622F]
 #define kNavTitleColor [UIColor colorWithRGBHex:0xFFFFFF]

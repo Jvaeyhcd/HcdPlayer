@@ -121,3 +121,5 @@
 /*空数据页面提示*/
 "filelist_empty_tips"="There is no file";
 "filelist_empty_tips_2"="Ops this is a empty directory!";
+"download_empty_tips"="No data";
+"download_empty_tips_2"="There is no download";
