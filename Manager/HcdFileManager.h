@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, FileType) {
 
 @interface HcdFileManager : NSObject
 
-+ (HcdFileManager *)defaultManager;
+SingletonH(HcdFileManager)
 
 - (BOOL)createDir:(NSString *)dir inDir:(NSString *)inDir;
 

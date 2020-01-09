@@ -123,3 +123,9 @@
 "filelist_empty_tips_2"="Ops this is a empty directory!";
 "download_empty_tips"="No data";
 "download_empty_tips_2"="There is no download";
+
+"download_failed"="Failed";
+"download_ing"="Downloading";
+"download_wait"="Waiting...";
+"download_done"="Done";
+"download_suspended"="Suspended";

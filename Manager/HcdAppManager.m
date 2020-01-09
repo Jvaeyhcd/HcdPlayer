@@ -92,7 +92,7 @@
     if (playList && [playList count] > 0) {
         for (NSString *path in playList) {
             NSString *fullPath = [NSString stringWithFormat:@"%@%@", documentPath, path];
-            if ([[HcdFileManager defaultManager] fileExists:fullPath]) {
+            if ([[HcdFileManager sharedHcdFileManager] fileExists:fullPath]) {
                 [array addObject:path];
             }
         }

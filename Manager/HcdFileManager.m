@@ -16,29 +16,20 @@
 
 @implementation HcdFileManager
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
+SingletonM(HcdFileManager)
+
+- (NSFileManager *)fileManager {
+    if (!_fileManager) {
         _fileManager = [NSFileManager defaultManager];
     }
-    return self;
-}
-
-+ (HcdFileManager *)defaultManager {
-    static HcdFileManager *manager = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        manager = [[HcdFileManager alloc] init];
-    });
-    return manager;
+    return _fileManager;
 }
 
 - (BOOL)createDir:(NSString *)dir inDir:(NSString *)inDir {
     NSString *path = [NSString stringWithFormat:@"%@/%@", inDir, dir];
     BOOL isDir;
-    if (![_fileManager fileExistsAtPath:path isDirectory:&isDir]) {
-        BOOL res = [_fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+    if (![self.fileManager fileExistsAtPath:path isDirectory:&isDir]) {
+        BOOL res = [self.fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
         return res;
     } else {
         return NO;
@@ -47,8 +38,8 @@
 
 - (BOOL)createFile:(NSString *)name inDir:(NSString *)inDir {
     NSString *path = [NSString stringWithFormat:@"%@/%@", inDir, name];
-    if ([_fileManager fileExistsAtPath:path]) {
-        BOOL res = [_fileManager createFileAtPath:path contents:nil attributes:nil];
+    if ([self.fileManager fileExistsAtPath:path]) {
+        BOOL res = [self.fileManager createFileAtPath:path contents:nil attributes:nil];
         return res;
     } else {
         return NO;
@@ -56,19 +47,19 @@
 }
 
 - (NSDictionary *)fileAttriutes:(NSString *)path {
-    NSDictionary *fileAttriutes = [_fileManager attributesOfItemAtPath:path error:nil];
+    NSDictionary *fileAttriutes = [self.fileManager attributesOfItemAtPath:path error:nil];
     return fileAttriutes;
 }
 
 - (BOOL)deleteFileByPath:(NSString *)path {
-    return [_fileManager removeItemAtPath:path error:nil];
+    return [self.fileManager removeItemAtPath:path error:nil];
 }
 
 - (BOOL)copyFile:(NSString *)path toPath:(NSString *)toPath {
     BOOL res = NO;
     NSError *error = nil;
     
-    res = [_fileManager copyItemAtPath:path toPath:toPath error:&error];
+    res = [self.fileManager copyItemAtPath:path toPath:toPath error:&error];
     if (error) {
         NSLog(@"copy失败：%@", [error localizedDescription]);
     }
@@ -79,7 +70,7 @@
     BOOL res = NO;
     NSError *error = nil;
     
-    res = [_fileManager moveItemAtPath:path toPath:toPath error:&error];
+    res = [self.fileManager moveItemAtPath:path toPath:toPath error:&error];
     if (error) {
         NSLog(@"cut失败：%@", [error localizedDescription]);
     }
@@ -87,7 +78,7 @@
 }
 
 - (NSMutableArray *)getAllFileByPath:(NSString *)path {
-    NSMutableArray *array = [[NSMutableArray alloc] initWithArray:[_fileManager contentsOfDirectoryAtPath:path error:nil]];
+    NSMutableArray *array = [[NSMutableArray alloc] initWithArray:[self.fileManager contentsOfDirectoryAtPath:path error:nil]];
     return array;
 }
 
@@ -97,7 +88,7 @@
     
     for (NSString *p in filePathList) {
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@", path, p];
-        NSString *fileType = [[_fileManager attributesOfItemAtPath:fullPath error:NULL] fileType];
+        NSString *fileType = [[self.fileManager attributesOfItemAtPath:fullPath error:NULL] fileType];
         if ([fileType isEqualToString:NSFileTypeDirectory]) {
             [folderPathList addObject:fullPath];
         }
@@ -112,7 +103,7 @@
     
     for (NSString *p in filePathList) {
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@", path, p];
-        FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:fullPath];
+        FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeByPath:fullPath];
         if (fileType == FileType_img) {
             [imagesPathList addObject:fullPath];
         }
@@ -126,7 +117,7 @@
     
     for (NSString *p in array) {
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@", path, p];
-        FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:fullPath];
+        FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeByPath:fullPath];
         if (fileType == FileType_img) {
             [imagesPathList addObject:fullPath];
         }
@@ -136,10 +127,10 @@
 }
 
 - (float)sizeOfPath:(NSString *)path {
-    if (![_fileManager fileExistsAtPath:path]) {
+    if (![self.fileManager fileExistsAtPath:path]) {
         return 0.0;
     }
-    NSDictionary *attributes = [_fileManager attributesOfItemAtPath:path error:NULL];
+    NSDictionary *attributes = [self.fileManager attributesOfItemAtPath:path error:NULL];
     NSString *fileType = [attributes fileType];
     if ([fileType isEqualToString:NSFileTypeDirectory]) {
         return [self folderSizeAtPath:path];
@@ -149,18 +140,18 @@
 }
 
 - (long long)fileSizeAtPath:(NSString *) filePath {
-    if ([_fileManager fileExistsAtPath:filePath]) {
-        return [[_fileManager attributesOfItemAtPath:filePath error:nil] fileSize];
+    if ([self.fileManager fileExistsAtPath:filePath]) {
+        return [[self.fileManager attributesOfItemAtPath:filePath error:nil] fileSize];
     }
     return 0;
 }
 
 - (long long)folderSizeAtPath:(NSString*) folderPath {
-    if (![_fileManager fileExistsAtPath:folderPath]) {
+    if (![self.fileManager fileExistsAtPath:folderPath]) {
         return 0;
     }
     
-    NSEnumerator *childFilesEnumerator = [[_fileManager subpathsAtPath:folderPath] objectEnumerator];
+    NSEnumerator *childFilesEnumerator = [[self.fileManager subpathsAtPath:folderPath] objectEnumerator];
     NSString *fileName;
     long long folderSize = 0;
     while ((fileName = [childFilesEnumerator nextObject]) != nil) {
@@ -174,7 +165,7 @@
     BOOL res = NO;
     NSError * error = nil;
     
-    res = [_fileManager moveItemAtPath:[NSString stringWithFormat:@"%@/%@", path, oldName] toPath:[NSString stringWithFormat:@"%@/%@", path, newName] error:&error];
+    res = [self.fileManager moveItemAtPath:[NSString stringWithFormat:@"%@/%@", path, oldName] toPath:[NSString stringWithFormat:@"%@/%@", path, newName] error:&error];
     if (error) {
         NSLog(@"rename失败：%@", [error localizedDescription]);
     }
@@ -184,8 +175,8 @@
 - (FileType)getFileTypeByPath:(NSString *)path {
     FileType fileType = FileType_unkonwn;
     
-    if ([_fileManager fileExistsAtPath:path]) {
-        NSDictionary *attributes = [_fileManager attributesOfItemAtPath:path error:NULL];
+    if ([self.fileManager fileExistsAtPath:path]) {
+        NSDictionary *attributes = [self.fileManager attributesOfItemAtPath:path error:NULL];
         NSString *type = [attributes fileType];
         if ([type isEqualToString:NSFileTypeDirectory]) {
             fileType = FileType_file_dir;
@@ -333,14 +324,14 @@
 }
 
 - (NSDictionary *)getFileInfoByPath:(NSString *)path {
-    if ([_fileManager fileExistsAtPath:path]) {
-        return [_fileManager attributesOfItemAtPath:path error:nil];
+    if ([self.fileManager fileExistsAtPath:path]) {
+        return [self.fileManager attributesOfItemAtPath:path error:nil];
     }
     return nil;
 }
 
 - (BOOL)fileExists:(NSString *)path {
-    return [_fileManager fileExistsAtPath:path];
+    return [self.fileManager fileExistsAtPath:path];
 }
 
 @end

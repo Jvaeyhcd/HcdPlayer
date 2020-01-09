@@ -14,6 +14,9 @@
 		B90B955F23BEDA66003031DC /* NetworkServiceDao.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B955E23BEDA66003031DC /* NetworkServiceDao.m */; };
 		B90B956B23C03011003031DC /* SMBFileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B956A23C03011003031DC /* SMBFileListViewController.m */; };
 		B90B959723C32585003031DC /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B959623C32585003031DC /* DownloadViewController.m */; };
+		B925A25923C6BE64000528CA /* HDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B925A25823C6BE64000528CA /* HDownloadManager.m */; };
+		B925A25C23C6D868000528CA /* HDownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B925A25B23C6D868000528CA /* HDownloadModel.m */; };
+		B925A25F23C7032F000528CA /* HDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B925A25E23C7032F000528CA /* HDownloadOperation.m */; };
 		B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F3222627AA00881CD4 /* HcdDocument.m */; };
 		B96CF6F7222627F600881CD4 /* iCloudManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F6222627F600881CD4 /* iCloudManager.m */; };
 		B96CF6FB222649EB00881CD4 /* HcdImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */; };
@@ -141,6 +144,12 @@
 		B90B956A23C03011003031DC /* SMBFileListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMBFileListViewController.m; sourceTree = "<group>"; };
 		B90B959523C32585003031DC /* DownloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
 		B90B959623C32585003031DC /* DownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
+		B925A25723C6BE64000528CA /* HDownloadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDownloadManager.h; sourceTree = "<group>"; };
+		B925A25823C6BE64000528CA /* HDownloadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadManager.m; sourceTree = "<group>"; };
+		B925A25A23C6D868000528CA /* HDownloadModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDownloadModel.h; sourceTree = "<group>"; };
+		B925A25B23C6D868000528CA /* HDownloadModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadModel.m; sourceTree = "<group>"; };
+		B925A25D23C7032F000528CA /* HDownloadOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDownloadOperation.h; sourceTree = "<group>"; };
+		B925A25E23C7032F000528CA /* HDownloadOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadOperation.m; sourceTree = "<group>"; };
 		B96CF6F2222627AA00881CD4 /* HcdDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdDocument.h; sourceTree = "<group>"; };
 		B96CF6F3222627AA00881CD4 /* HcdDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdDocument.m; sourceTree = "<group>"; };
 		B96CF6F5222627F600881CD4 /* iCloudManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudManager.h; sourceTree = "<group>"; };
@@ -543,6 +552,35 @@
 			path = Download;
 			sourceTree = "<group>";
 		};
+		B925A25523C6BDCA000528CA /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				B925A25623C6BE35000528CA /* HDownloadManager */,
+				B9AA90B121F5B2C400F3C70E /* HcdFileManager.h */,
+				B9AA90B221F5B2C400F3C70E /* HcdFileManager.m */,
+				B96CF6F5222627F600881CD4 /* iCloudManager.h */,
+				B96CF6F6222627F600881CD4 /* iCloudManager.m */,
+				B96CF6FC22265BE200881CD4 /* HcdFileSortManager.h */,
+				B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */,
+				B9A92B6122411268002989B2 /* HcdAppManager.h */,
+				B9A92B6222411268002989B2 /* HcdAppManager.m */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		B925A25623C6BE35000528CA /* HDownloadManager */ = {
+			isa = PBXGroup;
+			children = (
+				B925A25723C6BE64000528CA /* HDownloadManager.h */,
+				B925A25823C6BE64000528CA /* HDownloadManager.m */,
+				B925A25A23C6D868000528CA /* HDownloadModel.h */,
+				B925A25B23C6D868000528CA /* HDownloadModel.m */,
+				B925A25D23C7032F000528CA /* HDownloadOperation.h */,
+				B925A25E23C7032F000528CA /* HDownloadOperation.m */,
+			);
+			path = HDownloadManager;
+			sourceTree = "<group>";
+		};
 		B989B2F723BDD44600C34308 /* SMB */ = {
 			isa = PBXGroup;
 			children = (
@@ -840,6 +878,7 @@
 		B9AA8FC421ED785000F3C70E = {
 			isa = PBXGroup;
 			children = (
+				B925A25523C6BDCA000528CA /* Manager */,
 				B90B955423BECF86003031DC /* Model */,
 				B98F1CF323B4A8CC00C6A2DE /* HcdPlayer-Prefix.pch */,
 				B96CF6F8222630B200881CD4 /* HcdPlayer.entitlements */,
@@ -947,8 +986,6 @@
 				B9AA907721EDCB6100F3C70E /* BaseNavigationController.m */,
 				B902F40F222EB79E0049A626 /* BaseViewController.h */,
 				B902F410222EB79E0049A626 /* BaseViewController.m */,
-				B9AA90B121F5B2C400F3C70E /* HcdFileManager.h */,
-				B9AA90B221F5B2C400F3C70E /* HcdFileManager.m */,
 				B9BB461B21F9D1DE00682DD5 /* UIPlaceHolderTextView.h */,
 				B9BB461C21F9D1DE00682DD5 /* UIPlaceHolderTextView.m */,
 				B9BB461821F9D1BD00682DD5 /* HcdAlertInputView.h */,
@@ -959,16 +996,10 @@
 				B9A1DC252224091800F4C9C2 /* EditBottomView.m */,
 				B96CF6F2222627AA00881CD4 /* HcdDocument.h */,
 				B96CF6F3222627AA00881CD4 /* HcdDocument.m */,
-				B96CF6F5222627F600881CD4 /* iCloudManager.h */,
-				B96CF6F6222627F600881CD4 /* iCloudManager.m */,
 				B96CF6F9222649EB00881CD4 /* HcdImagePickerViewController.h */,
 				B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */,
-				B96CF6FC22265BE200881CD4 /* HcdFileSortManager.h */,
-				B96CF6FD22265BE200881CD4 /* HcdFileSortManager.m */,
 				B9FCE2D9223BF10800E2B9E4 /* HcdProgressView.h */,
 				B9FCE2DA223BF10800E2B9E4 /* HcdProgressView.m */,
-				B9A92B6122411268002989B2 /* HcdAppManager.h */,
-				B9A92B6222411268002989B2 /* HcdAppManager.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1288,6 +1319,7 @@
 				B9BC111B226B64B200145E2B /* VersionView.m in Sources */,
 				B98F1C5B23B4A7F900C6A2DE /* HCDPlayerDecoder.m in Sources */,
 				B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */,
+				B925A25923C6BE64000528CA /* HDownloadManager.m in Sources */,
 				B9DF3F012324924400DDA47E /* CLUPnPServer.m in Sources */,
 				B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */,
 				B98F1A1223B209E700C6A2DE /* YBIBImageData+Hcd.m in Sources */,
@@ -1307,6 +1339,7 @@
 				B90B955F23BEDA66003031DC /* NetworkServiceDao.m in Sources */,
 				B9DF3EFB2324924400DDA47E /* CLUPnPAVPositionInfo.m in Sources */,
 				B989B3B923BDEE1200C34308 /* HcdInputTableViewCell.m in Sources */,
+				B925A25C23C6D868000528CA /* HDownloadModel.m in Sources */,
 				B9A6F2F9221E6D8F0027D017 /* Reachability.m in Sources */,
 				B9BB461A21F9D1BD00682DD5 /* HcdAlertInputView.m in Sources */,
 				B96CF6FE22265BE200881CD4 /* HcdFileSortManager.m in Sources */,
@@ -1319,6 +1352,7 @@
 				B9AA90AD21F5760F00F3C70E /* GCDWebUploader.m in Sources */,
 				B90B955923BED0F8003031DC /* NetworkService.m in Sources */,
 				B9A92B6322411268002989B2 /* HcdAppManager.m in Sources */,
+				B925A25F23C7032F000528CA /* HDownloadOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

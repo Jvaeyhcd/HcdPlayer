@@ -123,3 +123,9 @@
 "filelist_empty_tips_2"="這個資料夾下什麼都沒有~";
 "download_empty_tips"="暫無數據";
 "download_empty_tips_2"="沒有下載，快去下載吧！";
+
+"download_failed"="已失敗";
+"download_ing"="下載中";
+"download_wait"="等待中...";
+"download_done"="已完成";
+"download_suspended"="已暫停";

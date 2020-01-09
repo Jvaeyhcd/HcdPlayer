@@ -78,7 +78,7 @@
     
     NSMutableArray *descArr = [[NSMutableArray alloc] init];
     
-    NSDictionary *fileInfo = [[HcdFileManager defaultManager] getFileInfoByPath:path];
+    NSDictionary *fileInfo = [[HcdFileManager sharedHcdFileManager] getFileInfoByPath:path];
     NSDate *date = [fileInfo fileCreationDate];
     if (date) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -86,7 +86,7 @@
         [descArr addObject:[formatter stringFromDate:date]];
     }
     
-    FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
+    FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeByPath:path];
     if (fileType != FileType_unkonwn && fileType != FileType_file_dir) {
         [descArr addObject:suffix];
     }
@@ -95,14 +95,14 @@
 //        HcdMovieInfo *info = [HcdMovieDecoder videoInfoWithContentPath:path];
 //        [descArr addObject:info.durationStr];
     }
-    NSString *size = [[HcdFileManager defaultManager] getFileSizeStrByPath:path];
+    NSString *size = [[HcdFileManager sharedHcdFileManager] getFileSizeStrByPath:path];
     if (size) {
         [descArr addObject:size];
     }
     if (fileType == FileType_img) {
         _fileTypeImageView.image = [UIImage imageWithContentsOfFile:path];
     } else {
-        _fileTypeImageView.image = [[HcdFileManager defaultManager] getFileTypeImageByPath:path];
+        _fileTypeImageView.image = [[HcdFileManager sharedHcdFileManager] getFileTypeImageByPath:path];
     }
     _titleLbl.text = fileName;
     _descLbl.text = [descArr componentsJoinedByString:@" | "];
@@ -138,13 +138,13 @@
         _descLbl.text = HcdLocalized(@"directory", nil);
         _fileTypeImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/barcode_result_page_type_file_dir_icon.png"];
     } else {
-        NSString *size = [[HcdFileManager defaultManager] formatSizeToStr:file.fileSize];
+        NSString *size = [[HcdFileManager sharedHcdFileManager] formatSizeToStr:file.fileSize];
         _descLbl.text = [NSString stringWithFormat:@"%@ | %@: %@", HcdLocalized(@"file", nil), HcdLocalized(@"size", nil), size];
 
         NSString *suffix = [[file.filePath pathExtension] lowercaseString];
-        FileType fileType = [[HcdFileManager defaultManager] getFileTypeBySuffix:suffix];
+        FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeBySuffix:suffix];
         
-        _fileTypeImageView.image = [[HcdFileManager defaultManager] getFileTypeImageByFileType:fileType];
+        _fileTypeImageView.image = [[HcdFileManager sharedHcdFileManager] getFileTypeImageByFileType:fileType];
     }
     self.accessoryType = file.directory ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
     

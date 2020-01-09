@@ -828,7 +828,7 @@ typedef enum : NSUInteger {
     [v addConstraints:cv];
     
     NSString *path = [[self.url mutableCopy] stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-    FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
+    FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeByPath:path];
     if (fileType != FileType_video) {
         airplayBtn.hidden = YES;
     }
@@ -1078,7 +1078,7 @@ typedef enum : NSUInteger {
     // 播放音频不显示AirPlay
     self.btnAirplay.hidden = _landscape;
     NSString *path = [[self.url mutableCopy] stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-    FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
+    FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeByPath:path];
     if (fileType != FileType_video) {
         self.btnAirplay.hidden = YES;
     }

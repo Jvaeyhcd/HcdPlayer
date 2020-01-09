@@ -140,7 +140,7 @@ typedef enum : NSUInteger {
             }];
         } else {
             NSString *suffix = [[file.filePath pathExtension] lowercaseString];
-            FileType fileType = [[HcdFileManager defaultManager] getFileTypeBySuffix:suffix];
+            FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeBySuffix:suffix];
             
             // smb://{user}:{password}@{host}/{path}
             NSString *path = [self smbFilePath:file];
@@ -176,7 +176,7 @@ typedef enum : NSUInteger {
                         for (int i = 0; i < self.files.count; i++) {
                             TOSMBSessionFile *file = [self.files objectAtIndex:i];
                             NSString *suffix = [[file.filePath pathExtension] lowercaseString];
-                            FileType fileType = [[HcdFileManager defaultManager] getFileTypeBySuffix:suffix];
+                            FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeBySuffix:suffix];
                             if (fileType == FileType_img) {
                                 NSString *p = [self smbFilePath:file];
                                 YBIBImageData *data = [YBIBImageData new];
@@ -513,14 +513,14 @@ typedef enum : NSUInteger {
 
 - (void)downloadToPath {
     NSMutableArray *fileList = [[NSMutableArray alloc] init];
-    for (NSString *path in self.selectedArr) {
-//        NSString *fullPath = [NSString stringWithFormat:@"%@/%@", _currentPath, path];
-//        [fileList addObject:fullPath];
+    for (TOSMBSessionFile *file in self.selectedArr) {
+        [fileList addObject:file.filePath];
     }
     
     MoveViewController *vc = [[MoveViewController alloc] init];
     vc.currentPath = [HSandbox docPath];
     vc.fileList = fileList;
+    vc.isDownload = YES;
     BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController: vc];
     nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav animated:YES completion:^{

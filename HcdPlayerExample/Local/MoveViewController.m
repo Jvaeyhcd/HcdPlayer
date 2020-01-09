@@ -18,6 +18,8 @@
     UITableView         *_tableView;
 }
 
+@property (nonatomic, strong) UIButton *okBtn;
+
 @end
 
 @implementation MoveViewController
@@ -96,6 +98,12 @@
             make.height.mas_equalTo(bottomHeight);
         }];
     }
+    self.okBtn = okBtn;
+    if (self.isDownload) {
+        [self.okBtn setTitle:HcdLocalized(@"download", nil) forState:UIControlStateNormal];
+    } else {
+        [self.okBtn setTitle:HcdLocalized(@"move", nil) forState:UIControlStateNormal];
+    }
 }
 
 - (void)reloadDatas {
@@ -108,7 +116,7 @@
         self.title = name;
         _isRoot = NO;
     }
-    _folderPathList = [[HcdFileManager defaultManager] getAllFolderByPath:_currentPath];
+    _folderPathList = [[HcdFileManager sharedHcdFileManager] getAllFolderByPath:_currentPath];
     [_tableView reloadData];
 }
 
@@ -140,26 +148,46 @@
     [newFolderView showReplyInView:[UIApplication sharedApplication].keyWindow];
 }
 
+- (void)setIsDownload:(BOOL)isDownload {
+    _isDownload = isDownload;
+    if (isDownload) {
+        [self.okBtn setTitle:HcdLocalized(@"download", nil) forState:UIControlStateNormal];
+    } else {
+        [self.okBtn setTitle:HcdLocalized(@"move", nil) forState:UIControlStateNormal];
+    }
+}
+
 #pragma mark - private
 
 - (void)createFolder:(NSString *)name {
-    BOOL res = [[HcdFileManager defaultManager] createDir:name inDir:_currentPath];
+    BOOL res = [[HcdFileManager sharedHcdFileManager] createDir:name inDir:_currentPath];
     if (res) {
         [self reloadDatas];
     }
 }
 
 - (void)moveFile {
-    for (NSString *file in _fileList) {
-        NSString *fileName = [file lastPathComponent];
-        BOOL res = [[HcdFileManager defaultManager] cutFile:file toPath:[NSString stringWithFormat:@"%@/%@", _currentPath, fileName]];
-        if (res) {
-            NSLog(@"-------------------移动成功");
+    if (self.isDownload) {
+        // 下载文件到本地
+        if (!self.session) {
+            return;
+        }
+        
+        for (NSString *filePath in _fileList) {
+            
+        }
+        
+    } else {
+        // 本地文件移动
+        for (NSString *file in _fileList) {
+            NSString *fileName = [file lastPathComponent];
+            BOOL res = [[HcdFileManager sharedHcdFileManager] cutFile:file toPath:[NSString stringWithFormat:@"%@/%@", _currentPath, fileName]];
+            if (res) {
+                NSLog(@"-------------------移动成功");
+            }
         }
     }
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Table view data source

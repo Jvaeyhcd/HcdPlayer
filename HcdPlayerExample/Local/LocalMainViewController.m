@@ -133,7 +133,7 @@ typedef enum : NSUInteger {
 #if DEBUG
     for (NSString *str in self.pathChidren) {
         NSLog(@"%@", str);
-        float size = [[HcdFileManager defaultManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", _currentPath, str]];
+        float size = [[HcdFileManager sharedHcdFileManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", _currentPath, str]];
         NSLog(@"%lf", size);
     }
 #endif
@@ -252,7 +252,7 @@ typedef enum : NSUInteger {
     [self.fileCellMoreActionSheet showHcdActionSheet];
     
 //    NSString *path = [NSString stringWithFormat:@"%@/%@", _currentPath, [self.pathChidren objectAtIndex:index]];
-//    FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
+//    FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeByPath:path];
 //
 //    switch (fileType) {
 //        case FileType_file_dir:
@@ -555,7 +555,7 @@ typedef enum : NSUInteger {
     NSString * fileName = [self.pathChidren objectAtIndex:_selectedIndex];
     if (fileName) {
         NSString *filePath = [NSString stringWithFormat:@"%@/%@", _currentPath, fileName];
-        BOOL res = [[HcdFileManager defaultManager] deleteFileByPath:filePath];
+        BOOL res = [[HcdFileManager sharedHcdFileManager] deleteFileByPath:filePath];
         if (res) {
             [self.pathChidren removeObjectAtIndex:_selectedIndex];
             [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:_selectedIndex inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
@@ -590,7 +590,7 @@ typedef enum : NSUInteger {
     NSMutableArray *successArr = [[NSMutableArray alloc] init];
     for (NSString *fileName in selectArr) {
         NSString *filePath = [NSString stringWithFormat:@"%@/%@", _currentPath, fileName];
-        BOOL res = [[HcdFileManager defaultManager] deleteFileByPath:filePath];
+        BOOL res = [[HcdFileManager sharedHcdFileManager] deleteFileByPath:filePath];
         if (res) {
             NSInteger index = [self getSelectedCellIndex:fileName];
             [successArr addObject:fileName];
@@ -642,7 +642,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)createFolder:(NSString *)name {
-    BOOL res = [[HcdFileManager defaultManager] createDir:name inDir:_currentPath];
+    BOOL res = [[HcdFileManager sharedHcdFileManager] createDir:name inDir:_currentPath];
     if (res) {
         [self reloadDatas];
     }
@@ -660,14 +660,14 @@ typedef enum : NSUInteger {
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
     NSString *type = [attributes fileType];
     if ([type isEqualToString:NSFileTypeDirectory]) {
-        BOOL res = [[HcdFileManager defaultManager] renameFileName:path newName:newPath inPath:_currentPath];
+        BOOL res = [[HcdFileManager sharedHcdFileManager] renameFileName:path newName:newPath inPath:_currentPath];
         if (res) {
             [self reloadCellAtRow:_selectedIndex newName:newPath];
         }
     } else {
         NSString *suffix = [fullPath pathExtension];
         newPath = [NSString stringWithFormat:@"%@.%@", newPath, suffix];
-        BOOL res = [[HcdFileManager defaultManager] renameFileName:path newName:newPath inPath:_currentPath];
+        BOOL res = [[HcdFileManager sharedHcdFileManager] renameFileName:path newName:newPath inPath:_currentPath];
         if (res) {
             [self reloadCellAtRow:_selectedIndex newName:newPath];
         }
@@ -715,7 +715,7 @@ typedef enum : NSUInteger {
         if (path) {
             path = [NSString stringWithFormat:@"%@/%@", _currentPath, path];
         }
-        FileType fileType = [[HcdFileManager defaultManager] getFileTypeByPath:path];
+        FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeByPath:path];
         switch (fileType) {
             case FileType_file_dir: {
                 NSString *folder = [path lastPathComponent];
@@ -760,7 +760,7 @@ typedef enum : NSUInteger {
             }
             case FileType_img:
             {
-                NSMutableArray *array = [[HcdFileManager defaultManager] getAllImagesInPathArray:self.pathChidren withPath:_currentPath];
+                NSMutableArray *array = [[HcdFileManager sharedHcdFileManager] getAllImagesInPathArray:self.pathChidren withPath:_currentPath];
                 NSLog(@"%@", array);
                 NSMutableArray *dataSourceArray = [NSMutableArray array];
                 NSInteger currentPage = 0;
@@ -875,7 +875,7 @@ typedef enum : NSUInteger {
     NSString *currentPath = _currentPath;
     
     NSString *fullPath = [NSString stringWithFormat:@"%@/%@", currentPath, fileName];
-    if (![[HcdFileManager defaultManager] fileExists:fullPath]) {
+    if (![[HcdFileManager sharedHcdFileManager] fileExists:fullPath]) {
         __weak LocalMainViewController *weakSelf = self;
         [iCloudManager downloadWithDocumentURL:url callBack:^(id  _Nonnull obj) {
             NSData *data = obj;

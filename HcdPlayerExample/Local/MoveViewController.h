@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TOSMBClient.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *currentPath;
 @property (nonatomic, copy) NSMutableArray *fileList;
+
+@property (nonatomic, assign) BOOL isDownload;
+
+@property (nonatomic, strong) TOSMBSession *session;
 
 @end
 

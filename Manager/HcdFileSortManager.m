@@ -88,8 +88,8 @@ NSInteger nameSort(id string1, id string2, void *reverse)
     NSArray *sortedArray = [array sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         NSString *file1 = (NSString *)obj1;
         NSString *file2 = (NSString *)obj2;
-        NSDictionary *fileInfo1 = [[HcdFileManager defaultManager] getFileInfoByPath:[NSString stringWithFormat:@"%@/%@", path, file1]];
-        NSDictionary *fileInfo2 = [[HcdFileManager defaultManager] getFileInfoByPath:[NSString stringWithFormat:@"%@/%@", path, file2]];
+        NSDictionary *fileInfo1 = [[HcdFileManager sharedHcdFileManager] getFileInfoByPath:[NSString stringWithFormat:@"%@/%@", path, file1]];
+        NSDictionary *fileInfo2 = [[HcdFileManager sharedHcdFileManager] getFileInfoByPath:[NSString stringWithFormat:@"%@/%@", path, file2]];
         if ([[fileInfo1 fileCreationDate] timeIntervalSince1970] < [[fileInfo2 fileCreationDate] timeIntervalSince1970]) {
             return reverseSort ? NSOrderedDescending : NSOrderedAscending;
         } else if ([[fileInfo1 fileCreationDate] timeIntervalSince1970] > [[fileInfo2 fileCreationDate] timeIntervalSince1970]) {
@@ -112,8 +112,8 @@ NSInteger nameSort(id string1, id string2, void *reverse)
     NSArray *sortedArray = [array sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         NSString *file1 = (NSString *)obj1;
         NSString *file2 = (NSString *)obj2;
-        float fileSize1 = [[HcdFileManager defaultManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", path, file1]];
-        float fileSize2 = [[HcdFileManager defaultManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", path, file2]];
+        float fileSize1 = [[HcdFileManager sharedHcdFileManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", path, file1]];
+        float fileSize2 = [[HcdFileManager sharedHcdFileManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", path, file2]];
         if (fileSize1 < fileSize2) {
             return reverseSort ? NSOrderedDescending : NSOrderedAscending;
         } else if (fileSize1 > fileSize2) {
