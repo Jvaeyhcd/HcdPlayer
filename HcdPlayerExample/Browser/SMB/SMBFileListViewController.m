@@ -521,6 +521,7 @@ typedef enum : NSUInteger {
     vc.currentPath = [HSandbox docPath];
     vc.fileList = fileList;
     vc.isDownload = YES;
+    vc.session = self.session;
     BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController: vc];
     nav.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:nav animated:YES completion:^{

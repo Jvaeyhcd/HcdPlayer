@@ -11,6 +11,8 @@
 #import "UITableView+Hcd.h"
 #import "FilesListTableViewCell.h"
 #import "HcdAlertInputView.h"
+#import "HDownloadModel.h"
+#import "HDownloadManager.h"
 
 @interface MoveViewController () {
     BOOL                _isRoot;
@@ -174,7 +176,16 @@
         }
         
         for (NSString *filePath in _fileList) {
+            HDownloadModel *model = [[HDownloadModel alloc] init];
+            model.ipAddress = self.session.ipAddress;
+            model.hostName = self.session.hostName;
+            model.password = self.session.password;
+            model.username = self.session.userName;
+            model.filePath = filePath;
+            model.localPath = [NSString stringWithFormat:@"%@/%@", self.currentPath, [filePath lastPathComponent]];
             
+            [[HDownloadManager shared] addDownloadModels:@[model]];
+            [[HDownloadManager shared] startWithDownloadModel:model];
         }
         
     } else {

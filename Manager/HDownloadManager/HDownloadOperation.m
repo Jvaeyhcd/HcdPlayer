@@ -31,7 +31,6 @@ BLOCK(); \
 - (instancetype)initWithModel:(HDownloadModel *)model {
     if (self = [super init]) {
         self.model = model;
-        [self statRequest];
     }
     return self;
 }
@@ -39,6 +38,11 @@ BLOCK(); \
 - (void)dealloc
 {
     self.task = nil;
+}
+
+- (void)start {
+    
+    [self statRequest];
 }
 
 - (void)statRequest {
@@ -58,6 +62,8 @@ BLOCK(); \
     }
     
     self.task = [self.session downloadTaskForFileAtPath:self.model.filePath destinationPath:self.model.localPath delegate:self];
+    
+    [self.task resume];
     
     [self configTask];
 }
