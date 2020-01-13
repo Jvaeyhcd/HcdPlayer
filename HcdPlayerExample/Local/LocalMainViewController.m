@@ -905,17 +905,12 @@ typedef enum : NSUInteger {
 }
 
 - (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView {
-    return [UIImage imageNamed:@"hcdplayer.bundle/pic_post_null"];
+    return [UIImage imageNamed:@"hcdplayer.bundle/pic_no_data"];
 }
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:16], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14], NSForegroundColorAttributeName: [UIColor color999]};
     return [[NSAttributedString alloc]initWithString:HcdLocalized(@"listEmptyTips", nil) attributes:attributes];
-}
-
-- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView {
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: [UIColor colorWithRGBHex:0xBBD4F3]};
-    return [[NSAttributedString alloc]initWithString:HcdLocalized(@"import_file_tips", nil) attributes:attributes];
 }
 
 #pragma mark - YBImageBrowserDelegate

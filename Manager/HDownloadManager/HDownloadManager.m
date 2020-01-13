@@ -10,6 +10,7 @@
 #import "HDownloadModel.h"
 #import "HDownloadOperation.h"
 #import "TOSMBClient.h"
+#import "HDownloadModelDao.h"
 
 static HDownloadManager *_h_downloadManager = nil;
 
@@ -36,6 +37,7 @@ static HDownloadManager *_h_downloadManager = nil;
     self = [super init];
     if (self) {
         _downloadModels = [[NSMutableArray alloc] init];
+
         self.queue = [[NSOperationQueue alloc] init];
         self.queue.maxConcurrentOperationCount = 4;
     }

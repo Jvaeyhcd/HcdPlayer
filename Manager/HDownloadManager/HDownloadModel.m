@@ -10,6 +10,7 @@
 
 @implementation HDownloadModel
 
+@synthesize progress = _progress;
 - (void)setProgress:(CGFloat)progress {
     if (_progress != progress) {
         _progress = progress;
@@ -22,6 +23,7 @@
     }
 }
 
+@synthesize status = _status;
 - (void)setStatus:(HCDDownloadStatus)status {
     if (_status != status) {
         _status = status;

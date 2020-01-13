@@ -12,6 +12,7 @@
 #import "HcdAppManager.h"
 #import "PasscodeViewController.h"
 #import "NetworkServiceDao.h"
+#import "HDownloadModelDao.h"
 
 @interface AppDelegate ()
 
@@ -41,6 +42,7 @@
 
 - (void)initDataBase {
     [[NetworkServiceDao sharedNetworkServiceDao] createOrUpgradeTable];
+    [[HDownloadModelDao sharedHDownloadModelDao] createOrUpgradeTable];
 }
 
 - (void)initRootViewController {

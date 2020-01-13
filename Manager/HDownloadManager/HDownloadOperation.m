@@ -61,9 +61,13 @@ BLOCK(); \
         self.session.password = self.model.password;
     }
     
-    self.task = [self.session downloadTaskForFileAtPath:self.model.filePath destinationPath:self.model.localPath delegate:self];
-    
-    [self.task resume];
+    __weak typeof(self)weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        strongSelf.task = [self.session downloadTaskForFileAtPath:self.model.filePath destinationPath:self.model.localPath delegate:self];
+        
+        [strongSelf.task resume];
+    });
     
     [self configTask];
 }
@@ -78,11 +82,13 @@ BLOCK(); \
 {
     CGFloat progress = totalBytesReceived / (float)totalBytesToReceive;
     NSLog(@"download progress:%.2f", progress);
+    self.model.progress = progress;
+    self.model.status = HCDDownloadStatusRunning;
 }
 
 - (void)downloadTask:(TOSMBSessionDownloadTask *)downloadTask didFinishDownloadingToPath:(NSString *)destinationPath
 {
-    
+    self.model.status = HCDDownloadStatusCompleted;
 }
 
 - (void)downloadFinished {

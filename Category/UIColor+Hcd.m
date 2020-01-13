@@ -175,5 +175,8 @@
     return [UIColor colorWithRGBHex:0x999999];
 }
 
++ (UIColor *)colorSplitLine {
+    return [UIColor colorWithRGBHex:0xefefef];
+}
 
 @end

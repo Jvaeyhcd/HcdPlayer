@@ -97,7 +97,7 @@
     }
     
     MainViewController *mainVc = [[MainViewController alloc] init];
-    mainVc.selectedIndex = 3;
+    mainVc.selectedIndex = 4;
     [HcdAppManager sharedInstance].mainVc = mainVc;
     
     LanguageViewController *vc = [[LanguageViewController alloc] init];
