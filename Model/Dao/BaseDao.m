@@ -241,15 +241,13 @@
     NSMutableArray *propertyArray = [NSMutableArray array];
     NSMutableArray *valueArray = [NSMutableArray array];
     
-    NSArray *all_p = [obj propertiesList];
+    NSArray *all_p = [self getAllProperty:[obj class]];
     NSLog(@"%ld", all_p.count);
     
-    unsigned int propsCount;
-    objc_property_t *props = class_copyPropertyList([obj class], &propsCount);
+    NSUInteger propsCount = all_p.count;
     for(int i = 0;i < propsCount; i++) {
-        objc_property_t prop = props[i];
         
-        NSString *propertyName = [NSString stringWithUTF8String:property_getName(prop)];
+        NSString *propertyName = [all_p objectAtIndex:i];
         id value = [obj valueForKey:propertyName];
         
         if (value != nil && value != NULL && ![value isKindOfClass:[NSNull class]]) {
@@ -273,7 +271,46 @@
         
         [propertyArray addObject:[NSString stringWithUTF8String:property_getName(prop)]];
     }
+    free(props);
     return propertyArray;
+}
+
+- (NSArray *)getClassProperty:(Class)cls {
+    if (!cls) return @[];
+    
+    NSMutableArray * all_p = [NSMutableArray array];
+    
+    unsigned int a;
+    
+    objc_property_t * result = class_copyPropertyList(cls, &a);
+    
+    for (unsigned int i = 0; i < a; i++) {
+        objc_property_t o_t =  result[i];
+        [all_p addObject:[NSString stringWithFormat:@"%s", property_getName(o_t)]];
+    }
+    
+    free(result);
+    
+    return [all_p copy];
+}
+
+- (NSArray *)getAllProperty:(Class)cls {
+    
+    Class stop_class = [NSObject class];
+    
+    if (cls == stop_class) return @[];
+    
+    NSMutableArray * all_p = [NSMutableArray array];
+    
+    [all_p addObjectsFromArray:[self getClassProperty:cls]];
+    
+    if (class_getSuperclass(cls) == stop_class) {
+        return [all_p copy];
+    } else {
+        [all_p addObjectsFromArray:[self getAllProperty:[cls superclass]]];
+    }
+    
+    return [all_p copy];
 }
 
 @end
