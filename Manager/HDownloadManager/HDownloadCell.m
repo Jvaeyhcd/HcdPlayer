@@ -86,7 +86,11 @@
         self.fileTypeIV.image = [[HcdFileManager sharedHcdFileManager] getFileTypeImageByFileType:fileType];
     }
     
-    self.progressView.progress = _model.progress;
+    if (_model.status == HCDDownloadStatusCompleted) {
+        self.progressView.progress = 1.0;
+    } else {
+        self.progressView.progress = _model.progress;
+    }
     self.statusLbl.text = [_model statusText];
     
 }

@@ -37,6 +37,11 @@ static HDownloadManager *_h_downloadManager = nil;
     self = [super init];
     if (self) {
         _downloadModels = [[NSMutableArray alloc] init];
+        
+        NSArray *historyArray = [[HDownloadModelDao sharedHDownloadModelDao] queryAll];
+        if (historyArray && historyArray.count > 0) {
+            [_downloadModels addObjectsFromArray:historyArray];
+        }
 
         self.queue = [[NSOperationQueue alloc] init];
         self.queue.maxConcurrentOperationCount = 4;
@@ -51,6 +56,7 @@ static HDownloadManager *_h_downloadManager = nil;
 - (void)addDownloadModels:(NSArray<HDownloadModel *> *)downloadModels {
     if ([downloadModels isKindOfClass:[NSArray class]]) {
         [_downloadModels addObjectsFromArray:downloadModels];
+        [[HDownloadModelDao sharedHDownloadModelDao] insertOrUpdateData:downloadModels];
     }
 }
 
@@ -60,7 +66,6 @@ static HDownloadManager *_h_downloadManager = nil;
         
         if (downloadModel.operation == nil) {
             downloadModel.operation = [[HDownloadOperation alloc] initWithModel:downloadModel];
-            [self.queue addOperation:downloadModel.operation];
             [downloadModel.operation start];
         } else {
             [downloadModel.operation resume];

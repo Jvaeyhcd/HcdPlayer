@@ -241,6 +241,9 @@
     NSMutableArray *propertyArray = [NSMutableArray array];
     NSMutableArray *valueArray = [NSMutableArray array];
     
+    NSArray *all_p = [obj propertiesList];
+    NSLog(@"%ld", all_p.count);
+    
     unsigned int propsCount;
     objc_property_t *props = class_copyPropertyList([obj class], &propsCount);
     for(int i = 0;i < propsCount; i++) {

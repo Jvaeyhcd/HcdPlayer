@@ -26,10 +26,10 @@ SingletonM(HDownloadModelDao)
         };
         NSMutableString *sql = [[NSMutableString alloc]init];
         
-        if ([db tableExists:@"DownloadModel"]) {
+        if ([db tableExists:@"HDownloadModel"]) {
             
         } else {
-            [sql appendString:@"CREATE TABLE DownloadModel (id integer PRIMARY KEY autoincrement, type integer, hostName varchar(200), ipAddress varchar(200), username varchar(20), password varchar(20), filePath varchar, localPath varchar(20), progress float, status integer);"];
+            [sql appendString:@"CREATE TABLE HDownloadModel (id integer PRIMARY KEY autoincrement, type integer, hostName varchar(200), ipAddress  , username varchar(20), password varchar(20), filePath varchar, localPath varchar(20), progress float, status integer, statusText varchar(200));"];
         }
         
         if(sql.length > 0 && [db executeStatements:sql]){
@@ -44,7 +44,7 @@ SingletonM(HDownloadModelDao)
     
     __block NSMutableArray *array = [NSMutableArray array];
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM DownloadModel"];
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM HDownloadModel"];
         FMResultSet *rs = [db executeQuery:sql];
      
         while ([rs next]) {
