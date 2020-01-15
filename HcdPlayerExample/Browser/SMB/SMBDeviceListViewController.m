@@ -244,7 +244,7 @@
 - (void)rightNavBarButtonClicked {
     
     if ([NSString isBlankString:self.networkService.host]) {
-        [HToastUtil showToast:HcdLocalized(@"toast_no_host", nil)];
+        [HHUDUtil showToast:HcdLocalized(@"toast_no_host", nil)];
         return;
     }
     

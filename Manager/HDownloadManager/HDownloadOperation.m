@@ -8,6 +8,7 @@
 
 #import "HDownloadOperation.h"
 #import "HDownloadModel.h"
+#import "HDownloadModelDao.h"
 #import <objc/runtime.h>
 
 #define kKVOBlock(KEYPATH, BLOCK) \
@@ -83,12 +84,17 @@ BLOCK(); \
     CGFloat progress = totalBytesReceived / (float)totalBytesToReceive;
     NSLog(@"download progress:%.2f", progress);
     self.model.progress = progress;
+    self.model.size = (float)totalBytesToReceive;
     self.model.status = HCDDownloadStatusRunning;
 }
 
 - (void)downloadTask:(TOSMBSessionDownloadTask *)downloadTask didFinishDownloadingToPath:(NSString *)destinationPath
 {
     self.model.status = HCDDownloadStatusCompleted;
+    self.model.progress = 1.0;
+    
+    // 下载完成后，保存下载记录
+    [[HDownloadModelDao sharedHDownloadModelDao] insertData:self.model];
 }
 
 - (void)downloadFinished {

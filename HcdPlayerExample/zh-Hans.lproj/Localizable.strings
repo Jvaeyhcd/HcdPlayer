@@ -129,3 +129,4 @@
 "download_wait"="等待中...";
 "download_done"="已完成";
 "download_suspended"="已暂停";
+"add_download_success"="成功加入下载队列";

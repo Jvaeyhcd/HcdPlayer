@@ -56,7 +56,6 @@ static HDownloadManager *_h_downloadManager = nil;
 - (void)addDownloadModels:(NSArray<HDownloadModel *> *)downloadModels {
     if ([downloadModels isKindOfClass:[NSArray class]]) {
         [_downloadModels addObjectsFromArray:downloadModels];
-        [[HDownloadModelDao sharedHDownloadModelDao] insertOrUpdateData:downloadModels];
     }
 }
 

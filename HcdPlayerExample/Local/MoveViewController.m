@@ -188,6 +188,8 @@
             [[HDownloadManager shared] startWithDownloadModel:model];
         }
         
+        [HHUDUtil showToast:HcdLocalized(@"add_download_success", nil)];
+        
     } else {
         // 本地文件移动
         for (NSString *file in _fileList) {

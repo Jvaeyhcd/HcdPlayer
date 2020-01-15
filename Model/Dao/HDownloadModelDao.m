@@ -29,7 +29,7 @@ SingletonM(HDownloadModelDao)
         if ([db tableExists:@"HDownloadModel"]) {
             
         } else {
-            [sql appendString:@"CREATE TABLE HDownloadModel (id integer PRIMARY KEY autoincrement, type integer, hostName varchar(200), ipAddress  , username varchar(20), password varchar(20), filePath varchar, localPath varchar(20), progress float, status integer, statusText varchar(200));"];
+            [sql appendString:@"CREATE TABLE HDownloadModel (id integer PRIMARY KEY autoincrement, type integer, hostName varchar(200), ipAddress varchar(200), username varchar(200), password varchar(200), filePath varchar(200), localPath varchar(200), progress float, size double, status integer, statusText varchar(200));"];
         }
         
         if(sql.length > 0 && [db executeStatements:sql]){

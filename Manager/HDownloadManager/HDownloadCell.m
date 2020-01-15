@@ -30,6 +30,10 @@
     
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         
+        self.multipleSelectionBackgroundView = [UIView new];
+        self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.frame];
+        self.selectedBackgroundView.backgroundColor = kSelectedCellBgColor;
+        
         [self.fileTypeIV mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.top.mas_equalTo(kBasePadding);
             make.width.height.mas_equalTo(kScaleFromDesign(50));
@@ -92,6 +96,7 @@
         self.progressView.progress = _model.progress;
     }
     self.statusLbl.text = [_model statusText];
+    self.sizeLbl.text = [NSString stringWithFormat:@"%ld", _model.size];
     
 }
 

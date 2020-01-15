@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *localPath;
 
 @property (nonatomic, assign) CGFloat progress;
+@property (nonatomic, assign) CGFloat size;
 
 @property (nonatomic, assign) HCDDownloadStatus status;
 

@@ -45,7 +45,7 @@
 - (UIButton *)allBtn {
     if (!_allBtn) {
         _allBtn = [[UIButton alloc] init];
-        _allBtn.frame = CGRectMake(6, 0, 40, 50);
+        _allBtn.frame = CGRectMake(7, 0, 40, 50);
         [_allBtn setImage:[UIImage imageNamed:@"hcdplayer.bundle/checkbox_circle"] forState:UIControlStateNormal];
         [_allBtn setImage:[UIImage imageNamed:@"hcdplayer.bundle/checkbox_circle_selected"] forState:UIControlStateSelected];
         _allBtn.titleLabel.font = [UIFont systemFontOfSize:14];

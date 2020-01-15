@@ -129,3 +129,4 @@
 "download_wait"="Waiting...";
 "download_done"="Done";
 "download_suspended"="Suspended";
+"add_download_success"="Joined download queue success";

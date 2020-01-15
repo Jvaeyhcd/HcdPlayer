@@ -15,9 +15,7 @@
 {
     self = [super init];
     if (self) {
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentDirectory = [paths objectAtIndex:0];
-        NSString *dbPath = [documentDirectory stringByAppendingPathComponent:@"HcdPlayer.db"];
+        NSString *dbPath = [[HSandbox libPrefPath] stringByAppendingPathComponent:@"HcdPlayer.db"];
         _dbQueue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
     }
     return self;
@@ -36,7 +34,18 @@
 }
 
 - (BOOL)updateData:(id)object {
-    return [self insertData:object only:NO];
+    
+    BOOL success = NO;
+    NSMutableArray *queryArray = [self queryData:object];
+    if (queryArray && queryArray.count > 0) {
+        id obj = queryArray[0];
+        if (obj && [obj objectForKey:@"id"]) {
+            [object setValue:[obj objectForKey:@"id"] forKey:@"id"];
+        }
+        success = [self insertOrUpdateData:object];
+    }
+    
+    return success;
 }
 
 - (NSMutableArray *)queryData:(id)object {
@@ -251,8 +260,10 @@
         id value = [obj valueForKey:propertyName];
         
         if (value != nil && value != NULL && ![value isKindOfClass:[NSNull class]]) {
-            [propertyArray addObject:propertyName];
-            [valueArray addObject:value];
+            if ([value isKindOfClass:[NSString class]] || [value isKindOfClass:[NSNumber class]]) {
+                [propertyArray addObject:propertyName];
+                [valueArray addObject:value];
+            }
         }
     }
     block(propertyArray,valueArray);
