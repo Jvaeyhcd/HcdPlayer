@@ -466,7 +466,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)updateEditSelectedCell:(NSUInteger)index {
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
     BOOL add = YES;
     TOSMBSessionFile *file = [self.files objectAtIndex:index];
     for (TOSMBSessionFile *ff in self.selectedArr) {
@@ -492,6 +492,20 @@ typedef enum : NSUInteger {
             [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
         }
     }];
+//    [self.tableView reloadData];
+}
+
+- (BOOL)isFileSelected:(TOSMBSessionFile *)file{
+    BOOL res = NO;
+    
+    for (TOSMBSessionFile *ff in self.selectedArr) {
+        if ([ff.filePath isEqualToString:file.filePath]) {
+            res = YES;
+            break;
+        }
+    }
+    
+    return res;
 }
 
 - (NSInteger)getSelectedCellIndex:(TOSMBSessionFile *)smbFile {

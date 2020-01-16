@@ -96,7 +96,7 @@
         self.progressView.progress = _model.progress;
     }
     self.statusLbl.text = [_model statusText];
-    self.sizeLbl.text = [NSString stringWithFormat:@"%ld", _model.size];
+    self.sizeLbl.text = [[HcdFileManager sharedHcdFileManager] formatSizeToStr:_model.size];
     
 }
 

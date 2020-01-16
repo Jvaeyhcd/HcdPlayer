@@ -449,7 +449,7 @@ typedef enum : NSUInteger {
 }
 
 - (void)updateEditSelectedCell:(NSUInteger)index {
-    [self.tableView reloadData];
+    
     BOOL add = YES;
     NSString *fileName = [self.pathChidren objectAtIndex:index];
     for (NSString *file in self.selectedArr) {

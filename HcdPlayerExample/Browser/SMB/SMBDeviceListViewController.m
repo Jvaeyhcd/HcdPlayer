@@ -127,6 +127,7 @@
             cell.titleLbl.text = HcdLocalized(@"title", nil);
             cell.required = NO;
             cell.inputTF.text = self.networkService.title ? self.networkService.title : @"";
+            cell.inputTF.secureTextEntry = NO;
             cell.textChanged = ^(NSString * _Nullable text) {
                 weakSelf.networkService.title = [text copy];
             };
@@ -134,6 +135,7 @@
             cell.titleLbl.text = HcdLocalized(@"host", nil);
             cell.required = YES;
             cell.inputTF.text = self.networkService.host ? self.networkService.host : @"";
+            cell.inputTF.secureTextEntry = NO;
             cell.textChanged = ^(NSString * _Nullable text) {
                 weakSelf.networkService.host = [text copy];
             };
@@ -141,6 +143,7 @@
             cell.titleLbl.text = HcdLocalized(@"port", nil);
             cell.required = NO;
             cell.inputTF.text = self.networkService.port ? self.networkService.port : @"";
+            cell.inputTF.secureTextEntry = NO;
             cell.textChanged = ^(NSString * _Nullable text) {
                 weakSelf.networkService.port = [text copy];
             };
@@ -148,6 +151,7 @@
             cell.titleLbl.text = HcdLocalized(@"path", nil);
             cell.required = NO;
             cell.inputTF.text = self.networkService.path ? self.networkService.path : @"";
+            cell.inputTF.secureTextEntry = NO;
             cell.textChanged = ^(NSString * _Nullable text) {
                 weakSelf.networkService.path = [text copy];
             };
@@ -155,6 +159,7 @@
             cell.titleLbl.text = HcdLocalized(@"user_name", nil);
             cell.required = NO;
             cell.inputTF.text = self.networkService.userName ? self.networkService.userName : @"";
+            cell.inputTF.secureTextEntry = NO;
             cell.textChanged = ^(NSString * _Nullable text) {
                 weakSelf.networkService.userName = [text copy];
             };
@@ -162,6 +167,7 @@
             cell.titleLbl.text = HcdLocalized(@"password", nil);
             cell.required = NO;
             cell.inputTF.text = self.networkService.password ? self.networkService.password : @"";
+            cell.inputTF.secureTextEntry = YES;
             cell.textChanged = ^(NSString * _Nullable text) {
                 weakSelf.networkService.password = [text copy];
             };
