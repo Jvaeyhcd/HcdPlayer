@@ -44,7 +44,7 @@ SingletonM(HDownloadModelDao)
     
     __block NSMutableArray *array = [NSMutableArray array];
     [self.dbQueue inDatabase:^(FMDatabase *db) {
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM HDownloadModel"];
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM HDownloadModel ORDER BY id DESC"];
         FMResultSet *rs = [db executeQuery:sql];
      
         while ([rs next]) {

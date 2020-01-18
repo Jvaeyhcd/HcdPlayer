@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addDownloadModels:(NSArray<HDownloadModel *> *)downloadModels;
 
+- (void)addDownloadModel:(HDownloadModel *)downloadModel;
+
 - (void)startWithDownloadModel:(HDownloadModel *)downloadModel;
 
 - (void)suspendWithDownloadModel:(HDownloadModel *)downloadModel;
@@ -27,6 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resumeWithDownloadModel:(HDownloadModel *)downloadModel;
 
 - (void)stopWithDownloadModel:(HDownloadModel *)downloadModel;
+
+- (void)deleteDownloadModel:(HDownloadModel *)downloadModel;
+
+- (void)deleteAllDownloadModels;
 
 @end
 

@@ -91,11 +91,13 @@
 
 "html_template_name" = "index.zh.hant";
 "confirm_clear_playlist" = "你確定要清空播放清單嗎？";
+"confirm_clear_all_download_list" = "你確定要删除所有下載歷史嗎?";
 
 "PROLOGUE" = "<p style='color: #EEEEEE;'>拖動文件到本窗口，或者點擊\"上傳文件\"按鈕選擇文件上傳</p>";
 "EPILOGUE" = "";
 "FOOTER_FORMAT" = "%@ %@";
 
+"server_http" = "提交一個URL";
 "server_smb" = "SMB/CIFS";
 "server_ftp" = "FTP";
 "server_sftp" = "SFTP";
@@ -130,3 +132,6 @@
 "download_done"="已完成";
 "download_suspended"="已暫停";
 "add_download_success"="成功加入下載隊列";
+
+/*placeholder*/
+"placeholder_please_input_a_url"="請輸入一個可以直接打開的連結";

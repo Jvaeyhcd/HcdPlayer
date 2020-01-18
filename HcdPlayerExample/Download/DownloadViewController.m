@@ -29,7 +29,7 @@
     [self.view addSubview:self.tableView];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
     [self.tableView reloadData];
     [self updateButtonItem];
 }
@@ -95,6 +95,41 @@
     
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    HDownloadModel *downloadModel = [[HDownloadManager shared].downloadModels objectAtIndex:indexPath.row];
+    if (downloadModel.status == HCDDownloadStatusRunning) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSMutableArray *array = [NSMutableArray array];
+    __weak typeof(self) weakSelf = self;
+    
+    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:HcdLocalized(@"delete", nil) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        
+        HDownloadModel *downloadModel = [[HDownloadManager shared].downloadModels objectAtIndex:indexPath.row];
+        [[HDownloadManager shared] deleteDownloadModel:downloadModel];
+        [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+//        [self.tableView reloadData];
+    }];
+    deleteAction.backgroundColor = kMainColor;
+    [array addObject:deleteAction];
+    
+    return array;
+}
+
 #pragma mark - DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView {
@@ -108,6 +143,33 @@
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView {
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14], NSForegroundColorAttributeName: [UIColor color999]};
     return [[NSAttributedString alloc]initWithString:HcdLocalized(@"download_empty_tips", nil) attributes:attributes];
+}
+
+#pragma mark - private
+
+- (void)rightNavBarButtonClicked {
+    [self showClearActionSheet];
+}
+
+- (void)showClearActionSheet {
+    
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:HcdLocalized(@"confirm_clear_all_download_list", nil)];
+    
+    __weak typeof(self) weakSelf = self;
+    deleteSheet.seletedButtonIndex = ^(NSInteger index) {
+        switch (index) {
+            case 1:
+            {
+                [[HDownloadManager shared] deleteAllDownloadModels];
+                [weakSelf.tableView reloadData];
+                break;
+            }
+            default:
+                break;
+        }
+    };
+    [[UIApplication sharedApplication].keyWindow addSubview:deleteSheet];
+    [deleteSheet showHcdActionSheet];
 }
 
 @end

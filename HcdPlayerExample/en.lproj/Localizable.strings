@@ -58,7 +58,7 @@
 "transferStatus"="Uploaded Files";
 "noWiFi"="WiFi not connected";
 "close"="Close";
-"ok"="Ok";
+"ok"="OK";
 "sureDelete"="Are you sure to delete this %@ file or folder?";
 "sure_delete_network"="Are you sure to delete this %@ network server?";
 "select_all"="Select all";
@@ -79,9 +79,9 @@
 "praise"="Praise";
 "update_version"="New version";
 "please_select_device"="Please select the device to project";
-"playlist_empty_tips"="No played video";
+"playlist_empty_tips"="There is no playlist";
 "select_a_video_to_play"="Please select a video to play in local folder";
-"network_empty_tips"="No network service";
+"network_empty_tips"="There is no network service";
 "add_network_service"="Please tap + button to add a network service";
 "select_a_device"="Select Device";
 "switch_device"="Switch TV";
@@ -91,11 +91,13 @@
 
 "html_template_name" = "index";
 "confirm_clear_playlist" = "Are you sure to clear the playlist?";
+"confirm_clear_all_download_list" = "Are you sure to clear the download history?";
 
 "PROLOGUE" = "<p style='color: #EEEEEE;'>Drag &amp; drop files on this window or use the \"Upload Files&hellip;\" button to upload new files.</p>";
 "EPILOGUE" = "";
 "FOOTER_FORMAT" = "%@ %@";
 
+"server_http" = "Direct URL";
 "server_smb" = "SMB/CIFS";
 "server_ftp" = "FTP";
 "server_sftp" = "SFTP";
@@ -121,7 +123,7 @@
 /*空数据页面提示*/
 "filelist_empty_tips"="There is no file";
 "filelist_empty_tips_2"="Ops this is a empty directory!";
-"download_empty_tips"="No data";
+"download_empty_tips"="There is no download";
 "download_empty_tips_2"="There is no download";
 
 "download_failed"="Failed";
@@ -130,3 +132,6 @@
 "download_done"="Done";
 "download_suspended"="Suspended";
 "add_download_success"="Joined download queue success";
+
+/*placeholder*/
+"placeholder_please_input_a_url"="Please input to direct URL";

@@ -55,8 +55,13 @@ static HDownloadManager *_h_downloadManager = nil;
 
 - (void)addDownloadModels:(NSArray<HDownloadModel *> *)downloadModels {
     if ([downloadModels isKindOfClass:[NSArray class]]) {
-        [_downloadModels addObjectsFromArray:downloadModels];
+        NSIndexSet *indexSet = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, downloadModels.count)];
+        [_downloadModels insertObjects:downloadModels atIndexes:indexSet];
     }
+}
+
+- (void)addDownloadModel:(HDownloadModel *)downloadModel {
+    [_downloadModels insertObject:downloadModel atIndex:0];
 }
 
 - (void)startWithDownloadModel:(HDownloadModel *)downloadModel {
@@ -87,6 +92,24 @@ static HDownloadManager *_h_downloadManager = nil;
 - (void)stopWithDownloadModel:(HDownloadModel *)downloadModel {
     if (downloadModel.operation) {
         [downloadModel.operation cancel];
+    }
+}
+
+- (void)deleteDownloadModel:(HDownloadModel *)downloadModel {
+    if (downloadModel.operation) {
+        [downloadModel.operation cancel];
+    }
+    if (downloadModel.id) {
+        [[HDownloadModelDao sharedHDownloadModelDao] deleteData:downloadModel];
+    }
+    [_downloadModels removeObject:downloadModel];
+}
+
+- (void)deleteAllDownloadModels {
+    NSMutableArray *tempArr = _downloadModels;
+    NSArray *array = [NSArray arrayWithArray:tempArr];
+    for (HDownloadModel *model in array) {
+        [self deleteDownloadModel:model];
     }
 }
 

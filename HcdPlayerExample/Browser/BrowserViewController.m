@@ -9,11 +9,14 @@
 #import "BrowserViewController.h"
 #import "SMBDeviceListViewController.h"
 #import "SMBFileListViewController.h"
+#import "HCDPlayerViewController.h"
 #import "HcdActionSheet.h"
 #import "NetworkServiceDao.h"
 #import "FilesListTableViewCell.h"
 #import "UITableView+Hcd.h"
 #import "TOSMBClient.h"
+#import "HcdAlertInputView.h"
+#import "HcdFileManager.h"
 
 @interface BrowserViewController ()<UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
@@ -209,6 +212,24 @@
     }];
 }
 
+- (void)openFileByURLString:(NSString *)urlStr {
+    NSString *suffix = [[urlStr pathExtension] lowercaseString];
+    FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeBySuffix:suffix];
+    switch (fileType) {
+        case FileType_video:
+        case FileType_music:
+        {
+            HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
+            vc.url = urlStr;
+            vc.modalPresentationStyle = UIModalPresentationFullScreen;
+            [self presentViewController:vc animated:YES completion:nil];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 #pragma mark - DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView {
@@ -237,10 +258,10 @@
     if (!_addActionSheet) {
         
         NSArray *titleArray = @[
+            HcdLocalized(@"server_http", nil),
             HcdLocalized(@"server_smb", nil),
             HcdLocalized(@"server_ftp", nil),
             HcdLocalized(@"server_sftp", nil)
-//            HcdLocalized(@"server_webdav", nil)
         ];
         
         _addActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:titleArray attachTitle:nil];
@@ -248,6 +269,16 @@
         _addActionSheet.seletedButtonIndex = ^(NSInteger index) {
             switch (index) {
                 case 1: {
+                    HcdAlertInputView *newFolderView = [[HcdAlertInputView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+                    newFolderView.tips = HcdLocalized(@"server_http", nil);
+                    newFolderView.placeHolder = HcdLocalized(@"placeholder_please_input_a_url", nil);
+                    newFolderView.commitBlock = ^(NSString * _Nonnull content) {
+                        [weakSelf openFileByURLString:content];
+                    };
+                    [newFolderView showReplyInView:[UIApplication sharedApplication].keyWindow];
+                    break;
+                }
+                case 2: {
                     SMBDeviceListViewController *vc = [[SMBDeviceListViewController alloc] init];
                     BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
                     nvc.modalPresentationStyle = UIModalPresentationFullScreen;
