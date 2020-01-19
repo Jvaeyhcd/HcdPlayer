@@ -94,6 +94,8 @@
             NSString *fullPath = [NSString stringWithFormat:@"%@%@", documentPath, path];
             if ([[HcdFileManager sharedHcdFileManager] fileExists:fullPath]) {
                 [array addObject:path];
+            } else if ([path isHttpRequestUrl]) {
+                [array addObject:path];
             }
         }
     }

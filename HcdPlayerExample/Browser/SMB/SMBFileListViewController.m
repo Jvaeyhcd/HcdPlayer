@@ -371,12 +371,16 @@ typedef enum : NSUInteger {
         __weak typeof(self) weakSelf = self;
         deleteSheet.seletedButtonIndex = ^(NSInteger index) {
             switch (index) {
-            case 1:
-            {
-                [weakSelf setTableViewEdit:YES];
-                [weakSelf updateEditSelectedCell:weakSelf.selectedIndex];
-                break;
-            }
+                case 1:
+                {
+                    [weakSelf setTableViewEdit:YES];
+                    [weakSelf updateEditSelectedCell:weakSelf.selectedIndex];
+                    break;
+                }
+                case 2:
+                {
+                    
+                }
             default:
                 break;
         }

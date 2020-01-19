@@ -80,7 +80,11 @@
     NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *path = [[HcdAppManager sharedInstance].playList objectAtIndex:indexPath.row];
     if (path) {
-        [cell setFilePath:[NSString stringWithFormat:@"%@%@", documentPath, path]];
+        if ([path isHttpRequestUrl]) {
+            [cell setFileUrlPath:path];
+        } else {
+            [cell setFilePath:[NSString stringWithFormat:@"%@%@", documentPath, path]];
+        }
     }
     
     return cell;
@@ -96,20 +100,12 @@
     NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *path = [[HcdAppManager sharedInstance].playList objectAtIndex:indexPath.row];
     
-//    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-//    if ([path.pathExtension isEqualToString:@"wmv"]) {
-//        parameters[HcdMovieParameterMinBufferedDuration] = @(5.0);
-//    }
-//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-//        parameters[HcdMovieParameterDisableDeinterlacing] = @(YES);
-//    }
-//    if (path) {
-//        HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:[NSString stringWithFormat:@"%@%@", documentPath, path] parameters:parameters];
-//        movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
-//        [self presentViewController:movieVc animated:YES completion:nil];
-//    }
     HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
-    vc.url = [NSString stringWithFormat:@"file://%@%@", documentPath, path];
+    if ([path isHttpRequestUrl]) {
+        vc.url = path;
+    } else {
+        vc.url = [NSString stringWithFormat:@"file://%@%@", documentPath, path];
+    }
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:nil];
 }

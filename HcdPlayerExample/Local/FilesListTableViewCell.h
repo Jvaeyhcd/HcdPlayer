@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setFilePath:(NSString *)path;
 
+- (void)setFileUrlPath:(NSString *)url;
+
 - (void)setFaterFolder:(NSString *)path;
 
 - (void)setNetworkService:(NetworkService *)service;

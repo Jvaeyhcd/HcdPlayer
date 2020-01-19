@@ -109,6 +109,21 @@
     self.accessoryType = fileType == FileType_file_dir ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
 }
 
+- (void)setFileUrlPath:(NSString *)url {
+    
+    NSString *fileName = [[url stringByDeletingPathExtension] lastPathComponent];
+    fileName = [fileName stringByRemovingPercentEncoding];
+    NSString *suffix = [url pathExtension];
+    
+    FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeBySuffix:suffix];
+    
+    _fileTypeImageView.image = [[HcdFileManager sharedHcdFileManager] getFileTypeImageByFileType:fileType];
+    _titleLbl.text = fileName;
+    _descLbl.text = url;
+    
+    self.accessoryType = UITableViewCellAccessoryNone;
+}
+
 - (void)setFaterFolder:(NSString *)path {
     NSString *name = [[path stringByDeletingLastPathComponent] lastPathComponent];
     _fileTypeImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/barcode_result_page_type_file_dir_icon.png"];

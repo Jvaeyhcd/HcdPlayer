@@ -220,7 +220,7 @@
         case FileType_music:
         {
             HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
-            vc.url = urlStr;
+            vc.url = [urlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
             vc.modalPresentationStyle = UIModalPresentationFullScreen;
             [self presentViewController:vc animated:YES completion:nil];
             break;
@@ -259,9 +259,9 @@
         
         NSArray *titleArray = @[
             HcdLocalized(@"server_http", nil),
-            HcdLocalized(@"server_smb", nil),
-            HcdLocalized(@"server_ftp", nil),
-            HcdLocalized(@"server_sftp", nil)
+            HcdLocalized(@"server_smb", nil)
+//            HcdLocalized(@"server_ftp", nil),
+//            HcdLocalized(@"server_sftp", nil)
         ];
         
         _addActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:titleArray attachTitle:nil];
