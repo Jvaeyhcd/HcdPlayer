@@ -220,6 +220,10 @@ typedef enum : NSUInteger {
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    TOSMBSessionFile *file = self.files[indexPath.row];
+    if (file.directory == YES) {
+        return NO;
+    }
     return YES;
 }
 
@@ -379,7 +383,7 @@ typedef enum : NSUInteger {
                 }
                 case 2:
                 {
-                    
+                    [weakSelf downloadCurrentFileToPath];
                 }
             default:
                 break;
@@ -527,6 +531,31 @@ typedef enum : NSUInteger {
 - (void)downloadToPath {
     NSMutableArray *fileList = [[NSMutableArray alloc] init];
     for (TOSMBSessionFile *file in self.selectedArr) {
+        if (!file.directory) {
+            [fileList addObject:file.filePath];
+        }
+    }
+    
+    MoveViewController *vc = [[MoveViewController alloc] init];
+    vc.currentPath = [HSandbox docPath];
+    vc.fileList = fileList;
+    vc.isDownload = YES;
+    vc.session = self.session;
+    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController: vc];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:nav animated:YES completion:^{
+        
+    }];
+}
+
+- (void)downloadCurrentFileToPath {
+    
+    TOSMBSessionFile *file = [self.files objectAtIndex:_selectedIndex];
+    if (!file) {
+        return;
+    }
+    NSMutableArray *fileList = [[NSMutableArray alloc] init];
+    if (![NSString isBlankString:file.filePath]) {
         [fileList addObject:file.filePath];
     }
     

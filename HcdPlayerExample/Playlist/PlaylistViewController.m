@@ -145,7 +145,7 @@
 - (void)showDeleteActionSheet {
     NSString *fileNmae = [[HcdAppManager sharedInstance].playList objectAtIndex:_selectedIndex];
     
-    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:[NSString stringWithFormat:HcdLocalized(@"sureDelete", nil), fileNmae]];
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:[NSString stringWithFormat:HcdLocalized(@"sure_delete_play_history", nil), fileNmae]];
     
     __weak PlaylistViewController *weakSelf = self;
     deleteSheet.seletedButtonIndex = ^(NSInteger index) {

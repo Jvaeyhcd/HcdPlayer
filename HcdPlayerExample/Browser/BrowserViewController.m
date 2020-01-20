@@ -213,6 +213,12 @@
 }
 
 - (void)openFileByURLString:(NSString *)urlStr {
+    
+    if ([NSString isBlankString:urlStr]) {
+        return;
+    } else if (![urlStr isHttpRequestUrl]) {
+        return;
+    }
     NSString *suffix = [[urlStr pathExtension] lowercaseString];
     FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeBySuffix:suffix];
     switch (fileType) {

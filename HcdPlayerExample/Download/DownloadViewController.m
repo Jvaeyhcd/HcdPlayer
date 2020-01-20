@@ -115,14 +115,11 @@
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *array = [NSMutableArray array];
-    __weak typeof(self) weakSelf = self;
     
     UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:HcdLocalized(@"delete", nil) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
         
-        HDownloadModel *downloadModel = [[HDownloadManager shared].downloadModels objectAtIndex:indexPath.row];
-        [[HDownloadManager shared] deleteDownloadModel:downloadModel];
-        [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-//        [self.tableView reloadData];
+        self.selectedIndex = indexPath.row;
+        [self showDeleteActionSheet];
     }];
     deleteAction.backgroundColor = kMainColor;
     [array addObject:deleteAction];
@@ -149,6 +146,31 @@
 
 - (void)rightNavBarButtonClicked {
     [self showClearActionSheet];
+}
+
+/**
+ * 显示删除按钮
+ */
+- (void)showDeleteActionSheet {
+    HDownloadModel *downloadModel = [[HDownloadManager shared].downloadModels objectAtIndex:self.selectedIndex];
+    NSString *fileNmae = [downloadModel.localPath lastPathComponent];
+    
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:[NSString stringWithFormat:HcdLocalized(@"sure_delete_download_history", nil), fileNmae]];
+    
+    deleteSheet.seletedButtonIndex = ^(NSInteger index) {
+        switch (index) {
+            case 1:
+            {
+                [[HDownloadManager shared] deleteDownloadModel:downloadModel];
+                [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.selectedIndex inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                break;
+            }
+            default:
+                break;
+        }
+    };
+    [[UIApplication sharedApplication].keyWindow addSubview:deleteSheet];
+    [deleteSheet showHcdActionSheet];
 }
 
 - (void)showClearActionSheet {

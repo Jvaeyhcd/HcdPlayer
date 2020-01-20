@@ -61,6 +61,8 @@
 "ok"="OK";
 "sureDelete"="Are you sure to delete this %@ file or folder?";
 "sure_delete_network"="Are you sure to delete this %@ network server?";
+"sure_delete_play_history"="Are you sure to delete this %@ play history?";
+"sure_delete_download_history"="Are you sure to delete this %@ download history?";
 "select_all"="Select all";
 "sure_delete_selected"="Are you sure to delete the selected item(s)?";
 "import_tips"="Please select import way";

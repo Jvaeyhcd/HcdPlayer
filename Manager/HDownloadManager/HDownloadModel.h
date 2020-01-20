@@ -25,7 +25,7 @@ typedef void(^HCDDownloadProgressChanged)(HDownloadModel *model);
 @property (nonatomic, copy) HCDDownloadStatusChanged onStatusChanged;
 @property (nonatomic, copy) HCDDownloadProgressChanged onProgressChanged;
 
-@property (nonatomic, readonly, copy) NSString *statusText;
+- (NSString *)statusText;
 
 @end
 

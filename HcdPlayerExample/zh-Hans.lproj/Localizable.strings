@@ -60,6 +60,8 @@
 "close"="关闭";
 "ok"="确定";
 "sureDelete"="你确定要删除 %@ 该文件/文件夹吗？";
+"sure_delete_play_history"="你确定要删除 %@ 该播放历史吗？";
+"sure_delete_download_history"="你确定要删除 %@ 该下载历史吗？";
 "sure_delete_network"="你确定要删除 %@ 该网络服务吗？";
 "select_all"="全选";
 "sure_delete_selected"="您确定要删除选中的内容吗？";
