@@ -190,9 +190,12 @@
         self.session.password = service.password;
     }
     
+    [HHUDUtil showLoading];
+    
     __weak typeof(self) weakSelf = self;
     [self.session requestContentsOfDirectoryAtFilePath:@"/" success:^(NSArray *files) {
         
+        [HHUDUtil hideLoading];
         NSLog(@"");
         SMBFileListViewController *vc = [[SMBFileListViewController alloc] initWithSession:self.session title:service.title];
         vc.files = files;
@@ -200,13 +203,23 @@
         [weakSelf.navigationController pushViewController:vc animated:YES];
         
     } error:^(NSError *error) {
-        if ([error.domain isEqualToString:TOSMBClientErrorDomain] && error.code == TOSMBSessionErrorCodeAuthenticationFailed) {
-            SMBDeviceListViewController *vc = [[SMBDeviceListViewController alloc] init];
-            vc.networkService = service;
-            BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
-            nvc.modalPresentationStyle = UIModalPresentationFullScreen;
-            [weakSelf presentViewController:nvc animated:YES completion:nil];
-        } else {
+        [HHUDUtil hideLoading];
+        if ([error.domain isEqualToString:TOSMBClientErrorDomain]) {
+            if (error.code == TOSMBSessionErrorCodeAuthenticationFailed) {
+                SMBDeviceListViewController *vc = [[SMBDeviceListViewController alloc] init];
+                vc.networkService = service;
+                BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
+                nvc.modalPresentationStyle = UIModalPresentationFullScreen;
+                [weakSelf presentViewController:nvc animated:YES completion:nil];
+            } else if (error.code == TOSMBSessionErrorCodeUnknown) {
+                [HHUDUtil showToast:HcdLocalized(@"smb_unknown_error", nil)];
+            } else if (error.code == TOSMBSessionErrorNotOnWiFi) {
+                [HHUDUtil showToast:HcdLocalized(@"smb_not_on_wifi", nil)];
+            } else if (error.code == TOSMBSessionErrorCodeUnableToResolveAddress) {
+                [HHUDUtil showToast:HcdLocalized(@"smb_unable_address", nil)];
+            } else if (error.code == TOSMBSessionErrorCodeUnableToConnect) {
+                [HHUDUtil showToast:HcdLocalized(@"smb_unable_connect", nil)];
+            }
             
         }
     }];

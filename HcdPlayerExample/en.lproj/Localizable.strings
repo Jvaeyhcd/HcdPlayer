@@ -137,3 +137,9 @@
 
 /*placeholder*/
 "placeholder_please_input_a_url"="Please input to direct URL";
+
+/*smb*/
+"smb_unknown_error"="Unknown error";
+"smb_not_on_wifi"="Not on WiFi";
+"smb_unable_address"="Unable to resolve address";
+"smb_unable_connect"="Unable to connect";

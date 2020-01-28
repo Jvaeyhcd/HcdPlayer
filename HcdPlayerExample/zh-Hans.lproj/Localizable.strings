@@ -137,3 +137,9 @@
 
 /*placeholder*/
 "placeholder_please_input_a_url"="请输入一个可以直接打开的链接";
+
+/*smb*/
+"smb_unknown_error"="未知错误";
+"smb_not_on_wifi"="没有使用WiFi";
+"smb_unable_address"="地址不可解析";
+"smb_unable_connect"="无法连接";
