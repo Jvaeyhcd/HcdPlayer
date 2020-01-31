@@ -106,7 +106,7 @@
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewCellEditingStyleDelete;
+    return UITableViewCellEditingStyleNone;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -122,12 +122,28 @@
     }];
     deleteAction.backgroundColor = kMainColor;
     [array addObject:deleteAction];
+    
+    UITableViewRowAction *moreAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:HcdLocalized(@"edit", nil) handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        [weakSelf tapEditRowAction:indexPath.row];
+    }];
+    [array addObject:moreAction];
+    
     return array;
 }
 
 - (void)tapRowAction:(NSInteger)row {
     _selectedIndex = row;
     [self showDeleteActionSheet];
+}
+
+- (void)tapEditRowAction:(NSInteger)row {
+    _selectedIndex = row;
+    NetworkService *service = [self.networkServerArray objectAtIndex:_selectedIndex];
+    SMBDeviceListViewController *vc = [[SMBDeviceListViewController alloc] init];
+    vc.networkService = service;
+    BaseNavigationController *nvc = [[BaseNavigationController alloc] initWithRootViewController:vc];
+    nvc.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:nvc animated:YES completion:nil];
 }
 
 /**
@@ -146,7 +162,7 @@
             {
                 BOOL success = [[NetworkServiceDao sharedNetworkServiceDao] deleteData:service];
                 if (success) {
-                    [self reloadNetworkServices];
+                    [weakSelf reloadNetworkServices];
                 }
                 break;
             }
