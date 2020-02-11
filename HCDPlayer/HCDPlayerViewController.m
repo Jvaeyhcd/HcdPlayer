@@ -139,14 +139,14 @@ typedef enum : NSUInteger {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     // 不自动锁屏
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     [HcdAppManager sharedInstance].isAllowAutorotate = YES;
     [self registerNotification];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     [HcdAppManager sharedInstance].isAllowAutorotate = NO;
     [self unregisterNotification];
     [self close];

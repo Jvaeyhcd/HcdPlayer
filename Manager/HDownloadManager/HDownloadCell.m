@@ -36,7 +36,7 @@
         
         [self.fileTypeIV mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.top.mas_equalTo(kBasePadding);
-            make.width.height.mas_equalTo(kScaleFromDesign(50));
+            make.width.height.mas_equalTo(scaleFromiPhoneXDesign(50));
         }];
         
         [self.fileNameLbl mas_makeConstraints:^(MASConstraintMaker *make) {
