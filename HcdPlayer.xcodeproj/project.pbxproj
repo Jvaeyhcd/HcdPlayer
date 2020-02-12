@@ -1584,7 +1584,7 @@
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 					"$(PROJECT_DIR)/Vender/TOSMBClient/libdsm",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1636,7 +1636,7 @@
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 					"$(PROJECT_DIR)/Vender/TOSMBClient/libdsm",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

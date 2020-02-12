@@ -8,3 +8,4 @@
 
 CFBundleDisplayName = "hPlayer";
 NSPhotoLibraryUsageDescription = "Used to save pictures to your album, please allow app to get this permission!";
+NSCameraUsageDescription = "Used to take a photo, please allow app to get this permission!";
