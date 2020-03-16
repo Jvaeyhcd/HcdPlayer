@@ -52,7 +52,7 @@
     
     _addressLbl = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, CGRectGetMaxY(tipsLbl.frame) + kBasePadding, kScreenWidth - 2 * kBasePadding, 20)];
     _addressLbl.font = kFont(18);
-    _addressLbl.textColor = [UIColor color333];
+    _addressLbl.textColor = [UIColor colorRGBHex:0x333333 darkColorRGBHex:0xffffff];
     _addressLbl.textAlignment = NSTextAlignmentCenter;
     _addressLbl.numberOfLines = 1;
     _addressLbl.text = @"";

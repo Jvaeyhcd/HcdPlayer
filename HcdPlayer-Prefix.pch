@@ -22,14 +22,15 @@
 #import "UIScrollView+EmptyDataSet.h"
 
 #define kMainColor [UIColor colorWithRGBHex:0xec7258]
-#define kMainBgColor [UIColor colorWithRGBHex:0xFFFFFF]
-#define kNavBgColor [UIColor colorWithRGBHex:0xFC622F]
+#define kMainBgColor [UIColor colorRGBHex:0xFFFFFF darkColorRGBHex:0x000000]
+#define kNavBgColor [UIColor colorRGBHex:0xFC622F darkColorRGBHex:0x000000]
 #define kNavTitleColor [UIColor colorWithRGBHex:0xFFFFFF]
 #define kBarBgColor [UIColor colorWithRGBHex:0xEEEEEE]
-#define kSplitLineBgColor [UIColor colorWithRGBHex:0xEEEEEE]
+#define kSplitLineBgColor [UIColor colorRGBHex:0xefefef darkColorRGBHex:0x38383A]
 #define kTabbarSelectedColor [UIColor colorWithRGBHex:0xFF7900]
-#define kSelectedCellBgColor [UIColor colorWithRGBHex:0xF9F9F9]
-#define kCellHeaderBgColor [UIColor colorWithRGBHex:0xF7F7F7]
+#define kSelectedCellBgColor [UIColor colorRGBHex:0xF9F9F9 darkColorRGBHex:0x39393c]
+#define kCellHeaderBgColor [UIColor colorRGBHex:0xF2F2F7 darkColorRGBHex:0x000000]
+#define kCellBgColor [UIColor colorRGBHex:0xFFFFFF darkColorRGBHex:0x1C1C1E]
 
 #define kFont(A) [UIFont systemFontOfSize:A]
 #define kBoldFont(A) [UIFont boldSystemFontOfSize:A]

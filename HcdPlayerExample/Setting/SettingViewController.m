@@ -137,7 +137,7 @@ enum {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HcdValueTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdValueCell forIndexPath:indexPath];
-    
+    cell.backgroundColor = kCellBgColor;
     NSString *title = @"";
     NSString *content = @"";
     if (indexPath.section == HcdSettingSectionGeneral) {

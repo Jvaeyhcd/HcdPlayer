@@ -36,6 +36,7 @@
 - (void)initSubviews {
     
 //    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    self.backgroundColor = kCellBgColor;
     self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     self.multipleSelectionBackgroundView = [UIView new];
     self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.frame];
@@ -43,7 +44,7 @@
     
     if (!_fileTypeImageView) {
         _fileTypeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(kBasePadding, kBasePadding, scaleFromiPhoneXDesign(50), scaleFromiPhoneXDesign(50))];
-        _fileTypeImageView.backgroundColor = [UIColor colorWithRGBHex:0xFFFFFF];
+        _fileTypeImageView.backgroundColor = [UIColor clearColor];
         _fileTypeImageView.contentMode = UIViewContentModeScaleAspectFit;
         _fileTypeImageView.clipsToBounds = YES;
         [self.contentView addSubview:_fileTypeImageView];
@@ -53,7 +54,7 @@
         _titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(_fileTypeImageView.frame.origin.x + _fileTypeImageView.frame.size.width + kBasePadding, _fileTypeImageView.frame.origin.y, kScreenWidth - (_fileTypeImageView.frame.origin.x + _fileTypeImageView.frame.size.width + 3 * kBasePadding), scaleFromiPhoneXDesign(30))];
         _titleLbl.font = kBoldFont(15);
         _titleLbl.textAlignment = NSTextAlignmentLeft;
-        _titleLbl.textColor = [UIColor color333];
+        _titleLbl.textColor = [UIColor colorRGBHex:0x333333 darkColorRGBHex:0xffffff];
         _titleLbl.text = HcdLocalized(@"local", nil);
         _titleLbl.numberOfLines = 1;
         [self.contentView addSubview:_titleLbl];

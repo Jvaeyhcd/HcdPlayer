@@ -24,6 +24,7 @@
 }
 
 - (void)initSubviews {
+    self.backgroundColor = kCellBgColor;
     self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.frame];
     self.selectedBackgroundView.backgroundColor = kSelectedCellBgColor;
     self.tintColor = kMainColor;
@@ -31,7 +32,7 @@
     if (!_titleLbl) {
         _titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, 0, kScreenWidth / 2 - kBasePadding, 50)];
         _titleLbl.font = [UIFont systemFontOfSize:16];
-        _titleLbl.textColor = [UIColor color333];
+        _titleLbl.textColor = [UIColor colorRGBHex:0x333333 darkColorRGBHex:0xFFFFFF];
         [self addSubview:_titleLbl];
         [_titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(50);
@@ -43,7 +44,7 @@
     if (!_contentLbl) {
         _contentLbl = [[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth / 2, 0, kScreenWidth / 2 - 2 * kBasePadding, 50)];
         _contentLbl.font = [UIFont systemFontOfSize:16];
-        _contentLbl.textColor = [UIColor color999];
+        _contentLbl.textColor = [UIColor colorRGBHex:0x999999 darkColorRGBHex:0xFFFFFF];
         _contentLbl.textAlignment = NSTextAlignmentRight;
         [self addSubview:_contentLbl];
         [_contentLbl mas_makeConstraints:^(MASConstraintMaker *make) {

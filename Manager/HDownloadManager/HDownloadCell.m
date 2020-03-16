@@ -124,7 +124,7 @@
     if (!_fileNameLbl) {
         _fileNameLbl = [[UILabel alloc] init];
         _fileNameLbl.font = kBoldFont(15);
-        _fileNameLbl.textColor = [UIColor color333];
+        _fileNameLbl.textColor = [UIColor colorRGBHex:0x333333 darkColorRGBHex:0xffffff];
         _fileNameLbl.textAlignment = NSTextAlignmentLeft;
         [self.contentView addSubview:_fileNameLbl];
     }

@@ -98,36 +98,36 @@
     if (!_dialogView) {
         _dialogView = [[UIView alloc]initWithFrame:CGRectMake(0, self.frame.size.height, kScreen_Width, kContenViewHeight)];
         _dialogView.userInteractionEnabled = YES;
-        _dialogView.backgroundColor = [UIColor colorWithRed:1.000 green:1.000 blue:1.000 alpha:1.00];
+        _dialogView.backgroundColor = [UIColor colorRGBHex:0xffffff darkColorRGBHex:0x1C1C1E];
         [_dialogView setCornerOnTop:8.0];
         [_mainView addSubview:_dialogView];
     }
     
     if (!_textField) {
         _textField = [[UITextField alloc]initWithFrame:CGRectMake(kBasePadding, (kContenViewHeight - 90) / 2 + 50, kScreen_Width - 3 * kBasePadding - 50, 40)];
-        _textField.backgroundColor = [UIColor colorWithRed:0.957 green:0.961 blue:0.965 alpha:1.00];
+        _textField.backgroundColor = [UIColor colorRGBHex:0xf3f4f6 darkColorRGBHex:0x493131];
         _textField.clipsToBounds = YES;
-        _textField.layer.borderColor = [UIColor colorWithRed:0.957 green:0.961 blue:0.965 alpha:1.00].CGColor;
+        _textField.layer.borderColor = [UIColor colorRGBHex:0xf3f4f6 darkColorRGBHex:0x493131].CGColor;
         _textField.layer.borderWidth = 1;
         _textField.layer.cornerRadius = 4;
         _textField.font = [UIFont systemFontOfSize:14];
         _textField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8, 0)];
         _textField.leftViewMode = UITextFieldViewModeAlways;
-        _textField.textColor = [UIColor blackColor];
+        _textField.textColor = [UIColor colorRGBHex:0x000000 darkColorRGBHex:0xffffff];
         _textField.clearsOnBeginEditing = YES;
         [_textField addTarget:self action:@selector(textFieldEditingChanged:) forControlEvents:UIControlEventEditingChanged];
         [_dialogView addSubview:_textField];
     }
     
     UIView *splitLine = [[UIView alloc] initWithFrame:CGRectMake(0, 50, kScreen_Width, 0.5)];
-    splitLine.backgroundColor = [UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1.00];
+    splitLine.backgroundColor = kSplitLineBgColor;
     [_dialogView addSubview:splitLine];
     
     if (!_tipsLbl) {
         _tipsLbl = [[UILabel alloc]initWithFrame:CGRectMake(70, 0, kScreen_Width - 140, 50)];
         _tipsLbl.font = [UIFont boldSystemFontOfSize:16];
         _tipsLbl.textAlignment = NSTextAlignmentCenter;
-        _tipsLbl.textColor = [UIColor color333];
+        _tipsLbl.textColor = [UIColor colorRGBHex:0x333333 darkColorRGBHex:0xffffff];
         [_dialogView addSubview:_tipsLbl];
     }
     
@@ -135,7 +135,7 @@
     [cancleBtn setTitle:HcdLocalized(@"cancel", nil) forState:UIControlStateNormal];
     [cancleBtn setTitleColor:[UIColor color999] forState:UIControlStateNormal];
     cancleBtn.titleLabel.font = kBaseFont;
-    cancleBtn.backgroundColor = [UIColor whiteColor];
+    cancleBtn.backgroundColor = [UIColor colorRGBHex:0xffffff darkColorRGBHex:0x1C1C1E];
     [cancleBtn addTarget:self action:@selector(hideReplayView) forControlEvents:UIControlEventTouchUpInside];
     [_dialogView addSubview:cancleBtn];
     

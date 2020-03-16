@@ -1551,7 +1551,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1584,7 +1584,7 @@
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 					"$(PROJECT_DIR)/Vender/TOSMBClient/libdsm",
 				);
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1603,7 +1603,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1636,7 +1636,7 @@
 					"$(PROJECT_DIR)/FFmpeg-iOS/lib",
 					"$(PROJECT_DIR)/Vender/TOSMBClient/libdsm",
 				);
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

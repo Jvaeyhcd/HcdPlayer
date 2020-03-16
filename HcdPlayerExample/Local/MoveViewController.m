@@ -50,7 +50,7 @@
     }
     
     UIButton *okBtn = [[UIButton alloc] init];
-    [okBtn setBackgroundColor:kMainColor];
+    [okBtn setBackgroundColor:[UIColor colorRGBHex:0xec7258 darkColorRGBHex:0x1C1C1E]];
     okBtn.titleLabel.font = [UIFont systemFontOfSize:16];
     [okBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [okBtn setTitle:HcdLocalized(@"move", nil) forState:UIControlStateNormal];

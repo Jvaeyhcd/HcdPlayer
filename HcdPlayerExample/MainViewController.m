@@ -34,7 +34,7 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    [self.tabBar dropShadowWithOffset:CGSizeMake(0, -3) radius:10 color:[UIColor colorWithRGBHex:0xE0E0E0] opacity:0.8];
+    [self.tabBar dropShadowWithOffset:CGSizeMake(0, -3) radius:10 color:[UIColor colorRGBHex:0xE0E0E0 darkColorRGBHex:0x0e0e0e] opacity:0.8];
 }
 
 - (void)createTabbar {
@@ -71,25 +71,25 @@
     
     [self setViewControllers:[NSArray arrayWithObjects:nvc1, nvc2, nvc3, nvc4, nvc5, nil]];
     
-    self.tabBar.backgroundColor = [UIColor colorWithRGBHex:0xfafafa];
+    self.tabBar.backgroundColor = [UIColor colorRGBHex:0xfafafa darkColorRGBHex:0x000000];
     
     // 去除UITabbar上的黑线
-    if (@available(iOS 13.0, *)) {
-        UITabBarAppearance *standardAppearance = [[UITabBarAppearance alloc] init];
-        UITabBarItemAppearance *inlineLayoutAppearance = [[UITabBarItemAppearance  alloc] init];
-        [inlineLayoutAppearance.normal setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10], NSForegroundColorAttributeName:[UIColor color999]}];
-        [inlineLayoutAppearance.normal setIconColor:[UIColor color999]];
-        [inlineLayoutAppearance.selected setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10], NSForegroundColorAttributeName:kTabbarSelectedColor}];
-        [inlineLayoutAppearance.selected setIconColor:kTabbarSelectedColor];
-        standardAppearance.stackedLayoutAppearance = inlineLayoutAppearance;
-        standardAppearance.backgroundColor = [UIColor whiteColor];
-        standardAppearance.shadowImage = [UIImage imageWithColor:[UIColor clearColor]];
-        self.tabBar.standardAppearance = standardAppearance;
-    } else {
-        [UITabBar appearance].shadowImage = [[UIImage alloc] init];
-        [UITabBar appearance].backgroundImage = [[UIImage alloc] init];
-    }
-    [UITabBar appearance].translucent = NO;
+//    if (@available(iOS 13.0, *)) {
+//        UITabBarAppearance *standardAppearance = [[UITabBarAppearance alloc] init];
+//        UITabBarItemAppearance *inlineLayoutAppearance = [[UITabBarItemAppearance  alloc] init];
+//        [inlineLayoutAppearance.normal setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10], NSForegroundColorAttributeName:[UIColor color999]}];
+//        [inlineLayoutAppearance.normal setIconColor:[UIColor color999]];
+//        [inlineLayoutAppearance.selected setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10], NSForegroundColorAttributeName:kTabbarSelectedColor}];
+//        [inlineLayoutAppearance.selected setIconColor:kTabbarSelectedColor];
+//        standardAppearance.stackedLayoutAppearance = inlineLayoutAppearance;
+//        standardAppearance.backgroundColor = [UIColor colorRGBHex:0xfafafa darkColorRGBHex:0x000000];
+//        standardAppearance.shadowImage = [UIImage imageWithColor:[UIColor clearColor]];
+//        self.tabBar.standardAppearance = standardAppearance;
+//    } else {
+//        [UITabBar appearance].shadowImage = [[UIImage alloc] init];
+//        [UITabBar appearance].backgroundImage = [[UIImage alloc] init];
+//    }
+//    [UITabBar appearance].translucent = NO;
     [[UITabBar appearance] setTintColor:kTabbarSelectedColor];
 }
 

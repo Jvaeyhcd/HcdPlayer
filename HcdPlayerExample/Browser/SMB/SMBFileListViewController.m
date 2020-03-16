@@ -576,7 +576,7 @@ typedef enum : NSUInteger {
 - (EditBottomView *)bottomView {
     if (!_bottomView) {
         _bottomView = [[EditBottomView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, kScreenWidth, kEditBottomViewHeight)];
-        _bottomView.backgroundColor = [UIColor whiteColor];
+        _bottomView.backgroundColor = [UIColor colorRGBHex:0xffffff darkColorRGBHex:0x1C1C1E];
         [_bottomView.allBtn addTarget:self action:@selector(selectAllEdit) forControlEvents:UIControlEventTouchUpInside];
         _bottomView.moveBtn.hidden = YES;
         

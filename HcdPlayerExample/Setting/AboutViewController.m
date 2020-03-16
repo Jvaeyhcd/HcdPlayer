@@ -53,7 +53,8 @@ enum {
     [self showBarButtonItemWithImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_back"] position:LEFT];
     [self.view addSubview:self.versionView];
     [self.versionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(0);
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(kNavHeight);
         make.height.mas_equalTo(scaleFromiPhoneXDesign(140) + 40);
     }];
     
@@ -123,7 +124,7 @@ enum {
 #pragma mark - MFMailComposeViewControllerDelegate
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -155,9 +156,6 @@ enum {
     NSString *message = @"";
     MFMailComposeViewController *vc = [[MFMailComposeViewController alloc] init];
     vc.title = subject;
-//    vc.navigationBar.tintColor = kNavTitleColor;
-    vc.navigationBar.backgroundColor = [UIColor whiteColor];
-    vc.navigationBar.barStyle = UIBarStyleDefault;
     
     [vc setSubject:subject];
     [vc setMessageBody:message isHTML:NO];

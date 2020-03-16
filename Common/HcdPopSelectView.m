@@ -125,7 +125,7 @@
     if (!_dialogView) {
         _dialogView = [[UIView alloc]initWithFrame:CGRectMake(0, self.frame.size.height, kScreenWidth, self.dialogViewHeight)];
         _dialogView.userInteractionEnabled = YES;
-        _dialogView.backgroundColor = [UIColor whiteColor];
+        _dialogView.backgroundColor = [UIColor colorRGBHex:0xFFFFFF darkColorRGBHex:0x1C1C1E];
         [_dialogView setCornerOnTop:8.0];
         [self addSubview:_dialogView];
     }
@@ -138,7 +138,7 @@
         _titleLbl.font = [UIFont systemFontOfSize:12.0f];
         _titleLbl.textColor = [UIColor grayColor];
         _titleLbl.textAlignment = NSTextAlignmentCenter;
-        _titleLbl.backgroundColor = [UIColor whiteColor];
+        _titleLbl.backgroundColor = [UIColor colorRGBHex:0xFFFFFF darkColorRGBHex:0x1C1C1E];
         _titleLbl.numberOfLines = 0;
         [self.dialogView addSubview:_titleLbl];
     }
@@ -151,7 +151,7 @@
         [_tableView registerClass:[SingleSelectTableViewCell class] forCellReuseIdentifier:kCellIdSingleSelectTableViewCell];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.backgroundColor = [UIColor whiteColor];
+        _tableView.backgroundColor = [UIColor colorRGBHex:0xFFFFFF darkColorRGBHex:0x1C1C1E];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self.dialogView addSubview:_tableView];
     }
@@ -229,8 +229,8 @@
         _titleLbl = [[UILabel alloc] init];
         _titleLbl.textAlignment = NSTextAlignmentCenter;
         _titleLbl.font = [UIFont systemFontOfSize:16];
-        _titleLbl.backgroundColor = [UIColor whiteColor];
-        _titleLbl.textColor = [UIColor blackColor];
+        _titleLbl.backgroundColor = [UIColor colorRGBHex:0xffffff darkColorRGBHex:0x1C1C1E];
+        _titleLbl.textColor = [UIColor colorRGBHex:0x000000 darkColorRGBHex:0xffffff];
         [self.contentView addSubview:_titleLbl];
     }
     return _titleLbl;

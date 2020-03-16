@@ -111,15 +111,17 @@
 
 + (UIColor *)colorRGBHex:(UInt32)hex darkColorRGBHex:(UInt32)darkHex {
     
-    BOOL isDark = NO;
-    if (@available(iOS 12.0, *)) {
-        isDark = ([UIApplication sharedApplication].keyWindow.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark);
+    if (@available(iOS 13.0, *)) {
+        return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+            if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
+                return [UIColor colorWithRGBHex:darkHex];
+            } else {
+                return [UIColor colorWithRGBHex:hex];
+            }
+        }];
+    } else {
+        return [UIColor colorWithRGBHex:hex];
     }
-    
-    if (isDark) {
-        return [UIColor colorWithRGBHex:darkHex];
-    }
-    return [UIColor colorWithRGBHex:hex];
 }
 
 + (UIColor *)colorWithHexString:(NSString *)stringToConvert {

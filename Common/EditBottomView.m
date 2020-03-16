@@ -21,6 +21,8 @@
         [self addSubview:self.deleteBtn];
         [self addSubview:self.moveBtn];
         
+        self.backgroundColor = [UIColor colorRGBHex:0xffffff darkColorRGBHex:0x1C1C1E];
+        
         NSString *str = HcdLocalized(@"delete", nil);
         CGFloat width = [str widthWithConstainedWidth:kScreenWidth font:[UIFont systemFontOfSize:14]] + 32;
         [self.deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -61,8 +63,8 @@
         _moveBtn.frame = CGRectMake(CGRectGetMinX(self.deleteBtn.frame) - width - 8, 10, width, 30);
         [_moveBtn setTitle:str forState:UIControlStateNormal];
         _moveBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_moveBtn setBackgroundColor:[UIColor whiteColor]];
-        [_moveBtn setTitleColor:[UIColor color333] forState:UIControlStateNormal];
+        [_moveBtn setBackgroundColor:[UIColor colorRGBHex:0xffffff darkColorRGBHex:0x1C1C1E]];
+        [_moveBtn setTitleColor:[UIColor colorRGBHex:0x333333 darkColorRGBHex:0x999999] forState:UIControlStateNormal];
         _moveBtn.layer.borderWidth = 1;
         _moveBtn.layer.cornerRadius = 15;
         _moveBtn.layer.borderColor = kSplitLineBgColor.CGColor;
@@ -78,8 +80,8 @@
         _deleteBtn.frame = CGRectMake(kScreenWidth - width - kBasePadding, 10, width, 30);
         [_deleteBtn setTitle:str forState:UIControlStateNormal];
         _deleteBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_deleteBtn setBackgroundColor:[UIColor whiteColor]];
-        [_deleteBtn setTitleColor:[UIColor color333] forState:UIControlStateNormal];
+        [_deleteBtn setBackgroundColor:[UIColor colorRGBHex:0xffffff darkColorRGBHex:0x1C1C1E]];
+        [_deleteBtn setTitleColor:[UIColor colorRGBHex:0x333333 darkColorRGBHex:0x999999] forState:UIControlStateNormal];
         _deleteBtn.layer.borderWidth = 1;
         _deleteBtn.layer.cornerRadius = 15;
         _deleteBtn.layer.borderColor = kSplitLineBgColor.CGColor;
@@ -89,7 +91,7 @@
 
 - (UILabel *)tipsLbl {
     UILabel *tipsLbl = [[UILabel alloc] initWithFrame:CGRectMake(46, 0, 120, 50)];
-    tipsLbl.textColor = [UIColor color333];
+    tipsLbl.textColor = [UIColor colorRGBHex:0x333333 darkColorRGBHex:0x999999];
     tipsLbl.font = [UIFont systemFontOfSize:14];
     tipsLbl.textAlignment = NSTextAlignmentLeft;
     tipsLbl.text = HcdLocalized(@"select_all", nil);

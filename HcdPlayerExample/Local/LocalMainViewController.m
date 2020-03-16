@@ -86,19 +86,19 @@ typedef enum : NSUInteger {
         [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
             make.height.mas_equalTo(kEditBottomViewHeight);
-            make.bottom.mas_equalTo(0);
+            make.bottom.mas_equalTo(-kTabbarHeight);
         }];
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(0);
+            make.top.mas_equalTo(kNavHeight);
             make.right.mas_equalTo(0);
-            make.bottom.mas_equalTo(-kEditBottomViewHeight);
+            make.bottom.mas_equalTo(-kEditBottomViewHeight-kTabbarHeight);
             make.left.mas_equalTo(0);
         }];
     } else {
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(0);
+            make.top.mas_equalTo(kNavHeight);
             make.right.mas_equalTo(0);
-            make.bottom.mas_equalTo(0);
+            make.bottom.mas_equalTo(-kTabbarHeight);
             make.left.mas_equalTo(0);
         }];
         [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -204,14 +204,14 @@ typedef enum : NSUInteger {
         [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
             make.height.mas_equalTo(kEditBottomViewHeight);
-            make.bottom.mas_equalTo(0);
+            make.bottom.mas_equalTo(-kTabbarHeight);
         }];
     } completion:^(BOOL finished) {
         
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(0);
+            make.top.mas_equalTo(kNavHeight);
             make.right.mas_equalTo(0);
-            make.bottom.mas_equalTo(-kEditBottomViewHeight);
+            make.bottom.mas_equalTo(-kEditBottomViewHeight-kTabbarHeight);
             make.left.mas_equalTo(0);
         }];
     }];
@@ -222,9 +222,9 @@ typedef enum : NSUInteger {
     [self.selectedArr removeAllObjects];
     [UIView animateWithDuration:0.5 animations:^{
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(0);
+            make.top.mas_equalTo(kNavHeight);
             make.right.mas_equalTo(0);
-            make.bottom.mas_equalTo(0);
+            make.bottom.mas_equalTo(-kTabbarHeight);
             make.left.mas_equalTo(0);
         }];
         [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -287,7 +287,7 @@ typedef enum : NSUInteger {
 - (EditBottomView *)bottomView {
     if (!_bottomView) {
         _bottomView = [[EditBottomView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, kScreenWidth, kEditBottomViewHeight)];
-        _bottomView.backgroundColor = [UIColor whiteColor];
+        _bottomView.backgroundColor = [UIColor colorRGBHex:0xffffff darkColorRGBHex:0x1C1C1E];
         [_bottomView.allBtn addTarget:self action:@selector(selectAllEdit) forControlEvents:UIControlEventTouchUpInside];
         [_bottomView.moveBtn addTarget:self action:@selector(moveSelectedPath) forControlEvents:UIControlEventTouchUpInside];
         [_bottomView.deleteBtn addTarget:self action:@selector(showDeleteMultipleSelectActionSheet) forControlEvents:UIControlEventTouchUpInside];
