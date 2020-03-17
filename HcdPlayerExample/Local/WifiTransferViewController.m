@@ -45,6 +45,21 @@
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 }
 
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [super traitCollectionDidChange:previousTraitCollection];
+    if (@available(iOS 13.0, *)) {
+        // trait模式发生了变化
+        if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
+            // 执行操作刷新列表
+            if (_tableView) {
+                [_tableView reloadData];
+            }
+        }
+    } else {
+        // Fallback on earlier versions
+    }
+}
+
 - (void)initDatas {
     _fileList = [[NSMutableArray alloc] init];
 }

@@ -124,9 +124,9 @@
 "directory"="文件夹";
 
 /*空数据页面提示*/
-"filelist_empty_tips"="暂无数据";
+"filelist_empty_tips"="这里空空如也~";
 "filelist_empty_tips_2"="这个文件夹下什么都没有~";
-"download_empty_tips"="暂无数据";
+"download_empty_tips"="这里空空如也~";
 "download_empty_tips_2"="没有下载，快去下载吧！";
 
 "download_failed"="已失败";

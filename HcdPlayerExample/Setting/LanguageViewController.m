@@ -27,6 +27,21 @@
     [self initSubviews];
 }
 
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [super traitCollectionDidChange:previousTraitCollection];
+    if (@available(iOS 13.0, *)) {
+        // trait模式发生了变化
+        if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
+            // 执行操作刷新列表
+            if (_tableView) {
+                [_tableView reloadData];
+            }
+        }
+    } else {
+        // Fallback on earlier versions
+    }
+}
+
 - (void)initSubviews {
     self.title = HcdLocalized(@"language", nil);
     self.view.backgroundColor = kMainBgColor;

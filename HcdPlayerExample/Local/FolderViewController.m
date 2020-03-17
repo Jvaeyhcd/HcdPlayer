@@ -68,14 +68,14 @@ typedef enum : NSUInteger {
             make.bottom.mas_equalTo(0);
         }];
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(0);
+            make.top.mas_equalTo(kNavHeight);
             make.right.mas_equalTo(0);
             make.bottom.mas_equalTo(-kEditBottomViewHeight);
             make.left.mas_equalTo(0);
         }];
     } else {
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(0);
+            make.top.mas_equalTo(kNavHeight);
             make.right.mas_equalTo(0);
             make.bottom.mas_equalTo(0);
             make.left.mas_equalTo(0);
@@ -85,6 +85,19 @@ typedef enum : NSUInteger {
             make.height.mas_equalTo(kEditBottomViewHeight);
             make.top.mas_equalTo(self.view.bounds.size.height);
         }];
+    }
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [super traitCollectionDidChange:previousTraitCollection];
+    if (@available(iOS 13.0, *)) {
+        // trait模式发生了变化
+        if ([self.traitCollection hasDifferentColorAppearanceComparedToTraitCollection:previousTraitCollection]) {
+            // 执行操作刷新列表
+            [self.tableView reloadData];
+        }
+    } else {
+        // Fallback on earlier versions
     }
 }
 
