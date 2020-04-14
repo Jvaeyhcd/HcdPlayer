@@ -9,10 +9,10 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
 			<key>CFBundleTypeName</key>
-			<string>com.cloud.OpenFile.common-data</string>
-			<key>LSHandlerRank</key>
-			<string>Default</string>
+			<string>com.hplayer.common-data</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.microsoft.powerpoint.ppt</string>

@@ -34,11 +34,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self hideBottomBorderInView:self.navigationBar];
-    if (nil == _navLineView) {
-        _navLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, kScreenWidth, 1)];
-        [_navLineView setBackgroundColor: kNavBgColor];
-        [self.navigationBar addSubview:_navLineView];
-    }
+//    if (nil == _navLineView) {
+//        _navLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, kScreenWidth, 1)];
+//        [_navLineView setBackgroundColor: kNavBgColor];
+//        [self.navigationBar addSubview:_navLineView];
+//    }
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {

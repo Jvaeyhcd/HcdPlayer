@@ -14,6 +14,7 @@
 "done"="Done";
 "more"="More";
 "delete"="Delete";
+"share"="Share";
 "edit"="Edit";
 "select"="Select";
 "download"="Download";
@@ -23,6 +24,7 @@
 "new_folder_placeholder"="Please input folder name";
 "cancel"="Cancel";
 "save"="Save";
+"open"="Open";
 "move"="Move";
 "rename"="Rename";
 "lock"="Lock";

@@ -90,6 +90,12 @@ SingletonH(HcdFileManager)
 
 - (BOOL)fileExists:(NSString *)path;
 
+/// 打开文件
+/// @param filePath 文件路径
+- (void)openFile:(NSString *)filePath;
+
+- (void)showMoveViewController:(NSString *)filePath;
+
 @end
 
 NS_ASSUME_NONNULL_END

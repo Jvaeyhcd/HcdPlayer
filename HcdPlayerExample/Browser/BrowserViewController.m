@@ -54,7 +54,7 @@
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(kNavHeight);
-        make.bottom.mas_equalTo(-kTabbarHeight);
+        make.bottom.mas_equalTo(-0);
     }];
 }
 

@@ -14,9 +14,11 @@
 		B90B955F23BEDA66003031DC /* NetworkServiceDao.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B955E23BEDA66003031DC /* NetworkServiceDao.m */; };
 		B90B956B23C03011003031DC /* SMBFileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B956A23C03011003031DC /* SMBFileListViewController.m */; };
 		B90B959723C32585003031DC /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B959623C32585003031DC /* DownloadViewController.m */; };
+		B923E3E824455FE70075A474 /* GadientLayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B923E3E724455FE70075A474 /* GadientLayerView.m */; };
 		B925A25923C6BE64000528CA /* HDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B925A25823C6BE64000528CA /* HDownloadManager.m */; };
 		B925A25C23C6D868000528CA /* HDownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B925A25B23C6D868000528CA /* HDownloadModel.m */; };
 		B925A25F23C7032F000528CA /* HDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B925A25E23C7032F000528CA /* HDownloadOperation.m */; };
+		B93426D624317A7A00C36545 /* UIDevice+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B93426D524317A7A00C36545 /* UIDevice+Hcd.m */; };
 		B96C62B323CC5B3100C87F14 /* HDownloadModelDao.m in Sources */ = {isa = PBXBuildFile; fileRef = B96C62B223CC5B3100C87F14 /* HDownloadModelDao.m */; };
 		B96C62B623CC624B00C87F14 /* DownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B96C62B523CC624B00C87F14 /* DownloadModel.m */; };
 		B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F3222627AA00881CD4 /* HcdDocument.m */; };
@@ -148,12 +150,16 @@
 		B90B956A23C03011003031DC /* SMBFileListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMBFileListViewController.m; sourceTree = "<group>"; };
 		B90B959523C32585003031DC /* DownloadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
 		B90B959623C32585003031DC /* DownloadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
+		B923E3E624455FE70075A474 /* GadientLayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GadientLayerView.h; sourceTree = "<group>"; };
+		B923E3E724455FE70075A474 /* GadientLayerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GadientLayerView.m; sourceTree = "<group>"; };
 		B925A25723C6BE64000528CA /* HDownloadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDownloadManager.h; sourceTree = "<group>"; };
 		B925A25823C6BE64000528CA /* HDownloadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadManager.m; sourceTree = "<group>"; };
 		B925A25A23C6D868000528CA /* HDownloadModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDownloadModel.h; sourceTree = "<group>"; };
 		B925A25B23C6D868000528CA /* HDownloadModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadModel.m; sourceTree = "<group>"; };
 		B925A25D23C7032F000528CA /* HDownloadOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDownloadOperation.h; sourceTree = "<group>"; };
 		B925A25E23C7032F000528CA /* HDownloadOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadOperation.m; sourceTree = "<group>"; };
+		B93426D424317A7A00C36545 /* UIDevice+Hcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Hcd.h"; sourceTree = "<group>"; };
+		B93426D524317A7A00C36545 /* UIDevice+Hcd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Hcd.m"; sourceTree = "<group>"; };
 		B96C62B123CC5B3100C87F14 /* HDownloadModelDao.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDownloadModelDao.h; sourceTree = "<group>"; };
 		B96C62B223CC5B3100C87F14 /* HDownloadModelDao.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadModelDao.m; sourceTree = "<group>"; };
 		B96C62B423CC624B00C87F14 /* DownloadModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadModel.h; sourceTree = "<group>"; };
@@ -995,6 +1001,8 @@
 				B98F1A1123B209E700C6A2DE /* YBIBImageData+Hcd.m */,
 				B98F1A1323B2FA5A00C6A2DE /* UIImage+Hcd.h */,
 				B98F1A1423B2FA5A00C6A2DE /* UIImage+Hcd.m */,
+				B93426D424317A7A00C36545 /* UIDevice+Hcd.h */,
+				B93426D524317A7A00C36545 /* UIDevice+Hcd.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -1020,6 +1028,8 @@
 				B96CF6FA222649EB00881CD4 /* HcdImagePickerViewController.m */,
 				B9FCE2D9223BF10800E2B9E4 /* HcdProgressView.h */,
 				B9FCE2DA223BF10800E2B9E4 /* HcdProgressView.m */,
+				B923E3E624455FE70075A474 /* GadientLayerView.h */,
+				B923E3E724455FE70075A474 /* GadientLayerView.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1343,6 +1353,7 @@
 				B98F1C5B23B4A7F900C6A2DE /* HCDPlayerDecoder.m in Sources */,
 				B9BB461D21F9D1DE00682DD5 /* UIPlaceHolderTextView.m in Sources */,
 				B925A25923C6BE64000528CA /* HDownloadManager.m in Sources */,
+				B93426D624317A7A00C36545 /* UIDevice+Hcd.m in Sources */,
 				B9DF3F012324924400DDA47E /* CLUPnPServer.m in Sources */,
 				B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */,
 				B98F1A1223B209E700C6A2DE /* YBIBImageData+Hcd.m in Sources */,
@@ -1371,6 +1382,7 @@
 				B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */,
 				B98F1D1323B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.m in Sources */,
 				B9AA907421EDC04100F3C70E /* UIColor+Hcd.m in Sources */,
+				B923E3E824455FE70075A474 /* GadientLayerView.m in Sources */,
 				B9DF3EFC2324924400DDA47E /* CLUPnPAction.m in Sources */,
 				B96C62B323CC5B3100C87F14 /* HDownloadModelDao.m in Sources */,
 				B9AA90AD21F5760F00F3C70E /* GCDWebUploader.m in Sources */,

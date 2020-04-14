@@ -13,6 +13,7 @@
 #import "PasscodeViewController.h"
 #import "NetworkServiceDao.h"
 #import "HDownloadModelDao.h"
+#import "HcdFileManager.h"
 
 @interface AppDelegate ()
 
@@ -84,6 +85,48 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_9_0
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(nullable NSString *)sourceApplication annotation:(id)annotation{
+    // 判断传过来的url是否为文件类型
+    if ([url.scheme isEqualToString:@"file"]) {
+        [self showFileActionSheetWithFilePath:url.absoluteString];
+    }
+    
+}
+#else
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options{
+    // 判断传过来的url是否为文件类型
+    if ([url.scheme isEqualToString:@"file"]) {
+        [self showFileActionSheetWithFilePath:url.absoluteString];
+    }
+    return YES;
+}
+#endif
+
+- (void)showFileActionSheetWithFilePath:(NSString *)filePath {
+    // 显示是打开还是保存至App
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"open", nil), HcdLocalized(@"save", nil)] attachTitle:[[filePath lastPathComponent] stringByRemovingPercentEncoding]];
+    
+    deleteSheet.seletedButtonIndex = ^(NSInteger index) {
+        switch (index) {
+            case 1:
+            {
+                [[HcdFileManager sharedHcdFileManager] openFile:filePath];
+                break;
+            }
+            case 2:
+            {
+                [[HcdFileManager sharedHcdFileManager] showMoveViewController:filePath];
+                break;
+            }
+            default:
+                break;
+        }
+    };
+    [[UIApplication sharedApplication].keyWindow addSubview:deleteSheet];
+    [deleteSheet showHcdActionSheet];
 }
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {

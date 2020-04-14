@@ -20,6 +20,7 @@
 #import "BaseNavigationController.h"
 #import "HcdLocalized.h"
 #import "UIScrollView+EmptyDataSet.h"
+#import "UIDevice+Hcd.h"
 
 #define kMainColor [UIColor colorWithRGBHex:0xec7258]
 #define kMainBgColor [UIColor colorRGBHex:0xFFFFFF darkColorRGBHex:0x000000]
@@ -47,12 +48,12 @@
 #define IS_PAD [[UIDevice currentDevice].model isEqualToString:@"iPad"]
 
 #define scaleFromiPhoneXDesign(x) (IS_PAD ? x : floor(x * (kScreenWidth / 375)))
-#define iPhoneX ((kScreenHeight == 812.f || kScreenWidth == 812.f || kScreenWidth == 896.f || kScreenHeight == 896.f) ? YES : NO)
+#define iPhoneX ((kScreenHeight == 812.f || kScreenWidth == 812.f || kScreenWidth == 896.f || kScreenHeight == 896.f) && !IS_PAD ? YES : NO)
 
 // 适配刘海屏状态栏高度
-#define kStatusBarHeight (iPhoneX ? 44.f : 20.f)
+#define kStatusBarHeight [UIDevice statusBarHeight]
 // 适配iPhone X 导航栏高度
-#define kNavHeight (iPhoneX ? 88.f : 64.f)
+#define kNavHeight [UIDevice statusBarAndNavBarHeight]
 // 适配iPhone X Tabbar距离底部的距离
 #define kTabbarSafeBottomMargin (iPhoneX ? 34.f : 0.f)
 // 适配iPhone X Tabbar高度

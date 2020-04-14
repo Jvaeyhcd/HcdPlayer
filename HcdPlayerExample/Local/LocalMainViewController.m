@@ -86,19 +86,19 @@ typedef enum : NSUInteger {
         [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
             make.height.mas_equalTo(kEditBottomViewHeight);
-            make.bottom.mas_equalTo(-kTabbarHeight);
+            make.bottom.mas_equalTo(-0);
         }];
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(kNavHeight);
             make.right.mas_equalTo(0);
-            make.bottom.mas_equalTo(-kEditBottomViewHeight-kTabbarHeight);
+            make.bottom.mas_equalTo(-kEditBottomViewHeight-0);
             make.left.mas_equalTo(0);
         }];
     } else {
         [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(kNavHeight);
             make.right.mas_equalTo(0);
-            make.bottom.mas_equalTo(-kTabbarHeight);
+            make.bottom.mas_equalTo(-0);
             make.left.mas_equalTo(0);
         }];
         [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -377,7 +377,7 @@ typedef enum : NSUInteger {
 
 -(HcdActionSheet *)fileCellMoreActionSheet {
     if (!_fileCellMoreActionSheet) {
-        NSArray *otherButtonTitles = @[HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"select", nil), HcdLocalized(@"delete", nil)];
+        NSArray *otherButtonTitles = @[HcdLocalized(@"move", nil), HcdLocalized(@"rename", nil), HcdLocalized(@"select", nil), HcdLocalized(@"share", nil), HcdLocalized(@"delete", nil)];
         _fileCellMoreActionSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:otherButtonTitles attachTitle:nil];
         
         __weak LocalMainViewController *weakSelf = self;
@@ -396,6 +396,9 @@ typedef enum : NSUInteger {
                     break;
                 }
                 case 4:
+                    [weakSelf showShareViewController];
+                    break;
+                case 5:
                     [weakSelf showDeleteActionSheet];
                     break;
                 default:
@@ -562,6 +565,28 @@ typedef enum : NSUInteger {
     };
     [[UIApplication sharedApplication].keyWindow addSubview:deleteSheet];
     [deleteSheet showHcdActionSheet];
+}
+
+- (void)showShareViewController {
+    NSString * fileName = [self.pathChidren objectAtIndex:_selectedIndex];
+    if (fileName) {
+        NSString *path = [NSString stringWithFormat:@"%@/%@", _currentPath, fileName];
+        UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:@[[NSURL fileURLWithPath:path]] applicationActivities:nil];
+        // >=iOS8.0系统用这个方法
+        activityVC.completionWithItemsHandler = ^(NSString *activityType,BOOL completed,NSArray *returnedItems,NSError *activityError)
+        {
+            if (completed) { // 确定分享
+            }
+            else {
+            }
+        };
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            activityVC.popoverPresentationController.sourceView = self.view;
+            [self presentViewController:activityVC animated:YES completion:nil];
+        } else {
+            [self presentViewController:activityVC animated:YES completion:nil];
+        }
+    }
 }
 
 - (void)deleteFileIndex {

@@ -22,6 +22,7 @@
 #import "HcdActionSheet.h"
 #import "HcdPopSelectView.h"
 #import "RemoteControlView.h"
+#import "GadientLayerView.h"
 
 #define kLeastMoveDistance 15.0
 
@@ -64,9 +65,9 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) HCDPlayer *player;
 @property (nonatomic, strong) UIActivityIndicatorView *aivBuffering;
 
-@property (nonatomic, weak) UIView *vTopBar;
+@property (nonatomic, weak) GadientLayerView *vTopBar;
 @property (nonatomic, weak) UILabel *lblTitle;
-@property (nonatomic, weak) UIView *vBottomBar;
+@property (nonatomic, weak) GadientLayerView *vBottomBar;
 @property (nonatomic, weak) UIButton *btnPlay;
 @property (nonatomic, weak) UILabel *lblPosition;
 @property (nonatomic, weak) UILabel *lblDuration;
@@ -775,9 +776,12 @@ typedef enum : NSUInteger {
     CGRect frame = self.view.bounds;
     CGFloat height = kNavHeight;
     frame.size.height = height;
-    UIView *v = [[UIView alloc] initWithFrame:frame];
+    GadientLayerView *v = [[GadientLayerView alloc] initWithFrame:frame];
+    v.gradientLayer.colors = @[(id)[UIColor colorWithWhite:0 alpha:0.8].CGColor,(id)[UIColor colorWithWhite:0 alpha:0.0].CGColor];
+    v.gradientLayer.startPoint = CGPointMake(0, 0);
+    v.gradientLayer.endPoint = CGPointMake(0, 1);
     v.translatesAutoresizingMaskIntoConstraints = NO;
-    v.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
+//    v.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
     [self.view addSubview:v];
     NSDictionary *views = NSDictionaryOfVariableBindings(v);
     NSArray *ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[v]|"
@@ -850,9 +854,9 @@ typedef enum : NSUInteger {
     CGFloat height = 44 + kTabbarSafeBottomMargin;
     CGRect frame = self.view.bounds;
     frame.size.height = height;
-    UIView *v = [[UIView alloc] initWithFrame:frame];
+    GadientLayerView *v = [[GadientLayerView alloc] initWithFrame:frame];
     v.translatesAutoresizingMaskIntoConstraints = NO;
-    v.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
+//    v.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
     [self.view addSubview:v];
     NSDictionary *views = NSDictionaryOfVariableBindings(v);
     NSArray *ch = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[v]|"

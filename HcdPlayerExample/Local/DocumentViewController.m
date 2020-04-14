@@ -59,6 +59,10 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    
+}
+
 /*
 #pragma mark - Navigation
 

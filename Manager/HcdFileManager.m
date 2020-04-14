@@ -7,8 +7,12 @@
 //
 
 #import "HcdFileManager.h"
+#import "HCDPlayerViewController.h"
+#import "DocumentViewController.h"
+#import "YBImageBrowser.h"
+#import "MoveViewController.h"
 
-@interface HcdFileManager()
+@interface HcdFileManager()<YBImageBrowserDelegate>
 
 @property (nonatomic, retain) NSFileManager *fileManager;
 
@@ -332,6 +336,108 @@ SingletonM(HcdFileManager)
 
 - (BOOL)fileExists:(NSString *)path {
     return [self.fileManager fileExistsAtPath:path];
+}
+
+- (void)openFile:(NSString *)filePath {
+    NSString *suffix = [[filePath pathExtension] lowercaseString];
+    FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeBySuffix:suffix];
+    switch (fileType) {
+        case FileType_music:
+        case FileType_video: {
+            HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
+            vc.url = filePath;
+            vc.modalPresentationStyle = UIModalPresentationFullScreen;
+            [[self getCurrentVC] presentViewController:vc animated:YES completion:nil];
+            break;
+        }
+        case FileType_doc:
+        case FileType_pdf:
+        case FileType_txt:
+        case FileType_xls:
+        case FileType_ppt:
+        {
+            DocumentViewController *vc = [[DocumentViewController alloc] init];
+            vc.documentPath = filePath;
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+            nav.modalPresentationStyle = UIModalPresentationFullScreen;
+            [[self getCurrentVC] presentViewController:nav animated:YES completion:nil];
+            break;
+        }
+        case FileType_img:
+        {
+            YBIBImageData *data1 = [YBIBImageData new];
+            data1.imagePath = filePath;
+            YBImageBrowser *browser = [YBImageBrowser new];
+            browser.delegate = self;
+            browser.supportedOrientations = UIInterfaceOrientationMaskPortrait;
+            browser.dataSourceArray = @[data1];
+            browser.currentPage = 0;
+            browser.defaultToolViewHandler.topView.operationType = YBIBTopViewOperationTypeSave;
+            [browser show];
+            browser.defaultToolViewHandler.topView.frame = CGRectMake(0, kStatusBarHeight, kScreenWidth, kNavHeight - kStatusBarHeight);
+            break;
+        }
+            
+        default:
+            break;
+    }
+}
+
+//获取当前屏幕显示的viewcontroller
+- (UIViewController *)getCurrentVC
+{
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    
+    UIViewController *currentVC = [self getCurrentVCFrom:rootViewController];
+    
+    return currentVC;
+}
+
+- (UIViewController *)getCurrentVCFrom:(UIViewController *)rootVC
+{
+    UIViewController *currentVC;
+    
+    if ([rootVC presentedViewController]) {
+        // 视图是被presented出来的
+        
+        rootVC = [rootVC presentedViewController];
+    }
+    
+    if ([rootVC isKindOfClass:[UITabBarController class]]) {
+        // 根视图为UITabBarController
+        
+        currentVC = [self getCurrentVCFrom:[(UITabBarController *)rootVC selectedViewController]];
+        
+    } else if ([rootVC isKindOfClass:[UINavigationController class]]){
+        // 根视图为UINavigationController
+        
+        currentVC = [self getCurrentVCFrom:[(UINavigationController *)rootVC visibleViewController]];
+        
+    } else {
+        // 根视图为非导航类
+        
+        currentVC = rootVC;
+    }
+    
+    return currentVC;
+}
+
+- (void)showMoveViewController:(NSString *)filePath {
+    
+    MoveViewController *vc = [[MoveViewController alloc] init];
+    vc.currentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    vc.fileList = [[NSMutableArray alloc] initWithObjects:filePath, nil];
+    BaseNavigationController *nav = [[BaseNavigationController alloc] initWithRootViewController: vc];
+    nav.modalPresentationStyle = UIModalPresentationFullScreen;
+    [[self getCurrentVC] presentViewController:nav animated:YES completion:^{
+        
+    }];
+}
+
+#pragma mark - YBImageBrowserDelegate
+
+- (void)yb_imageBrowser:(YBImageBrowser *)imageBrowser respondsToLongPressWithData:(id<YBIBDataProtocol>)data {
+    
 }
 
 @end

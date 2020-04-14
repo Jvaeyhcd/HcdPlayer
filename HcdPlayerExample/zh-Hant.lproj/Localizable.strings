@@ -14,6 +14,7 @@
 "done"="完成";
 "more"="更多";
 "delete"="刪除";
+"share"="分享";
 "edit"="編輯";
 "select"="選擇";
 "download"="下載";
@@ -23,6 +24,7 @@
 "new_folder_placeholder"="請輸入文件夾名稱";
 "cancel"="取消";
 "save"="保存";
+"open"="打開";
 "move"="移動";
 "rename"="重命名";
 "lock"="加鎖";
