@@ -29,6 +29,9 @@
 		B96A5AEB24B60D5C00000B96 /* libavdevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B96A5AE324B60D5C00000B96 /* libavdevice.a */; };
 		B96A5AEC24B60D5C00000B96 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B96A5AE424B60D5C00000B96 /* libswresample.a */; };
 		B96A5AED24B60D5C00000B96 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B96A5AE524B60D5C00000B96 /* libswscale.a */; };
+		B96A5AF624B60E8500000B96 /* CDAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5AF124B60E8500000B96 /* CDAudioManager.m */; };
+		B96A5AF724B60E8500000B96 /* CDPlayerDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5AF224B60E8500000B96 /* CDPlayerDecoder.m */; };
+		B96A5AF824B60E8600000B96 /* CDHardwareVideoDecompress.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5AF424B60E8500000B96 /* CDHardwareVideoDecompress.m */; };
 		B96C62B323CC5B3100C87F14 /* HDownloadModelDao.m in Sources */ = {isa = PBXBuildFile; fileRef = B96C62B223CC5B3100C87F14 /* HDownloadModelDao.m */; };
 		B96C62B623CC624B00C87F14 /* DownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B96C62B523CC624B00C87F14 /* DownloadModel.m */; };
 		B96CF6F4222627AA00881CD4 /* HcdDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B96CF6F3222627AA00881CD4 /* HcdDocument.m */; };
@@ -296,6 +299,13 @@
 		B96A5AE324B60D5C00000B96 /* libavdevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavdevice.a; sourceTree = "<group>"; };
 		B96A5AE424B60D5C00000B96 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libswresample.a; sourceTree = "<group>"; };
 		B96A5AE524B60D5C00000B96 /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libswscale.a; sourceTree = "<group>"; };
+		B96A5AEF24B60E8500000B96 /* CDPlayerDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPlayerDecoder.h; sourceTree = "<group>"; };
+		B96A5AF024B60E8500000B96 /* CDHardwareVideoDecompress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDHardwareVideoDecompress.h; sourceTree = "<group>"; };
+		B96A5AF124B60E8500000B96 /* CDAudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDAudioManager.m; sourceTree = "<group>"; };
+		B96A5AF224B60E8500000B96 /* CDPlayerDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDPlayerDecoder.m; sourceTree = "<group>"; };
+		B96A5AF324B60E8500000B96 /* CDAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDAudioManager.h; sourceTree = "<group>"; };
+		B96A5AF424B60E8500000B96 /* CDHardwareVideoDecompress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDHardwareVideoDecompress.m; sourceTree = "<group>"; };
+		B96A5AF524B60E8500000B96 /* CDLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDLogger.h; sourceTree = "<group>"; };
 		B96C62B123CC5B3100C87F14 /* HDownloadModelDao.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDownloadModelDao.h; sourceTree = "<group>"; };
 		B96C62B223CC5B3100C87F14 /* HDownloadModelDao.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadModelDao.m; sourceTree = "<group>"; };
 		B96C62B423CC624B00C87F14 /* DownloadModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadModel.h; sourceTree = "<group>"; };
@@ -900,6 +910,20 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		B96A5AEE24B60E8500000B96 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				B96A5AF324B60E8500000B96 /* CDAudioManager.h */,
+				B96A5AF124B60E8500000B96 /* CDAudioManager.m */,
+				B96A5AF024B60E8500000B96 /* CDHardwareVideoDecompress.h */,
+				B96A5AF424B60E8500000B96 /* CDHardwareVideoDecompress.m */,
+				B96A5AF524B60E8500000B96 /* CDLogger.h */,
+				B96A5AEF24B60E8500000B96 /* CDPlayerDecoder.h */,
+				B96A5AF224B60E8500000B96 /* CDPlayerDecoder.m */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		B989B2F723BDD44600C34308 /* SMB */ = {
 			isa = PBXGroup;
 			children = (
@@ -1056,6 +1080,7 @@
 		B9AA906021ED7BE800F3C70E /* HCDPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				B96A5AEE24B60E8500000B96 /* model */,
 				B98F1C3523B4A7F800C6A2DE /* HCDPlayer.h */,
 				B98F1C3B23B4A7F800C6A2DE /* HCDPlayer.m */,
 				B98F1C4E23B4A7F900C6A2DE /* HCDPlayerViewController.h */,
@@ -1413,7 +1438,9 @@
 				B9AA90B621F5EE3700F3C70E /* FilesListTableViewCell.m in Sources */,
 				B988293D23CC00EB002696B6 /* HDownloadCell.m in Sources */,
 				B90B959723C32585003031DC /* DownloadViewController.m in Sources */,
+				B96A5AF624B60E8500000B96 /* CDAudioManager.m in Sources */,
 				B989B2FA23BDDB3200C34308 /* SMBDeviceListViewController.m in Sources */,
+				B96A5AF724B60E8500000B96 /* CDPlayerDecoder.m in Sources */,
 				B9AA90A721F56B4200F3C70E /* WifiTransferViewController.m in Sources */,
 				B989B2F323BB371600C34308 /* HCDPlayerViewController.m in Sources */,
 				B98F1C6423B4A7F900C6A2DE /* HCDPlayerUtils.m in Sources */,
@@ -1453,6 +1480,7 @@
 				B9DF3F012324924400DDA47E /* CLUPnPServer.m in Sources */,
 				B9A1DC262224091800F4C9C2 /* EditBottomView.m in Sources */,
 				B98F1A1223B209E700C6A2DE /* YBIBImageData+Hcd.m in Sources */,
+				B96A5AF824B60E8600000B96 /* CDHardwareVideoDecompress.m in Sources */,
 				B902F411222EB79E0049A626 /* BaseViewController.m in Sources */,
 				B98F1C6623B4A7F900C6A2DE /* HCDPlayerVideoFrame.m in Sources */,
 				B9AA907821EDCB6100F3C70E /* BaseNavigationController.m in Sources */,

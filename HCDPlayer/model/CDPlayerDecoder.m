@@ -9,15 +9,15 @@
 #import "CDPlayerDecoder.h"
 #import <Accelerate/Accelerate.h>
 #import <AVFoundation/AVFoundation.h>
-#import <libavformat/avformat.h>
-#import <libavutil/imgutils.h>
-#import <libavutil/pixdesc.h>
-#import <libswscale/swscale.h>
-#import <libswresample/swresample.h>
-#import <libavfilter/avfilter.h>
-#import <libavfilter/buffersink.h>
-#import <libavfilter/buffersrc.h>
-#import <libavutil/opt.h>
+#import "libavformat/avformat.h"
+#import "libavutil/imgutils.h"
+#import "libavutil/pixdesc.h"
+#import "libswscale/swscale.h"
+#import "libswresample/swresample.h"
+#import "libavfilter/avfilter.h"
+#import "libavfilter/buffersink.h"
+#import "libavfilter/buffersrc.h"
+#import "libavutil/opt.h"
 #import <objc/runtime.h>
 #import "CDLogger.h"
 #import "CDAudioManager.h"
@@ -1199,66 +1199,66 @@ static int interrupt_callback(void *ctx);
 
 - (void)generatedPreviewImagesWithImagesCount:(NSInteger)count
                             completionHandler:(void (^)(NSMutableArray * _Nonnull, NSError * _Nonnull))handler {
-    @synchronized (self) {
-        
-        NSInteger duration = self.duration;
-        
-        if (self.path.length <=0 || duration <= 0 || count <= 0 || duration == NSNotFound || count == NSNotFound) {
-            handler(nil, [NSError errorWithDomain:CDPlayerErrorDomain code:-1 userInfo:nil]);
-            return;
-        }
-        
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            double countPerSec = ((double)count) / ((double)duration);
-            NSString * countPerSecStr = [NSString stringWithFormat:@"%f", countPerSec];
-            char * timeInterval = (char *)[countPerSecStr UTF8String];
-            char *movie = (char *)[self.path UTF8String];
-            NSString * documentPath = CDDocumentPath(@"");
-            NSString * cyTmpPath = [documentPath stringByAppendingPathComponent:@"CYPlayerTmp"];
-            NSFileManager * fileManager = [NSFileManager defaultManager];
-            BOOL isDir = NO;
-            // fileExistsAtPath 判断一个文件或目录是否有效，isDirectory判断是否一个目录
-            BOOL existed = [fileManager fileExistsAtPath:cyTmpPath isDirectory:&isDir];
-            if ( !(isDir == YES && existed == YES) ) {//如果文件夹不存在
-                [fileManager createDirectoryAtPath:cyTmpPath withIntermediateDirectories:YES attributes:nil error:nil];
-            }
-            NSString * outPath = [cyTmpPath stringByAppendingPathComponent:@"%05d.jpg"];
-            char *outPic = (char *)[outPath UTF8String];
-            char *durationChar = (char *)[[NSString stringWithFormat:@"%ld", (long)duration] UTF8String];
-            //ffmpeg -ss 00:00 -i xxx.mp4 -f image2 -r 0.2 -t 02:45 %3d.jpg
-            char* a[] = {
-                "ffmpeg",
-                "-ss",
-                "0",
-                "-i",
-                movie,
-                "-f",
-                "image2",
-                "-r",
-                timeInterval,
-                "-t",
-                durationChar,
-                outPic
-            };
-            
-            int result = ffmpeg_main(sizeof(a)/sizeof(*a), a);
-            NSError * error = nil;
-            NSMutableArray * models = [[NSMutableArray alloc] initWithCapacity:count];
-            if (result != 0) {
-                error = [NSError errorWithDomain:CDPlayerErrorDomain code:result userInfo:nil];
-            } else {
-                for (int i = 1; i <= count; i++) {
-                    NSString * imagePath = [cyTmpPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%05d.jpg", i]];
-                    UIImage * image = [UIImage imageWithContentsOfFile:imagePath];
-//                    CYFFmpegPreviewModel * model = [CYFFmpegPreviewModel previewModelWithImage:image position:duration / count * (i-1)];
-//                    [models addObject:model];
-                }
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(models, error);
-            });
-        });
-    }
+//    @synchronized (self) {
+//        
+//        NSInteger duration = self.duration;
+//        
+//        if (self.path.length <=0 || duration <= 0 || count <= 0 || duration == NSNotFound || count == NSNotFound) {
+//            handler(nil, [NSError errorWithDomain:CDPlayerErrorDomain code:-1 userInfo:nil]);
+//            return;
+//        }
+//        
+//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//            double countPerSec = ((double)count) / ((double)duration);
+//            NSString * countPerSecStr = [NSString stringWithFormat:@"%f", countPerSec];
+//            char * timeInterval = (char *)[countPerSecStr UTF8String];
+//            char *movie = (char *)[self.path UTF8String];
+//            NSString * documentPath = CDDocumentPath(@"");
+//            NSString * cyTmpPath = [documentPath stringByAppendingPathComponent:@"CYPlayerTmp"];
+//            NSFileManager * fileManager = [NSFileManager defaultManager];
+//            BOOL isDir = NO;
+//            // fileExistsAtPath 判断一个文件或目录是否有效，isDirectory判断是否一个目录
+//            BOOL existed = [fileManager fileExistsAtPath:cyTmpPath isDirectory:&isDir];
+//            if ( !(isDir == YES && existed == YES) ) {//如果文件夹不存在
+//                [fileManager createDirectoryAtPath:cyTmpPath withIntermediateDirectories:YES attributes:nil error:nil];
+//            }
+//            NSString * outPath = [cyTmpPath stringByAppendingPathComponent:@"%05d.jpg"];
+//            char *outPic = (char *)[outPath UTF8String];
+//            char *durationChar = (char *)[[NSString stringWithFormat:@"%ld", (long)duration] UTF8String];
+//            //ffmpeg -ss 00:00 -i xxx.mp4 -f image2 -r 0.2 -t 02:45 %3d.jpg
+//            char* a[] = {
+//                "ffmpeg",
+//                "-ss",
+//                "0",
+//                "-i",
+//                movie,
+//                "-f",
+//                "image2",
+//                "-r",
+//                timeInterval,
+//                "-t",
+//                durationChar,
+//                outPic
+//            };
+//            
+//            int result = ffmpeg_main(sizeof(a)/sizeof(*a), a);
+//            NSError * error = nil;
+//            NSMutableArray * models = [[NSMutableArray alloc] initWithCapacity:count];
+//            if (result != 0) {
+//                error = [NSError errorWithDomain:CDPlayerErrorDomain code:result userInfo:nil];
+//            } else {
+//                for (int i = 1; i <= count; i++) {
+//                    NSString * imagePath = [cyTmpPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%05d.jpg", i]];
+//                    UIImage * image = [UIImage imageWithContentsOfFile:imagePath];
+////                    CYFFmpegPreviewModel * model = [CYFFmpegPreviewModel previewModelWithImage:image position:duration / count * (i-1)];
+////                    [models addObject:model];
+//                }
+//            }
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                handler(models, error);
+//            });
+//        });
+//    }
 }
 
 - (NSArray *)decodeTargetFrames:(CGFloat)minDuration targetPos:(CGFloat)targetPos {
