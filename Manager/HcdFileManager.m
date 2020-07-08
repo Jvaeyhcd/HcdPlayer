@@ -216,7 +216,7 @@ SingletonM(HcdFileManager)
         fileType = FileType_txt;
     } else if ([@[@"vcf"] containsObject:suffix]) {
         fileType = FileType_vcf;
-    } else if ([@[@"mp4", @"avi", @"mov", @"asf", @"asx", @"wmv", @"mkv", @"3gp", @"rmvb", @"vob", @"dat", @"webm", @"hevc", @"m4v", @"flv", @"ogv", @"ts", @"mpg", @"mpeg", @"rm", @"ram", @"swf", @"mpe", @"mpa", @"m15", @"m1v", @"mp2", @"dmv", @"amv", @"mtv"] containsObject:suffix]) {
+    } else if ([@[@"mp4", @"avi", @"mov", @"asf", @"asx", @"wmv", @"mkv", @"3gp", @"rmvb", @"vob", @"dat", @"webm", @"hevc", @"m4v", @"flv", @"ogv", @"ts", @"mpg", @"mpeg", @"rm", @"ram", @"swf", @"mpe", @"mpa", @"m15", @"m1v", @"mp2", @"dmv", @"amv", @"mtv", @"hup"] containsObject:suffix]) {
         fileType = FileType_video;
     } else if ([@[@"vsd"] containsObject:suffix]) {
         fileType = FileType_vsd;

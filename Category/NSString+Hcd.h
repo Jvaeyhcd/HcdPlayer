@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)removeAllSpaceAndNewline;
 - (NSString *)removeBothSideSpaceAndNewline;
 - (NSString *)replaceMoreThan10SpaceTo10Space;
+- (NSString *)stringByURLEncode;
 @end
 
 NS_ASSUME_NONNULL_END

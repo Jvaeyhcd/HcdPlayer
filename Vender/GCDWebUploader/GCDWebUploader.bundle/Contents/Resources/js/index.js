@@ -194,7 +194,7 @@ $(document).ready(function() {
     pasteZone: null,
     autoUpload: true,
     sequentialUploads: true,
-    // limitConcurrentUploads: 2,
+     limitConcurrentUploads: 2,
     // forceIframeTransport: true,
     
     url: 'upload',
