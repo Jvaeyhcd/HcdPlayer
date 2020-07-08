@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+/// 视频播放器解码
 @interface HCDPlayerDecoder : NSObject
 
 @property (nonatomic) BOOL isYUV;
@@ -19,6 +20,9 @@
 @property (nonatomic) double rotation;
 @property (nonatomic) double duration;
 @property (nonatomic, strong) NSDictionary *metadata;
+
+/// 视频信息
+@property (readonly, nonatomic, strong) NSDictionary *info;
 
 @property (nonatomic) UInt32 audioChannels;
 @property (nonatomic) float audioSampleRate;

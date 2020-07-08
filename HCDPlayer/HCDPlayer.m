@@ -269,7 +269,7 @@
         @autoreleasepool {
             NSArray *fs = [self.decoder readFrames];
 #if DEBUG
-            NSLog(@"read frames count:%ld, video frames count:%ld, audio frames count:%ld", [fs count], [self.vframes count], [self.aframes count]);
+            NSLog(@"read frames count:%@, video frames count:%@, audio frames count:%@", @([fs count]), @([fs count]), @([self.aframes count]));
 #endif
             if (fs == nil) { break; }
             if (fs.count == 0) { continue; }
@@ -368,6 +368,8 @@
     self.mediaPosition = self.requestSeekPosition;
 }
 
+#pragma mark - render video
+
 - (void)render {
     if (!self.playing) return;
 
@@ -421,6 +423,7 @@
             dispatch_semaphore_signal(self.vFramesLock);
         }
     }
+    // Render video on view
     [self.view render:frame];
     
     // Sync audio with video

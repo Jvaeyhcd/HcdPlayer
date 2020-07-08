@@ -13,12 +13,12 @@
 #import "HCDPlayerAudioFrame.h"
 #import "HCDPlayerVideoRGBFrame.h"
 #import "HCDPlayerVideoYUVFrame.h"
-#import <libavformat/avformat.h>
-#import <libavutil/imgutils.h>
-#import <libavutil/display.h>
-#import <libavutil/eval.h>
-#import <libswscale/swscale.h>
-#import <libswresample/swresample.h>
+#import "libavformat/avformat.h"
+#import "libavutil/imgutils.h"
+#import "libavutil/display.h"
+#import "libavutil/eval.h"
+#import "libswscale/swscale.h"
+#import "libswresample/swresample.h"
 #import <Accelerate/Accelerate.h>
 
 #define HCDPlayerIOTimeout 30
@@ -51,6 +51,8 @@ static int interruptCallback(void *context) {
     SwrContext *m_pAudioSwrContext;
     void *m_pAudioSwrBuffer;
     int m_nAudioSwrBufferSize;
+    
+    NSDictionary        *_info;
 }
 
 @end
@@ -203,6 +205,7 @@ static int interruptCallback(void *context) {
     int64_t duration = fmtctx->duration;
     self.duration = (duration == AV_NOPTS_VALUE ? -1 : ((double)duration / AV_TIME_BASE));
     self.metadata = [self findMetadata:fmtctx];
+    self.metadata = self.info;
     
     g_bPrepareClose = FALSE;
     AVIOInterruptCB icb = {interruptCallback, NULL};
@@ -625,6 +628,36 @@ static int interruptCallback(void *context) {
 - (int)videoHeight {
     if (m_pVideoCodecContext == NULL) return 0;
     return m_pVideoCodecContext->height;
+}
+
+- (NSDictionary *)info {
+    if (!_info) {
+        NSMutableDictionary *md = [NSMutableDictionary dictionary];
+        
+        if (m_pFormatContext) {
+            
+            const char *formatName = m_pFormatContext->iformat->name;
+            [md setValue:[NSString stringWithCString:formatName encoding:NSUTF8StringEncoding] forKey:@"format"];
+            
+            if (m_pFormatContext->bit_rate) {
+                [md setValue:[NSNumber numberWithInt:(int)m_pFormatContext->bit_rate] forKey:@"bitrate"];
+            }
+            
+            if (m_pFormatContext->metadata) {
+                NSMutableDictionary *md1 = [NSMutableDictionary dictionary];
+                
+                AVDictionaryEntry *tag = NULL;
+                while ((tag = av_dict_get(m_pFormatContext->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
+                    [md1 setValue:[NSString stringWithCString:tag->value encoding:NSUTF8StringEncoding] forKey:[NSString stringWithCString:tag->key encoding:NSUTF8StringEncoding]];
+                }
+                
+                [md setValue:[md1 copy] forKey:@"metadata"];
+            }
+        }
+        
+        _info = [md copy];
+    }
+    return _info;
 }
 
 #pragma mark - Utils

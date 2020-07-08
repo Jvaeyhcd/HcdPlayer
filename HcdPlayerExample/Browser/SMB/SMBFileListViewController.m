@@ -15,6 +15,7 @@
 #import "YBImageBrowser.h"
 #import "EditBottomView.h"
 #import "MoveViewController.h"
+#import "NSString+Hcd.h"
 
 #define kEditBottomViewHeight (50 + kTabbarSafeBottomMargin)
 
@@ -340,19 +341,35 @@ typedef enum : NSUInteger {
 - (NSString *)smbFilePath:(TOSMBSessionFile *)file {
     
     // smb://{user}:{password}@{host}/{path}
-    NSMutableString *path = [NSMutableString stringWithString:@"smb://"];
-    if (self.session.userName) {
-        [path appendString:self.session.userName];
-        if (self.session.password) {
-            [path appendString:@":"];
-            [path appendString:self.session.password];
-        }
-        [path appendString:@"@"];
+//    NSMutableString *path = [NSMutableString stringWithString:@"smb://"];
+//    if (self.session.userName) {
+//        [path appendString:self.session.userName];
+//        if (self.session.password) {
+//            [path appendString:@":"];
+//            [path appendString:self.session.password];
+//        }
+//        [path appendString:@"@"];
+//    }
+//    [path appendString:self.session.ipAddress];
+//    [path appendString:file.filePath];
+//
+//    return [NSString stringWithFormat:@"%@", path];
+    //两次URL编码
+    NSMutableString *path = [[NSMutableString alloc] initWithString:@"smb://"];
+    if (self.session.userName.length && self.session.password.length) {
+        [path appendFormat:@"%@:%@@", [[self.session.userName stringByURLEncode] stringByURLEncode], [[self.session.password stringByURLEncode] stringByURLEncode]];
     }
-    [path appendString:self.session.ipAddress];
-    [path appendString:file.filePath];
+    else if (self.session.userName.length && self.session.password.length == 0) {
+        [path appendFormat:@"%@@", [[self.session.userName stringByURLEncode] stringByURLEncode]];
+    }
     
-    return [NSString stringWithFormat:@"%@", path];
+    if (self.session.ipAddress.length) {
+        [path appendString:self.session.ipAddress];
+    }
+    
+    [path appendFormat:@"%@", [[file.filePath stringByURLEncode] stringByURLEncode]];
+    
+    return path;
 }
 
 // 显示删除按钮
