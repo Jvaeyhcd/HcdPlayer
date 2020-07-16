@@ -20,6 +20,7 @@ target 'HcdPlayer' do
     pod 'MJExtension'
     pod 'TOSMBClient', '1.0.8'
     pod 'LxFTPRequest', '1.1.2'
+    pod 'CYFFmpeg'
     # swift
     pod 'HcdSpecialField', :path => '../HcdSpecialField'
 end

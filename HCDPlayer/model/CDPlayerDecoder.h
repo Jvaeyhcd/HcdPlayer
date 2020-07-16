@@ -18,7 +18,7 @@ extern NSInteger CDPlayerDecoderMaxFPS;
 
 extern NSString * CDPlayerErrorDomain;
 
-extern int ffmpeg_main(int argc, char * _Nonnull argv[_Nullable]);
+extern int ffmpeg_main(int argc, char * argv[]);
 
 typedef BOOL(^CDPlayerDecoderInterruptCallback)(void);
 
@@ -214,6 +214,9 @@ typedef void(^CDPlayerCompeletionThread)(NSArray<CDPlayerFrame *> *frames);
 + (id)movieDecodeWithContentPath:(NSString *)path
                            error:(NSError **)perror;
 
+- (BOOL)openFile:(NSString *)path
+           error:(NSError **)perror;
+    
 - (void)closeFile;
 
 - (void)flush;

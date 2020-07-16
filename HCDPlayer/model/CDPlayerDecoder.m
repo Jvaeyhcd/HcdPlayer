@@ -2340,13 +2340,13 @@ static int interrupt_callback(void *ctx);
     return frame;
 }
 
-- (CDAudioFrame *) handleAudioFrame:(AVFrame *)audioFrame {
+- (CDAudioFrame *)handleAudioFrame:(AVFrame *)audioFrame {
     
     if (!audioFrame->data[0]) {
         return nil;
     }
     
-    CFAbsoluteTime startTime =CFAbsoluteTimeGetCurrent();
+    CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
     
     id<CDAudioManager> audioManager = [CDAudioManager audioManager];
     const NSUInteger numChannels = audioManager.avcodecContextNumOutputChannels;
@@ -2422,7 +2422,7 @@ static int interrupt_callback(void *ctx);
                 frame.samples.length / (8.0 * 44100.0));
 #endif
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-    NSLog(@"Linked handleAudioFrame in %f ms", linkTime *1000.0);
+    NSLog(@"Linked handleAudioFrame in %f ms", linkTime * 1000.0);
     return frame;
 }
 

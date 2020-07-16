@@ -21,6 +21,7 @@
 #import "iCloudManager.h"
 #import "HcdImagePickerViewController.h"
 #import "HCDPlayerViewController.h"
+#import "CDFFmpegViewController.h"
 #import "HcdFileSortManager.h"
 #import "DocumentViewController.h"
 #import <StoreKit/StoreKit.h>
@@ -777,8 +778,13 @@ typedef enum : NSUInteger {
 //                HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
 //                movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
 //                [self presentViewController:movieVc animated:YES completion:nil];
-                HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
-                vc.url = [NSString stringWithFormat:@"file://%@", path];
+//                HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
+//                vc.url = [NSString stringWithFormat:@"file://%@", path];
+//                vc.modalPresentationStyle = UIModalPresentationFullScreen;
+//                [self presentViewController:vc animated:YES completion:nil];
+                
+                CDFFmpegViewController *vc = [[CDFFmpegViewController alloc] init];
+                vc.path = [NSString stringWithFormat:@"file://%@", path];
                 vc.modalPresentationStyle = UIModalPresentationFullScreen;
                 [self presentViewController:vc animated:YES completion:nil];
                 break;
