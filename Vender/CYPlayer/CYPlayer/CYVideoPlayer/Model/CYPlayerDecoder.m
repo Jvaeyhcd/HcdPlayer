@@ -744,8 +744,7 @@ static int interrupt_callback(void *ctx);
     dispatch_semaphore_signal(_avSendAndReceivePacketLock);
 }
 
-- (NSUInteger) frameWidth
-{
+- (NSUInteger)frameWidth {
     if (_dstWidth > 0) {
         return _dstWidth;
     }
@@ -755,10 +754,8 @@ static int interrupt_callback(void *ctx);
     return width ? width : 0;
 }
 
-- (NSUInteger) frameHeight
-{
-    if (_dstHeight > 0)
-    {
+- (NSUInteger)frameHeight {
+    if (_dstHeight > 0) {
         return _dstHeight;
     }
     NSUInteger width = _videoCodecCtx->width;

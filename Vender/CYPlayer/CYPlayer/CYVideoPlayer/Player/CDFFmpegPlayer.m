@@ -16,14 +16,12 @@
 #import <Masonry/Masonry.h>
 
 //Views
-#import "CYVideoPlayerControlView.h"
 #import "CYLoadingView.h"
 #import "CYVideoPlayerPresentView.h"
+#import "CYVideoPlayerBaseView.h"
 
 //Models
-#import "CYVolBrigControl.h"
 #import "CYPlayerGestureControl.h"
-#import "CYOrentationObserver.h"
 #import "CYTimerControl.h"
 #import "CYVideoPlayerRegistrar.h"
 #import "CYVideoPlayerSettings.h"
@@ -48,25 +46,25 @@
 
 #define CYColorWithHEX(hex) [UIColor colorWithRed:(float)((hex & 0xFF0000) >> 16)/255.0 green:(float)((hex & 0xFF00) >> 8)/255.0 blue:(float)(hex & 0xFF)/255.0 alpha:1.0]
 
-inline static void _cyErrorLog(id msg) {
+inline static void _cdErrorLog(id msg) {
     NSLog(@"__error__: %@", msg);
 }
 
-inline static void _cyHiddenViews(NSArray<UIView *> *views) {
+inline static void _cdHiddenViews(NSArray<UIView *> *views) {
     [views enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         obj.alpha = 0.0;
         obj.hidden = YES;
     }];
 }
 
-inline static void _cyShowViews(NSArray<UIView *> *views) {
+inline static void _cdShowViews(NSArray<UIView *> *views) {
     [views enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         obj.alpha = 1.0;
         obj.hidden = NO;
     }];
 }
 
-inline static void _cyAnima(void(^block)(void)) {
+inline static void _cdAnima(void(^block)(void)) {
     if ( block ) {
         [UIView animateWithDuration:0.3 animations:^{
             block();
@@ -95,14 +93,10 @@ static NSMutableDictionary * gHistory = nil;//播放记录
 #define MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT 100//100 相当于关闭
 #define HAS_PLENTY_OF_MEMORY [self getAvailableMemorySize] >= 0//0相当于关闭
 
-@interface CDFFmpegPlayer ()<
-CYVideoPlayerControlViewDelegate,
-CYSliderDelegate,
-CYPCMAudioManagerDelegate,
-CYAudioManagerDelegate>
+@interface CDFFmpegPlayer ()<CYPCMAudioManagerDelegate,  CYAudioManagerDelegate>
 {
-    CGFloat             _moviePosition;//播放到的位置
-    CGFloat             _audioPosition;//播放到的位置
+    CGFloat             _moviePosition;//视频播放到的位置
+    CGFloat             _audioPosition;//音频播放到的位置
     NSDictionary        *_parameters;
     NSString            *_path;
     BOOL                _interrupted;
@@ -165,10 +159,9 @@ CYAudioManagerDelegate>
 
 @property (readwrite) BOOL playing;
 @property (readwrite) BOOL decoding;
-@property (readwrite) BOOL unarchiving;
+
 @property (readwrite, strong) CYArtworkFrame *artworkFrame;
 
-@property (nonatomic, strong, readonly) CYOrentationObserver *orentation;
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 
 @property (nonatomic, assign, readwrite) CDFFmpegPlayerPlayState state;
@@ -187,12 +180,9 @@ CYAudioManagerDelegate>
 @implementation CDFFmpegPlayer
 {
     CYVideoPlayerPresentView *_presentView;
-    CYVideoPlayerControlView *_controlView;
-    CYVolBrigControl *_volBrigControl;
     CYLoadingView *_loadingView;
     CYPlayerGestureControl *_gestureControl;
     CYVideoPlayerBaseView *_view;
-    CYOrentationObserver *_orentation;
     dispatch_queue_t _workQueue;
     CYVideoPlayerRegistrar *_registrar;
 }
@@ -216,8 +206,7 @@ CYAudioManagerDelegate>
     }
 }
 
-- (instancetype)init
-{
+- (instancetype)init {
     if (self = [super init]) {
         [self resetSetting];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsPlayerNotification:) name:CYSettingsPlayerNotification object:nil];
@@ -225,15 +214,13 @@ CYAudioManagerDelegate>
     return self;
 }
 
-+ (id) movieViewWithContentPath: (NSString *) path
-                     parameters: (NSDictionary *) parameters
-{
++ (id)movieViewWithContentPath:(NSString *)path
+                    parameters:(NSDictionary *)parameters {
     return [[self alloc] initWithContentPath: path parameters: parameters];;
 }
 
-- (id) initWithContentPath: (NSString *) path
-                parameters: (NSDictionary *) parameters
-{
+- (id)initWithContentPath:(NSString *)path
+               parameters:(NSDictionary *)parameters {
     NSAssert(path.length > 0, @"empty path");
     
     self = [super init];
@@ -245,15 +232,13 @@ CYAudioManagerDelegate>
     return self;
 }
 
-- (void)setupPlayerWithPath:(NSString *)path parameters: (NSDictionary *) parameters
-{
+- (void)setupPlayerWithPath:(NSString *)path parameters:(NSDictionary *)parameters {
+    
     id<CYAudioManager> audioManager = [CYAudioManager audioManager];
     BOOL canUseAudio = [audioManager activateAudioSession];
     //    BOOL canUseAudio = YES;
     
     [self view];
-    [self orentation];
-    [self volBrig];
     //__weak typeof(self) _self = self;
     [self settingPlayer:^(CYVideoPlayerSettings * _Nonnull settings) {
 
@@ -264,20 +249,17 @@ CYAudioManagerDelegate>
     
     [self _itemPrepareToPlay];
     
-    if (!_progressQueue)
-    {
+    if (!_progressQueue) {
         //        _progressQueue = dispatch_queue_create("CYPlayer Progress", DISPATCH_QUEUE_SERIAL);
         _progressQueue  = dispatch_get_main_queue();
     }
     
-    if (!_videoQueue)
-    {
+    if (!_videoQueue) {
         //        _videoQueue = dispatch_queue_create("CYPlayer Video", DISPATCH_QUEUE_SERIAL);
         _videoQueue  = dispatch_get_main_queue();
     }
     
-    if (!_audioQueue)
-    {
+    if (!_audioQueue) {
         _audioQueue = dispatch_queue_create("CYPlayer Audio", DISPATCH_QUEUE_SERIAL);
         //        _audioQueue  = dispatch_get_main_queue();
     }
@@ -290,27 +272,22 @@ CYAudioManagerDelegate>
     
     __block CYPlayerDecoder *decoder = [[CYPlayerDecoder alloc] init];
     CYVideoDecodeType type = CYVideoDecodeTypeVideo;
-    if (canUseAudio)
-    {
+    if (canUseAudio) {
         type |= CYVideoDecodeTypeAudio;
-    }
-    else
-    {
+    } else {
         LoggerAudio(0, @"Can not open Audio Session");
     }
-    [decoder setDecodeType:type];//
+    [decoder setDecodeType:type];
     
-    self.controlView.decoder = decoder;
+    __weak __typeof(self) weakSelf = self;
     
-    __weak __typeof(&*self)weakSelf = self;
-    
-    decoder.interruptCallback = ^BOOL(){
-        __strong __typeof(&*self)strongSelf = weakSelf;
+    decoder.interruptCallback = ^BOOL() {
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         return strongSelf ? [strongSelf interruptDecoder] : YES;
     };
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         
         NSError *error = nil;
         [decoder openFile:path error:&error];
@@ -318,7 +295,7 @@ CYAudioManagerDelegate>
         [decoder setUseHWDecompressor:strongSelf.settings.useHWDecompressor];
         if (strongSelf) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                __strong __typeof(&*self)strongSelf2 = weakSelf;
+                __strong __typeof(weakSelf) strongSelf2 = weakSelf;
                 if (strongSelf2 && !strongSelf.stopped) {
                     [strongSelf2 setMovieDecoder:decoder withError:error];
                 }
@@ -330,25 +307,24 @@ CYAudioManagerDelegate>
     });
 }
 
-
-- (void)changeSelectionsPath:(NSString *)path
-{
+- (void)changeSelectionsPath:(NSString *)path {
+    
     _path = path;
     
     __block CYPlayerDecoder *decoder = [[CYPlayerDecoder alloc] init];
     CYVideoDecodeType type = _decoder.decodeType;
     [decoder setDecodeType:type];
-    __weak __typeof(&*self)weakSelf = self;
+    __weak __typeof(self) weakSelf = self;
     
     decoder.interruptCallback = ^BOOL(){
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         return strongSelf ? [strongSelf interruptDecoder] : YES;
     };
     [self pause];
     self.autoplay = YES;
     self.suspend = NO;//手动暂停会挂起,这里要取消挂起才会自动播放
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         
         NSError *error = nil;
         [decoder openFile:path error:&error];
@@ -356,13 +332,12 @@ CYAudioManagerDelegate>
         
         if (strongSelf) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                __strong __typeof(&*self)strongSelf2 = weakSelf;
+                __strong __typeof(weakSelf) strongSelf2 = weakSelf;
                 if (strongSelf2 && !strongSelf.stopped) {
                     [decoder setPosition:0];
                     strongSelf2->_moviePosition = 0;
                     //关闭原先的解码器
 //                    [strongSelf.decoder closeFile];
-                    strongSelf2.controlView.decoder = decoder;
                     //清除旧的缓存
                     [strongSelf2 freeBufferedFrames];
                     //播放器连接新的解码器decoder
@@ -380,22 +355,21 @@ CYAudioManagerDelegate>
     });
 }
 
-- (void)changeDefinitionPath:(NSString *)path
-{
+- (void)changeDefinitionPath:(NSString *)path {
     _path = path;
     
     __block CYPlayerDecoder *decoder = [[CYPlayerDecoder alloc] init];
     CYVideoDecodeType type = _decoder.decodeType;
     [decoder setDecodeType:type];
-    __weak __typeof(&*self)weakSelf = self;
+    __weak __typeof(self) weakSelf = self;
     
     decoder.interruptCallback = ^BOOL(){
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         return strongSelf ? [strongSelf interruptDecoder] : YES;
     };
     self.autoplay = YES;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         
         NSError *error = nil;
         [decoder openFile:path error:&error];
@@ -403,12 +377,12 @@ CYAudioManagerDelegate>
         
         if (strongSelf) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                __strong __typeof(&*self)strongSelf2 = weakSelf;
+                __strong __typeof(weakSelf) strongSelf2 = weakSelf;
                 if (strongSelf2 && !strongSelf.stopped) {
                     [decoder setPosition:strongSelf.decoder.position];
                     //关闭原先的解码器
 //                    [strongSelf.decoder closeFile];
-                    strongSelf2.controlView.decoder = decoder;
+//                    strongSelf2.controlView.decoder = decoder;
                     //播放器连接新的解码器decoder
                     [strongSelf2 setMovieDecoder:decoder withError:error];
                     
@@ -424,22 +398,21 @@ CYAudioManagerDelegate>
     });
 }
 
-- (void)changeLiveDefinitionPath:(NSString *)path
-{
+- (void)changeLiveDefinitionPath:(NSString *)path {
     _path = path;
     
     __block CYPlayerDecoder *decoder = [[CYPlayerDecoder alloc] init];
     CYVideoDecodeType type = _decoder.decodeType;
     [decoder setDecodeType:type];
-    __weak __typeof(&*self)weakSelf = self;
+    __weak __typeof(self) weakSelf = self;
     
     decoder.interruptCallback = ^BOOL(){
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         return strongSelf ? [strongSelf interruptDecoder] : YES;
     };
     self.autoplay = YES;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         
         NSError *error = nil;
         [decoder openFile:path error:&error];
@@ -447,11 +420,10 @@ CYAudioManagerDelegate>
         
         if (strongSelf) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                __strong __typeof(&*self)strongSelf2 = weakSelf;
+                __strong __typeof(weakSelf) strongSelf2 = weakSelf;
                 if (strongSelf2 && !strongSelf.stopped) {
                     //关闭原先的解码器
 //                    [strongSelf.decoder closeFile];
-                    strongSelf2.controlView.decoder = decoder;
                     //播放器连接新的解码器decoder
                     [strongSelf2 setMovieDecoder:decoder withError:error];
                     
@@ -467,74 +439,19 @@ CYAudioManagerDelegate>
     });
 }
 
-- (void)refreshSelectionsBtnStatus
-{
-    if (_isChangingSelections)
-    {
-        [self.controlView.bottomControlView.selectionsBtn setTitle:@"正在切换" forState:UIControlStateNormal];
-        self.controlView.bottomControlView.selectionsBtn.enabled = NO;
-    }
-    else
-    {
-        [self.controlView.bottomControlView.selectionsBtn setTitle:@"选集" forState:UIControlStateNormal];
-        self.controlView.bottomControlView.selectionsBtn.enabled = YES;
-    }
-}
-
-- (void)refreshDefinitionBtnStatus
-{
-    NSString * title = @"";
-    if (_isChangingDefinition)
-    {
-        [self.controlView.bottomControlView.definitionBtn setTitle:@"正在切换" forState:UIControlStateNormal];
-        self.controlView.bottomControlView.definitionBtn.enabled = NO;
-    }
-    else
-    {
-        switch (_definitionType) {
-            case CYFFmpegPlayerDefinitionLLD:
-            {
-                title = @"流畅";
-            }
-                break;
-            case CYFFmpegPlayerDefinitionLSD:
-            {
-                title = @"标清";
-            }
-                break;
-            case CYFFmpegPlayerDefinitionLHD:
-            {
-                title = @"高清";
-            }
-                break;
-            case CYFFmpegPlayerDefinitionLUD:
-            {
-                title = @"超清";
-            }
-                break;
-                
-            default:
-            {
-                title = @"标清";
-            }
-                break;
-        }
-
-        [self.controlView.bottomControlView.definitionBtn setTitle:title forState:UIControlStateNormal];
-        self.controlView.bottomControlView.definitionBtn.enabled = YES;
-    }
-}
-
-
-- (void) dealloc
-{
-#ifdef USE_OPENAL
-    [[CYPCMAudioManager audioManager] stopAndCleanBuffer];
-#endif
+- (void)refreshSelectionsBtnStatus {
     
-#ifdef USE_AUDIOTOOL
+}
+
+- (void)refreshDefinitionBtnStatus {
+    
+}
+
+
+- (void)dealloc {
+    
     [self enableAudioTick:NO];
-#endif
+    
     while ((_decoder.validVideo ? _videoFrames.count : 0) + (_decoder.validAudio ? _audioFrames.count : 0) > 0) {
         
         @synchronized(_videoFrames) {
@@ -544,8 +461,8 @@ CYAudioManagerDelegate>
             }
         }
         
-        const CGFloat duration = _decoder.isNetwork ? .0f : 0.1f;
-        //        [_decoder decodeFrames:duration];
+//        const CGFloat duration = _decoder.isNetwork ? .0f : 0.1f;
+//        [_decoder decodeFrames:duration];
         @synchronized(_audioFrames) {
             if (_audioFrames.count > 0)
             {
@@ -588,14 +505,11 @@ CYAudioManagerDelegate>
 - (void)loadView {
     
     if (_decoder) {
-        
         [self setupPresentView];
-        
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     if (self.playing) {
         
         [self pause];
@@ -614,11 +528,6 @@ CYAudioManagerDelegate>
             [_decoder closeFile];
             [_decoder openFile:nil error:nil];
             
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
-                                        message:NSLocalizedString(@"Out of memory", nil)
-                                       delegate:nil
-                              cancelButtonTitle:NSLocalizedString(@"Close", nil)
-                              otherButtonTitles:nil] show];
         }
         
     } else {
@@ -632,8 +541,7 @@ CYAudioManagerDelegate>
 
 # pragma mark - UI处理
 - (UIView *)view {
-    if ( _view )
-    {
+    if ( _view ) {
         [_presentView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(_presentView.superview);
         }];
@@ -642,47 +550,24 @@ CYAudioManagerDelegate>
     _view = [CYVideoPlayerBaseView new];
     _view.backgroundColor = [UIColor blackColor];
     [_view addSubview:self.presentView];
-    [_view addSubview:self.controlView];
     
-    [self gesturesHandleWithTargetView:_controlView];
-    
-    _controlView.delegate = self;
-    _controlView.bottomControlView.progressSlider.delegate = self;
+    [self gesturesHandleWithTargetView:_view];
     
     [_presentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(_presentView.superview);
     }];
     
-    [_controlView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(_controlView.superview);
-    }];
-    
     _loadingView = [CYLoadingView new];
-    [_controlView addSubview:_loadingView];
+    [_view addSubview:_loadingView];
     [_loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.offset(0);
     }];
     
-    __weak typeof(self) _self = self;
-    _view.setting = ^(CYVideoPlayerSettings * _Nonnull setting) {
-        __strong typeof(_self) self = _self;
-        if ( !self ) return;
-        self.loadingView.lineColor = setting.loadingLineColor;
-    };
-    
     return _view;
 }
 
-- (CYVideoPlayerControlView *)controlView {
-    if ( _controlView ) return _controlView;
-    _controlView = [CYVideoPlayerControlView new];
-    _controlView.clipsToBounds = YES;
-    return _controlView;
-}
-
 # pragma mark - 公开方法
-- (double)currentTime
-{
+- (double)currentTime {
     return self.decoder.validVideo ? _moviePosition : _audioPosition;
 }
 
@@ -705,8 +590,7 @@ CYAudioManagerDelegate>
                                                object:[UIApplication sharedApplication]];
 }
 
-- (void)viewWillDisappear
-{
+- (void)viewWillDisappear {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     if (_decoder) {
@@ -750,8 +634,8 @@ CYAudioManagerDelegate>
     self.state = CDFFmpegPlayerPlayState_Buffing;
 }
 
--(void) _play
-{
+-(void)_play {
+    
     [self _stopLoading];
     
     if (self.playing)
@@ -780,21 +664,14 @@ CYAudioManagerDelegate>
     //    [self asyncDecodeFrames];
     [self concurrentAsyncDecodeFrames];
     
-    __weak typeof(&*self)weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC);
     dispatch_after(popTime, _progressQueue, ^(void){
         
         [weakSelf progressTick];
         
-        if (weakSelf.decoder.validAudio)
-        {
-#ifdef USE_OPENAL
-            [weakSelf audioTick];
-            [[CYPCMAudioManager audioManager] setPlayRate:weakSelf.rate];
-#endif
-#ifdef USE_AUDIOTOOL
+        if (weakSelf.decoder.validAudio) {
             [weakSelf enableAudioTick:YES];
-#endif
         }
         
         if (weakSelf.decoder.validVideo)
@@ -843,50 +720,42 @@ CYAudioManagerDelegate>
     LoggerStream(1, @"pause movie");
 }
 
-- (void) setMoviePosition: (CGFloat) position
-{
+- (void)setMoviePosition:(CGFloat)position {
+    
     BOOL playMode = self.playing;
     
+    [self setMoviePosition:position playMode:playMode];
+}
+
+- (void)setMoviePosition:(CGFloat)position playMode:(BOOL)playMode {
+    
     self.playing = NO;
     _buffered = NO;
     _disableUpdateHUD = YES;
     
-    __weak typeof(&*self)weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [weakSelf updatePosition:position playMode:playMode];
     });
 }
 
-- (void) setMoviePosition: (CGFloat) position playMode:(BOOL)playMode
-{
-    self.playing = NO;
-    _buffered = NO;
-    _disableUpdateHUD = YES;
+- (void)generatedPreviewImagesWithCount:(NSInteger)imagesCount completionHandler:(CYPlayerImageGeneratorCompletionHandler)handler {
     
-    __weak typeof(&*self)weakSelf = self;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [weakSelf updatePosition:position playMode:playMode];
-    });
-}
-
-- (void)generatedPreviewImagesWithCount:(NSInteger)imagesCount completionHandler:(CYPlayerImageGeneratorCompletionHandler)handler
-{
     __block CYPlayerDecoder *decoder = [[CYPlayerDecoder alloc] init];
     [decoder setDecodeType:CYVideoDecodeTypeVideo];
     
-    __weak __typeof(&*self)weakSelf = self;
+    __weak __typeof(self) weakSelf = self;
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         
         NSError *error = nil;
-        [decoder openFile:_decoder.path error:&error];
+        [decoder openFile:strongSelf->_decoder.path error:&error];
         
         if (strongSelf) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                __strong __typeof(&*self)strongSelf2 = weakSelf;
+                __strong __typeof(weakSelf) strongSelf2 = weakSelf;
                 if (strongSelf2) {
                     [strongSelf2 setGeneratedPreviewImagesDecoder:decoder imagesCount:imagesCount withError:error completionHandler:handler];
                 }
@@ -895,8 +764,7 @@ CYAudioManagerDelegate>
     });
 }
 
-- (void)setupPlayerWithPath:(NSString *)path
-{
+- (void)setupPlayerWithPath:(NSString *)path {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
     // increase buffering for .wmv, it solves problem with delaying audio frames
@@ -913,7 +781,6 @@ CYAudioManagerDelegate>
 
 
 # pragma mark - 私有方法
-# pragma mark player
 - (void) restorePlay
 {
     NSNumber *n = [[self getHistory] valueForKey:_decoder.path];
@@ -1074,7 +941,7 @@ CYAudioManagerDelegate>
         [self _itemReadyToPlay];
     } else {
         if (!_interrupted) {
-            [self handleDecoderMovieError: error];
+            [self handleDecoderMovieError:error];
             self.error = error;
             [self _itemPlayFailed];
         }
@@ -1102,11 +969,12 @@ CYAudioManagerDelegate>
         }
         
         if (!frameView) {
-            CGRect bounds = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width * 9.0/16.0);
+            CGRect bounds = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
             
             if (_decoder.validVideo && [_decoder getVideoFrameFormat] == CYVideoFrameFormatYUV) {
                 _glView = [[CYPlayerGLView alloc] initWithFrame:bounds decoder:_decoder];
                 _glView.contentScaleFactor = [UIScreen mainScreen].scale;
+                _glView.contentMode = UIViewContentModeScaleAspectFill;
             }
             
             if (!_glView && !_metalView) {
@@ -1132,14 +1000,6 @@ CYAudioManagerDelegate>
             if (!self.generatPreviewImages || [self.decoder.path hasPrefix:@"rtmp"] || [self.decoder.path hasPrefix:@"rtsp"]) {
                 return;
             }
-            //先隐藏previewbtn
-            _cyAnima(^{
-                _cyHiddenViews(@[self.controlView.topControlView.previewBtn]);
-                [self.controlView.topControlView.previewBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.width.equalTo(@0);
-                }];
-            });
-            self.controlView.previewView.previewFrames = @[];
             
             [self generatedPreviewImagesWithCount:20 completionHandler:^(NSMutableArray<CYVideoFrame *> *frames, NSError *error) {
                 __strong typeof(_self) self = _self;
@@ -1149,15 +1009,6 @@ CYAudioManagerDelegate>
                     return;
                 }
                 _self.hasBeenGeneratedPreviewImages = YES;
-                if ( _self.orentation.fullScreen ) {
-                    _cyAnima(^{
-                        _cyShowViews(@[_self.controlView.topControlView.previewBtn]);
-                        [self.controlView.topControlView.previewBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                            make.width.equalTo(@49);
-                        }];
-                    });
-                }
-                _self.controlView.previewView.previewFrames = frames;
             }];
             
         } else {
@@ -1186,6 +1037,7 @@ CYAudioManagerDelegate>
                                                        delegate:nil
                                               cancelButtonTitle:NSLocalizedString(@"Close", nil)
                                               otherButtonTitles:nil];
+    
     [alertView show];
 }
 
@@ -1235,10 +1087,8 @@ CYAudioManagerDelegate>
 }
 
 
-- (void) asyncDecodeFrames
-{
-    if (self.decoding)
-    {
+- (void)asyncDecodeFrames {
+    if (self.decoding) {
         return;
     }
     self.decoding = YES;
@@ -1249,8 +1099,7 @@ CYAudioManagerDelegate>
     const CGFloat duration = _decoder.isNetwork ? 1.0f : 0.1f;
     dispatch_async(_asyncDecodeQueue, ^{
         __strong CDFFmpegPlayer *strongSelf = weakSelf;
-        if (strongSelf)
-        {
+        if (strongSelf) {
             if (!weakSelf.playing)
                 return;
             
@@ -1264,29 +1113,21 @@ CYAudioManagerDelegate>
                     if (weakDecoder && (weakDecoder.validVideo || weakDecoder.validAudio)) {
                         
                         NSArray *frames = nil;
-                        if (strongSelf->_positionUpdating)//正在跳播
-                        {
+                        // 正在跳播
+                        if (strongSelf->_positionUpdating) {
                             frames = [weakDecoder decodeTargetFrames:duration targetPos:strongSelf->_targetPosition];
-                        }
-                        else
-                        {
+                        } else {
                             frames = [weakDecoder decodeFrames:duration];
-                            //                            frames = [weakDecoder decodeTargetFrames:duration :strongSelf->_audioPosition];
                         }
-                        
-                        //                        for (CYPlayerFrame * frame in frames) {
-                        //                            [weakSelf archiveFrame:frame];
-                        //                        }
                         
                         if (frames.count) {
-                            
                             good = [weakSelf addFrames:frames];
                         }
                         frames = nil;
                     }
                 }
                 CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-                //NSLog(@"Linked asyncDecodeFrames in %f ms", linkTime *1000.0);
+                NSLog(@"Linked asyncDecodeFrames in %f ms", linkTime * 1000.0);
             }
             
             weakSelf.decoding = NO;
@@ -1294,10 +1135,9 @@ CYAudioManagerDelegate>
     });
 }
 
-- (void) concurrentAsyncDecodeFrames
-{
-    if (self.decoding)
-    {
+/// 异步解码媒体文件
+- (void)concurrentAsyncDecodeFrames {
+    if (self.decoding) {
         return;
     }
     self.decoding = YES;
@@ -1308,17 +1148,15 @@ CYAudioManagerDelegate>
     const CGFloat duration = _decoder.isNetwork ? 1.0f : 0.1f;
     dispatch_async(_asyncDecodeQueue, ^{
         __strong CDFFmpegPlayer *strongSelf = weakSelf;
-        if (strongSelf)
-        {
+        if (strongSelf) {
             if (!weakSelf.playing)
                 return;
-            CFAbsoluteTime startTime =CFAbsoluteTimeGetCurrent();
+            CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
             
             @autoreleasepool {
                 
                 if (weakDecoder && (weakDecoder.validVideo || weakDecoder.validAudio)) {
                     
-                    NSArray *frames = nil;
                     if (strongSelf->_positionUpdating)//正在跳播
                     {
                         [weakDecoder asyncDecodeFrames:duration targetPosition:strongSelf->_targetPosition compeletionHandler:^(NSArray<CYPlayerFrame *> *frames, BOOL compeleted) {
@@ -1328,9 +1166,7 @@ CYAudioManagerDelegate>
                                 weakSelf.decoding = NO;
                             }
                         }];
-                    }
-                    else
-                    {
+                    } else {
                         [weakDecoder concurrentDecodeFrames:duration compeletionHandler:^(NSArray<CYPlayerFrame *> *frames, BOOL compeleted) {
                             [weakSelf insertFrames:frames];
                             if (compeleted)
@@ -1342,20 +1178,19 @@ CYAudioManagerDelegate>
                 }
             }
             CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-            //NSLog(@"Linked asyncDecodeFrames in %f ms", linkTime *1000.0);
+            NSLog(@"Linked asyncDecodeFrames in %f ms", linkTime * 1000.0);
         }
     });
 }
 
-- (void) insertFrames: (NSArray *)frames
-{
+- (void)insertFrames:(NSArray *)frames {
+    
     if (_decoder.validVideo) {
         
         @synchronized(_videoFrames) {
             
-            for (CYPlayerFrame *frame in frames)
-                if (frame.type == CYPlayerFrameTypeVideo)
-                {
+            for (CYPlayerFrame *frame in frames) {
+                if (frame.type == CYPlayerFrameTypeVideo) {
                     if (!_positionUpdating)
                     {
                         NSInteger targetIndex = _videoFrames.count;
@@ -1375,22 +1210,17 @@ CYAudioManagerDelegate>
                         if (!hasInserted) {
                             [_videoFrames insertObject:frame atIndex:targetIndex];
                             _videoBufferedDuration += frame.duration;
-                        }else {
+                        } else {
                             LoggerVideo(0, @"skip hasInserted video frames");
                         }
                         
-                    }
-                    else
-                    {
-                        if (frame.position >= _targetPosition)
-                        {
+                    } else {
+                        if (frame.position >= _targetPosition) {
                             NSInteger targetIndex = _videoFrames.count;
                             BOOL hasInserted = NO;
-                            for( int i = 0; i < _videoFrames.count; i ++ )
-                            {
+                            for( int i = 0; i < _videoFrames.count; i++ ) {
                                 CYVideoFrame * targetFrame = [_videoFrames objectAtIndex:i];
-                                if (frame.position <= targetFrame.position)
-                                {
+                                if (frame.position <= targetFrame.position) {
                                     targetIndex = i;
                                     if (frame.position == targetFrame.position) {
                                         hasInserted = YES;
@@ -1398,16 +1228,16 @@ CYAudioManagerDelegate>
                                     break;
                                 }
                             }
-                             if (!hasInserted) {
-                                 [_videoFrames insertObject:frame atIndex:targetIndex];
-                                 _videoBufferedDuration += frame.duration;
-                             }else {
-                                 LoggerVideo(0, @"skip hasInserted video frames");
-                             }
-                            
+                            if (!hasInserted) {
+                                [_videoFrames insertObject:frame atIndex:targetIndex];
+                                _videoBufferedDuration += frame.duration;
+                            } else {
+                                LoggerVideo(0, @"skip hasInserted video frames");
+                            }
                         }
                     }
                 }
+            }
         }
     }
     
@@ -1415,11 +1245,9 @@ CYAudioManagerDelegate>
         
         @synchronized(_audioFrames) {
             
-            for (CYPlayerFrame *frame in frames)
-                if (frame.type == CYPlayerFrameTypeAudio)
-                {
-                    if (!_positionUpdating)
-                    {
+            for (CYPlayerFrame *frame in frames) {
+                if (frame.type == CYPlayerFrameTypeAudio) {
+                    if (!_positionUpdating) {
                         NSInteger targetIndex = _audioFrames.count;
                         BOOL hasInserted = NO;
                         for( int i = 0; i < _audioFrames.count; i ++ )
@@ -1437,14 +1265,11 @@ CYAudioManagerDelegate>
                          if (!hasInserted) {
                              [_audioFrames insertObject:frame atIndex:targetIndex];
                              _audioBufferedDuration += frame.duration;
-                         }else {
+                         } else {
                              LoggerVideo(0, @"skip hasInserted audio frames");
                          }
-                    }
-                    else
-                    {
-                        if (frame.position >= _targetPosition)
-                        {
+                    } else {
+                        if (frame.position >= _targetPosition) {
                             NSInteger targetIndex = _audioFrames.count;
                             BOOL hasInserted = NO;
                             for( int i = 0; i < _audioFrames.count; i ++ )
@@ -1468,6 +1293,7 @@ CYAudioManagerDelegate>
                         }
                     }
                 }
+            }
         }
         
         if (!_decoder.validVideo) {
@@ -1482,18 +1308,14 @@ CYAudioManagerDelegate>
         
         @synchronized(_subtitles) {
             
-            for (CYPlayerFrame *frame in frames)
-                if (frame.type == CYPlayerFrameTypeSubtitle)
-                {
-                    if (!_positionUpdating)
-                    {
+            for (CYPlayerFrame *frame in frames) {
+                if (frame.type == CYPlayerFrameTypeSubtitle) {
+                    if (!_positionUpdating) {
                         NSInteger targetIndex = _subtitles.count;
                         BOOL hasInserted = NO;
-                        for( int i = 0; i < _subtitles.count; i ++ )
-                        {
+                        for( int i = 0; i < _subtitles.count; i ++ ) {
                             CYSubtitleFrame * targetFrame = [_subtitles objectAtIndex:i];
-                            if (frame.position <= targetFrame.position)
-                            {
+                            if (frame.position <= targetFrame.position) {
                                 targetIndex = i;
                                 if (frame.position == targetFrame.position) {
                                     hasInserted = YES;
@@ -1503,14 +1325,11 @@ CYAudioManagerDelegate>
                         }
                         if (!hasInserted) {
                             [_subtitles insertObject:frame atIndex:targetIndex];
-                        }else {
+                        } else {
                             LoggerVideo(0, @"skip hasInserted subtitles frames");
                         }
-                    }
-                    else
-                    {
-                        if (frame.position >= _targetPosition)
-                        {
+                    } else {
+                        if (frame.position >= _targetPosition) {
                             NSInteger targetIndex = _subtitles.count;
                             BOOL hasInserted = NO;
                             for( int i = 0; i < _subtitles.count; i ++ )
@@ -1527,23 +1346,24 @@ CYAudioManagerDelegate>
                             }
                             if (!hasInserted) {
                                 [_subtitles insertObject:frame atIndex:targetIndex];
-                            }else {
+                            } else {
                                 LoggerVideo(0, @"skip hasInserted subtitles frames");
                             }
                         }
                     }
                 }
+            }
         }
     }
 }
 
-- (BOOL) addFrames: (NSArray *)frames
-{
+- (BOOL)addFrames:(NSArray *)frames {
+    
     if (_decoder.validVideo) {
         
         @synchronized(_videoFrames) {
             
-            for (CYPlayerFrame *frame in frames)
+            for (CYPlayerFrame *frame in frames) {
                 if (frame.type == CYPlayerFrameTypeVideo) {
                     if (_positionUpdating)
                     {
@@ -1558,8 +1378,8 @@ CYAudioManagerDelegate>
                         [_videoFrames addObject:frame];
                         _videoBufferedDuration += frame.duration;
                     }
-                    
                 }
+            }
         }
     }
     
@@ -1567,7 +1387,7 @@ CYAudioManagerDelegate>
         
         @synchronized(_audioFrames) {
             
-            for (CYPlayerFrame *frame in frames)
+            for (CYPlayerFrame *frame in frames) {
                 if (frame.type == CYPlayerFrameTypeAudio) {
                     if (_positionUpdating)
                     {
@@ -1585,6 +1405,7 @@ CYAudioManagerDelegate>
                         _audioBufferedDuration += frame.duration;
                     }
                 }
+            }
         }
         
         if (!_decoder.validVideo) {
@@ -1599,7 +1420,7 @@ CYAudioManagerDelegate>
         
         @synchronized(_subtitles) {
             
-            for (CYPlayerFrame *frame in frames)
+            for (CYPlayerFrame *frame in frames) {
                 if (frame.type == CYPlayerFrameTypeSubtitle) {
                     if (_positionUpdating)
                     {
@@ -1607,33 +1428,32 @@ CYAudioManagerDelegate>
                         {
                             [_subtitles addObject:frame];
                         }
-                    }
-                    else
-                    {
+                    } else {
                         [_subtitles addObject:frame];
                     }
                 }
+            }
         }
     }
     
-    return self.playing && (_videoBufferedDuration < _maxBufferedDuration || _audioBufferedDuration < _maxBufferedDuration) && ([self getMemoryUsedPercent] < MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT) && HAS_PLENTY_OF_MEMORY;
+    return self.playing
+        && (_videoBufferedDuration < _maxBufferedDuration || _audioBufferedDuration < _maxBufferedDuration)
+        && ([self getMemoryUsedPercent] < MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT)
+        && HAS_PLENTY_OF_MEMORY;
 }
 
-- (void) videoTick
-{
-    __weak typeof(&*self)weakSelf = self;
+- (void)videoTick {
+    
+    __weak typeof(&*self) weakSelf = self;
     CGFloat interval = 0;
-    if (!_buffered)
-    {
-        if (_positionUpdating )
-        {
+    if (!_buffered) {
+        if (_positionUpdating ) {
             _positionUpdating = NO;
         }
         interval = [self presentVideoFrame];
     }
     
-    if (self.playing)
-    {
+    if (self.playing) {
         const NSUInteger leftFrames =
         (_decoder.validVideo ? _videoFrames.count : 0) +
         (_decoder.validAudio ? _audioFrames.count : 0);
@@ -1663,10 +1483,9 @@ CYAudioManagerDelegate>
 }
 
 
-- (void) audioCallbackFillData: (float *) outData
-                     numFrames: (UInt32) numFrames
-                   numChannels: (UInt32) numChannels
-{
+- (void)audioCallbackFillData:(float *)outData
+                    numFrames:(UInt32)numFrames
+                  numChannels:(UInt32)numChannels {
 #ifdef USE_AUDIOTOOL
     //fillSignalF(outData,numFrames,numChannels);
     //return;
@@ -1766,8 +1585,7 @@ CYAudioManagerDelegate>
 }
 
 
-- (void) enableAudioTick: (BOOL) on
-{
+- (void)enableAudioTick:(BOOL)on {
 #ifdef USE_AUDIOTOOL
     id<CYAudioManager> audioManager = [CYAudioManager audioManager];
 
@@ -1799,23 +1617,18 @@ CYAudioManagerDelegate>
 }
 
 
-- (void)audioTick
-{
+- (void)audioTick {
 #ifdef USE_OPENAL
-    __weak typeof(&*self)weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     CYPCMAudioManager * audioManager = [CYPCMAudioManager audioManager];
     
     CGFloat interval = 0;
-    if (!_buffered)
-    {
-        if (_positionUpdating )
-        {
+    if (!_buffered) {
+        if ( _positionUpdating ) {
             _positionUpdating = NO;
         }
         interval = [self presentAudioFrame];
-    }
-    else
-    {
+    } else {
         //        const int bufSize = 100;
         int bufSize = av_samples_get_buffer_size(NULL,
                                                  (int)audioManager.avcodecContextNumOutputChannels,
@@ -1839,10 +1652,7 @@ CYAudioManagerDelegate>
             !(_videoBufferedDuration > _maxBufferedDuration) ||
             !(_audioBufferedDuration > _maxBufferedDuration))
             &&
-            ([self getMemoryUsedPercent] <= MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT) && HAS_PLENTY_OF_MEMORY)
-        {
-            
-            //            [self asyncDecodeFrames];
+            ([self getMemoryUsedPercent] <= MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT) && HAS_PLENTY_OF_MEMORY) {
             [self concurrentAsyncDecodeFrames];
         }
         
@@ -1856,32 +1666,20 @@ CYAudioManagerDelegate>
 #endif
 }
 
-- (void)progressTick
-{
-    __weak typeof(&*self)weakSelf = self;
-    if (_buffered &&
-        (
-         (
+- (void)progressTick {
+    
+    __weak typeof(self) weakSelf = self;
+    if ( _buffered &&((
           (_videoBufferedDuration > _minBufferedDuration) ||
-          (_audioBufferedDuration > _minBufferedDuration)
-          ) ||
-         _decoder.isEOF ||
-         ([self getMemoryUsedPercent] > MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT || !(HAS_PLENTY_OF_MEMORY))
-         )
-        )
-    {
+          (_audioBufferedDuration > _minBufferedDuration)) || _decoder.isEOF || ([self getMemoryUsedPercent] > MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT || !(HAS_PLENTY_OF_MEMORY)))) {
         _tickCorrectionTime = 0;
         _cantPlayStartTime = 0;
         _buffered = NO;
-        if (([self getMemoryUsedPercent] > MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT) || !(HAS_PLENTY_OF_MEMORY))
-        {
+        if (([self getMemoryUsedPercent] > MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT) || !(HAS_PLENTY_OF_MEMORY)) {
             [self play];
-        }
-        else
-        {
+        } else {
             if ((_videoBufferedDuration > _minBufferedDuration) ||
-                (_audioBufferedDuration > _minBufferedDuration))
-            {
+                (_audioBufferedDuration > _minBufferedDuration)) {
                 [self play];
             }
         }
@@ -1895,40 +1693,34 @@ CYAudioManagerDelegate>
         (_decoder.validAudio ? _audioFrames.count : 0);
         
         CGFloat curr_position = _decoder.validVideo ? _moviePosition : _audioPosition;
-        if ( leftFrames == 0 )
-        {
+        if ( leftFrames == 0 ) {
             if (_decoder.isEOF) {
                 if (_decoder.duration - curr_position <= 1.0 &&
                     _decoder.duration > 0 &&
-                    _decoder.duration != NSNotFound)
-                {
-                    [self _itemPlayEnd];
+                    _decoder.duration != NSNotFound) {
                     
+                    [self _itemPlayEnd];
                     return;
                 }
-//                if ([_decoder.path hasPrefix:@"rtsp"] || [_decoder.path hasPrefix:@"rtmp"] || [[_decoder.path lastPathComponent] containsString:@"m3u8"])
-//                {
-//                    [self _pause];
-//                    CGFloat interval = 0;
-//                    const NSTimeInterval correction = [self tickCorrection];
-//                    const NSTimeInterval time = MAX(interval + correction, 0.01);
-//                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, time * NSEC_PER_SEC);
-//                    dispatch_after(popTime, _progressQueue, ^(void){
-//                        [weakSelf replayFromInterruptWithDecoder:weakSelf.decoder];
-//                    });
-//                    return;
-//                }
-//                else
-                {
+                if ([_decoder.path hasPrefix:@"rtsp"] || [_decoder.path hasPrefix:@"rtmp"] || [[_decoder.path lastPathComponent] containsString:@"m3u8"]) {
+                    
+                    [self _pause];
+                    CGFloat interval = 0;
+                    const NSTimeInterval correction = [self tickCorrection];
+                    const NSTimeInterval time = MAX(interval + correction, 0.01);
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, time * NSEC_PER_SEC);
+                    dispatch_after(popTime, _progressQueue, ^(void){
+                        [weakSelf replayFromInterruptWithDecoder:weakSelf.decoder];
+                    });
+                    return;
+                } else {
+                    
                     [self _itemPlayFailed];
                     
                     return;
                 }
-            }
-            else
-            {
-                if (_cantPlayStartTime <= 0)
-                {
+            } else {
+                if (_cantPlayStartTime <= 0) {
                     _cantPlayStartTime = CFAbsoluteTimeGetCurrent();
                 }
                 CFAbsoluteTime currTime = CFAbsoluteTimeGetCurrent();
@@ -1937,18 +1729,16 @@ CYAudioManagerDelegate>
                 NSString * cantPlayStartTimeStr = [NSString stringWithFormat:@"%f", _cantPlayStartTime * 1000.0];
                 CGFloat cant = [cantPlayStartTimeStr doubleValue];
                 CGFloat durationTime = curr - cant;
-                if (durationTime >= CYPLAYER_MAX_TIMEOUT * 1000)
-                {
+                if (durationTime >= CYPLAYER_MAX_TIMEOUT * 1000) {
                     _interrupted = YES;
                     _cantPlayStartTime = 0.0;
-                    //                    return;
+                    return;
                 }
             }
             
             if (_minBufferedDuration > 0) {
                 
-                if (!_buffered)
-                {
+                if (!_buffered) {
                     _buffered = YES;
                 }
                 
@@ -1957,65 +1747,45 @@ CYAudioManagerDelegate>
                 }
                 
             }
-        }
-        else if ((_videoFrames.count == 0 &&
-                  _audioFrames.count != 0 &&
-                  _decoder.validVideo == YES) ||
-                 ((_audioFrames.count == 0 &&
-                   _videoFrames.count != 0 &&
-                   _decoder.validAudio == YES)))
-        {
+        } else if ((_videoFrames.count == 0 && _audioFrames.count != 0 && _decoder.validVideo == YES) ||
+                 ((_audioFrames.count == 0 && _videoFrames.count != 0 && _decoder.validAudio == YES))) {
             if (_decoder.isEOF) {
                 if (_decoder.duration - curr_position <= 1.0 &&
                     _decoder.duration > 0 &&
-                    _decoder.duration != NSNotFound)
-                {
+                    _decoder.duration != NSNotFound) {
+                    
                     [self _itemPlayEnd];
                     return;
                 }
-//                if ([_decoder.path hasPrefix:@"rtsp"] || [_decoder.path hasPrefix:@"rtmp"] || [[_decoder.path lastPathComponent] containsString:@"m3u8"])
-//                {
-//                    [self _pause];
-//                    CGFloat interval = 0;
-//                    const NSTimeInterval correction = [self tickCorrection];
-//                    const NSTimeInterval time = MAX(interval + correction, 0.01);
-//                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, time * NSEC_PER_SEC);
-//                    dispatch_after(popTime, _progressQueue, ^(void){
-//                        [weakSelf replayFromInterruptWithDecoder:weakSelf.decoder];
-//                    });
-//                    return;
-//                }
-                else
-                {
-                    //                    [self _itemPlayFailed];
-                    //
-                    //                    return;
+                if ([_decoder.path hasPrefix:@"rtsp"] || [_decoder.path hasPrefix:@"rtmp"] || [[_decoder.path lastPathComponent] containsString:@"m3u8"]) {
+                    [self _pause];
+                    CGFloat interval = 0;
+                    const NSTimeInterval correction = [self tickCorrection];
+                    const NSTimeInterval time = MAX(interval + correction, 0.01);
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, time * NSEC_PER_SEC);
+                    dispatch_after(popTime, _progressQueue, ^(void){
+                        [weakSelf replayFromInterruptWithDecoder:weakSelf.decoder];
+                    });
+                    return;
+                } else {
+                    
+                    [self _itemPlayFailed];
+
+                    return;
                 }
             }
         }
         
-        if ([self.decoder validVideo])
-        {
-            if ([self getMemoryUsedPercent] <= MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT && HAS_PLENTY_OF_MEMORY)
-            {
-                 if (!leftFrames ||
-                                (_videoBufferedDuration < _maxBufferedDuration)
-                                )
-                            {
-                                //            [self asyncDecodeFrames];
-                                [self concurrentAsyncDecodeFrames];
-                            }
+        if ([self.decoder validVideo]) {
+            if ([self getMemoryUsedPercent] <= MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT && HAS_PLENTY_OF_MEMORY) {
+                if (!leftFrames || (_videoBufferedDuration < _maxBufferedDuration)) {
+                    [self concurrentAsyncDecodeFrames];
+                }
             }
-           
-        }
-        else if (![self.decoder validVideo] && [self.decoder validAudio])
-        {
-            if ([self getMemoryUsedPercent] <= MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT && HAS_PLENTY_OF_MEMORY)
-            {
-                if (!leftFrames ||
-                    (_audioBufferedDuration < _maxBufferedDuration))
-                {
-                    //            [self asyncDecodeFrames];
+        } else if (![self.decoder validVideo] && [self.decoder validAudio]) {
+            if ([self getMemoryUsedPercent] <= MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT && HAS_PLENTY_OF_MEMORY) {
+                if (!leftFrames || (_audioBufferedDuration < _maxBufferedDuration)) {
+                    
                     [self concurrentAsyncDecodeFrames];
                 }
             }
@@ -2035,9 +1805,9 @@ CYAudioManagerDelegate>
 
 - (void)refreshProgressViews
 {
-    __weak typeof(&*self)weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     dispatch_async(_progressQueue, ^{
-        __strong typeof(&*self)strongSelf = weakSelf;
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         if (strongSelf)
         {
             const CGFloat duration = strongSelf->_decoder.duration;
@@ -2053,9 +1823,8 @@ CYAudioManagerDelegate>
                 [weakSelf _refreshingTimeProgressSliderWithLoadedTime:loadedPosition duration:duration];
             }
             
-            if ([weakSelf.delegate respondsToSelector:@selector(CDFFmpegPlayer:UpdatePosition:Duration:isDrag:)])
-            {
-                [weakSelf.delegate CDFFmpegPlayer:weakSelf UpdatePosition:position Duration:duration isDrag:strongSelf->_isDraging];
+            if ([weakSelf.delegate respondsToSelector:@selector(cdFFmpegPlayer:updatePosition:duration:isDrag:)]) {
+                [weakSelf.delegate cdFFmpegPlayer:weakSelf updatePosition:position duration:duration isDrag:strongSelf->_isDraging];
             }
             
             if (strongSelf.settings.definitionTypes != CYFFmpegPlayerDefinitionNone) {
@@ -2165,8 +1934,8 @@ CYAudioManagerDelegate>
     return 0;
 }
 
-- (CGFloat) presentVideoFrame
-{
+- (CGFloat)presentVideoFrame {
+    
     CGFloat interval = 0;
     
     if (_decoder.validVideo) {
@@ -2229,26 +1998,20 @@ CYAudioManagerDelegate>
     return interval;
 }
 
-- (CGFloat) presentVideoFrame: (CYVideoFrame *) frame
-{
-    if([UIApplication sharedApplication].applicationState == UIApplicationStateActive)
-    {
-        if (_glView)
-        {
+- (CGFloat)presentVideoFrame:(CYVideoFrame *)frame {
+    
+    if([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        if (_glView) {
             
             @synchronized (_glView) {
                 [_glView render:frame];
             }
             
-        }
-        else if (_metalView)
-        {
+        } else if (_metalView) {
             @synchronized (_metalView) {
                 [_metalView renderWithPixelBuffer:((CYVideoFrameYUV *)frame).pixelBuffer];
             }
-        }
-        else
-        {
+        } else {
             
             CYVideoFrameRGB *rgbFrame = (CYVideoFrameRGB *)frame;
             _imageView.image = [rgbFrame asImage];
@@ -2259,8 +2022,7 @@ CYAudioManagerDelegate>
     return frame.duration;
 }
 
-- (void) presentSubtitles
-{
+- (void)presentSubtitles {
     NSArray *actual, *outdated;
     
     if ([self subtitleForPosition:_moviePosition
@@ -2280,8 +2042,6 @@ CYAudioManagerDelegate>
                 if (ms.length) [ms appendString:@"\n"];
                 [ms appendString:subtitle.text];
             }
-            
-#warning 处理subtitle
             
         } else {
             
@@ -2330,11 +2090,10 @@ CYAudioManagerDelegate>
     return actual.count || outdated.count;
 }
 
-- (void) updatePosition: (CGFloat) position
-               playMode: (BOOL) playMode
-{
-    if (_buffered)
-    {
+- (void)updatePosition:(CGFloat)position
+              playMode:(BOOL)playMode {
+    
+    if (_buffered) {
         return;
     }
     _positionUpdating = YES;
@@ -2354,8 +2113,7 @@ CYAudioManagerDelegate>
     position = MAX(position, 0);
     _targetPosition = position;
     
-    if (playMode)
-    {
+    if (playMode) {
         dispatch_async(_asyncDecodeQueue, ^{
             {
                 __strong CDFFmpegPlayer *strongSelf = weakSelf;
@@ -2373,9 +2131,7 @@ CYAudioManagerDelegate>
                 }
             });
         });
-    }
-    else
-    {
+    } else {
         dispatch_async(_asyncDecodeQueue, ^{
             {
                 __strong CDFFmpegPlayer *strongSelf = weakSelf;
@@ -2398,20 +2154,17 @@ CYAudioManagerDelegate>
     }
 }
 
-- (void) setDecoderPosition: (CGFloat) position
-{
+- (void)setDecoderPosition:(CGFloat)position {
     _decoder.position = position;
 }
 
-- (void) setMoviePositionFromDecoder
-{
+- (void)setMoviePositionFromDecoder {
     _moviePosition = _decoder.position;
     _audioPosition = [_decoder position];
 }
 
-- (BOOL) decodeFrames
-{
-    NSAssert(dispatch_get_current_queue() == _asyncDecodeQueue, @"bugcheck");
+- (BOOL)decodeFrames {
+//    NSAssert(dispatch_get_current_queue() == _asyncDecodeQueue, @"bugcheck");
     
     NSArray *frames = nil;
     
@@ -2432,18 +2185,13 @@ CYAudioManagerDelegate>
     return gHistory;
 }
 
-# pragma mark controlview
-
 - (void)setHiddenLeftControlView:(BOOL)hiddenLeftControlView {
     if ( hiddenLeftControlView == _hiddenLeftControlView ) return;
     _hiddenLeftControlView = hiddenLeftControlView;
-    if ( _hiddenLeftControlView )
-    {
-        self.controlView.leftControlView.transform = CGAffineTransformMakeTranslation(-CYControlLeftH, 0);
-    }
-    else
-    {
-        self.controlView.leftControlView.transform =  CGAffineTransformIdentity;
+    if ( _hiddenLeftControlView ) {
+        
+    } else {
+        
     }
 }
 
@@ -2456,7 +2204,7 @@ CYAudioManagerDelegate>
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         self.lockScreen = YES;
-//        [self pause];
+        [self pause];
     };
     
     _registrar.didBecomeActive = ^(CYVideoPlayerRegistrar * _Nonnull registrar) {
@@ -2466,7 +2214,7 @@ CYAudioManagerDelegate>
         if ( self.state == CDFFmpegPlayerPlayState_PlayEnd ||
             self.state == CDFFmpegPlayerPlayState_Unknown ||
             self.state == CDFFmpegPlayerPlayState_PlayFailed ) return;
-//        if ( !self.userClickedPause ) [self play];
+        if ( !self.userClickedPause ) [self play];
     };
     
     _registrar.oldDeviceUnavailable = ^(CYVideoPlayerRegistrar * _Nonnull registrar) {
@@ -2490,107 +2238,12 @@ CYAudioManagerDelegate>
     return _registrar;
 }
 
-- (CYVolBrigControl *)volBrig {
-    if ( _volBrigControl ) return _volBrigControl;
-    _volBrigControl  = [CYVolBrigControl new];
-    __weak typeof(self) _self = self;
-    _volBrigControl.volumeChanged = ^(float volume) {
-        __strong typeof(_self) self = _self;
-        if ( !self ) return;
-    };
-    
-    _volBrigControl.brightnessChanged = ^(float brightness) {
-        __strong typeof(_self) self = _self;
-        if ( !self ) return;
-    };
-    
-    return _volBrigControl;
-}
-
-- (CYOrentationObserver *)orentation
-{
-    if (_orentation)
-    {
-        return _orentation;
-    }
-    _orentation = [[CYOrentationObserver alloc] initWithTarget:self.presentView container:self.view];
-    __weak typeof(self) _self = self;
-    
-    _orentation.rotationCondition = ^BOOL(CYOrentationObserver * _Nonnull observer) {
-        __strong typeof(_self) self = _self;
-        if ( !self ) return NO;
-        if ( self.stopped ) {
-            if ( observer.isFullScreen ) return YES;
-            else return NO;
-        }
-        if ( self.touchedScrollView ) return NO;
-        switch (self.state) {
-            case CDFFmpegPlayerPlayState_Unknown:
-            case CDFFmpegPlayerPlayState_Prepare:
-            case CDFFmpegPlayerPlayState_PlayFailed: return NO;
-            default: break;
-        }
-        if ( self.disableRotation ) return NO;
-        if ( self.isLockedScrren ) return NO;
-        return YES;
-    };
-    
-    _orentation.orientationChanged = ^(CYOrentationObserver * _Nonnull observer) {
-        __strong typeof(_self) self = _self;
-        if ( !self )
-        {
-            return;
-        }
-        self.hideControl = NO;
-        _cyAnima(^{
-//            self.controlView.previewView.hidden = YES;
-            _cyHiddenViews(@[self.controlView.previewView]);
-            
-            self.hiddenLeftControlView = !observer.isFullScreen;
-            if ( observer.isFullScreen ) {
-                _cyShowViews(@[self.controlView.topControlView.moreBtn,]);
-                if ( self.hasBeenGeneratedPreviewImages )
-                {
-                    _cyShowViews(@[self.controlView.topControlView.previewBtn]);
-                    [self.controlView.topControlView.previewBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.width.equalTo(@49);
-                    }];
-                }
-                
-                [self.controlView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                    //                    make.center.offset(0);
-                    //                    make.height.equalTo(self.controlView.superview);
-                    //                    make.width.equalTo(self.controlView.mas_height).multipliedBy(16.0 / 9.0);
-                    make.edges.equalTo(self.controlView.superview);
-                }];
-                //横屏按钮界面处理
-                self.controlView.bottomControlView.fullBtn.selected = YES;
-            }
-            else {
-                _cyHiddenViews(@[self.controlView.topControlView.moreBtn,
-                                 self.controlView.topControlView.previewBtn,]);
-                [self.controlView.topControlView.previewBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.width.equalTo(@0);
-                }];
-                [self.controlView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                    make.edges.equalTo(self.controlView.superview);
-                }];
-                //横屏按钮界面处理
-                self.controlView.bottomControlView.fullBtn.selected = NO;
-            }
-        });//_cyAnima(^{})
-        if ( self.rotatedScreen ) self.rotatedScreen(self, observer.isFullScreen);
-    };//orientationChanged
-    
-    return _orentation;
-}
-
 - (void)setState:(CDFFmpegPlayerPlayState)state {
     if ( state == _state ) return;
     _state = state;
-    if ([self.delegate respondsToSelector:@selector(CDFFmpegPlayer:ChangeStatus:)])
+    if ([self.delegate respondsToSelector:@selector(cdFFmpegPlayer:changeStatus:)])
     {
-        [self.delegate CDFFmpegPlayer:self ChangeStatus:_state];
+        [self.delegate cdFFmpegPlayer:self changeStatus:_state];
     }
 }
 
@@ -2618,28 +2271,12 @@ CYAudioManagerDelegate>
         __strong typeof(_self) self = _self;
         if (!self) {return NO;}
         //        if (self->_buffered) { return NO; }
-        if ([self.control_delegate respondsToSelector:@selector(CDFFmpegPlayer:triggerCondition:gesture:)]) {
-            return [self.control_delegate CDFFmpegPlayer:self triggerCondition:control gesture:gesture];
+        if ([self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:triggerCondition:gesture:)]) {
+            return [self.control_delegate cdFFmpegPlayer:self triggerCondition:control gesture:gesture];
         }
         if ( self.isLockedScrren ) return NO;
         CGPoint point = [gesture locationInView:gesture.view];
         BOOL result = YES;
-        
-        if (CGRectContainsPoint(self.controlView.previewView.frame, point))
-        {
-            if (self.controlView.previewView.alpha != 0.0)
-            {
-                result = NO;
-            }
-        }
-        
-        if (CGRectContainsPoint(self.controlView.selectTableView.frame, point))
-        {
-            if (self.controlView.selectTableView.alpha != 0.0)
-            {
-                result = NO;
-            }
-        }
         
         return result;
     };
@@ -2648,14 +2285,11 @@ CYAudioManagerDelegate>
     _gestureControl.singleTapped = ^(CYPlayerGestureControl * _Nonnull control) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
-        if ([self.control_delegate respondsToSelector:@selector(CDFFmpegPlayer:singleTapped:)]) {
-            [self.control_delegate CDFFmpegPlayer:self singleTapped:control];
+        if ([self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:singleTapped:)]) {
+            [self.control_delegate cdFFmpegPlayer:self singleTapped:control];
         }
-        _cyAnima(^{
+        _cdAnima(^{
             self.hideControl = !self.isHiddenControl;
-            if (self.controlView.selectTableView.alpha != 0.0) {
-                _cyHiddenViews(@[self.controlView.selectTableView]);
-            }
             
         });
     };
@@ -2664,8 +2298,8 @@ CYAudioManagerDelegate>
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         //        if (self->_buffered) return;
-        if ([self.control_delegate respondsToSelector:@selector(CDFFmpegPlayer:doubleTapped:)]) {
-            [self.control_delegate CDFFmpegPlayer:self doubleTapped:control];
+        if ([self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:doubleTapped:)]) {
+            [self.control_delegate cdFFmpegPlayer:self doubleTapped:control];
         }
         switch (self.state) {
             case CDFFmpegPlayerPlayState_Unknown:
@@ -2698,8 +2332,8 @@ CYAudioManagerDelegate>
         if ( !self ) return;
         if (self->_buffered) return;
         if (self->_positionUpdating) { return; }
-        if ([self.control_delegate respondsToSelector:@selector(CDFFmpegPlayer:beganPan:direction:location:)]) {
-            [self.control_delegate CDFFmpegPlayer:self beganPan:control direction:direction location:location];
+        if ([self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:beganPan:direction:location:)]) {
+            [self.control_delegate cdFFmpegPlayer:self beganPan:control direction:direction location:location];
         }
         switch (direction) {
             case CYPanDirection_H: {
@@ -2714,30 +2348,16 @@ CYAudioManagerDelegate>
                 }
                 
 //                [self _pause];
-                _cyAnima(^{
-                    _cyShowViews(@[self.controlView.draggingProgressView]);
+                _cdAnima(^{
+                    
                 });
-                if ( self.orentation.fullScreen )
-                {
-                    self.controlView.draggingProgressView.hiddenProgressSlider = NO;
-                }
-                else
-                {
-                    self.controlView.draggingProgressView.hiddenProgressSlider = YES;
-                }
                 
-                
-                if ([self.decoder validVideo])
-                {
-                    self.controlView.draggingProgressView.progress = self->_moviePosition / self->_decoder.duration;
-                }
-                else if ([self.decoder validAudio])
-                {
-                    self.controlView.draggingProgressView.progress = self->_audioPosition / self->_decoder.duration;
-                }
-                else
-                {
-                    self.controlView.draggingProgressView.progress = self->_decoder.position / self->_decoder.duration;
+                if ([self.decoder validVideo]) {
+                    
+                } else if ([self.decoder validAudio]) {
+                    
+                } else {
+                    
                 }
                 self.hideControl = YES;
             }
@@ -2763,8 +2383,8 @@ CYAudioManagerDelegate>
         if ( !self ) return;
         if ( self->_buffered ) return;
         if (self->_positionUpdating) { return; }
-        if ([self.control_delegate respondsToSelector:@selector(CDFFmpegPlayer:changedPan:direction:location:)]) {
-            [self.control_delegate CDFFmpegPlayer:self changedPan:control direction:direction location:location];
+        if ([self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:changedPan:direction:location:)]) {
+            [self.control_delegate cdFFmpegPlayer:self changedPan:control direction:direction location:location];
         }
         switch (direction) {
             case CYPanDirection_H: {
@@ -2777,7 +2397,6 @@ CYAudioManagerDelegate>
                     return;
                 }
                 NSLog(@"%f", translate.x * 0.0003);
-                self.controlView.draggingProgressView.progress += translate.x * 0.0003;
             }
                 break;
             case CYPanDirection_V: {
@@ -2801,8 +2420,8 @@ CYAudioManagerDelegate>
     };
     
     _gestureControl.endedPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location) {
-        if ([_self.control_delegate respondsToSelector:@selector(CDFFmpegPlayer:endedPan:direction:location:)]) {
-            [_self.control_delegate CDFFmpegPlayer:_self endedPan:control direction:direction location:location];
+        if ([_self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:endedPan:direction:location:)]) {
+            [_self.control_delegate cdFFmpegPlayer:_self endedPan:control direction:direction location:location];
         }
         __strong typeof(_self) self = _self;
         if ( !self ) return;
@@ -2818,14 +2437,6 @@ CYAudioManagerDelegate>
                 
                 if (!self->_positionUpdating) { self->_positionUpdating = YES; } //手势互斥
                 
-                _cyAnima(^{
-                    _cyHiddenViews(@[_self.controlView.draggingProgressView]);
-                });
-                [_self setMoviePosition:_self.controlView.draggingProgressView.progress * _self.controlView.draggingProgressView.decoder.duration playMode:YES];
-                //                [_self play];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    _self.controlView.draggingProgressView.hiddenProgressSlider = NO;
-                });
             }
                 break;
             case CYPanDirection_V:{
@@ -2844,8 +2455,6 @@ CYAudioManagerDelegate>
     _interrupted = NO;
     self.hideControl = YES;
     self.userClickedPause = NO;
-    self.controlView.bottomProgressSlider.value = 0;
-    self.controlView.bottomProgressSlider.bufferProgress = 0;
     [self _prepareState];
 }
 
@@ -2854,17 +2463,17 @@ CYAudioManagerDelegate>
     _interrupted = YES;
     [self _pause];
     [self _playFailedState];
-    _cyErrorLog(self.error);
+    _cdErrorLog(self.error);
 }
 
 - (void)_itemReadyToPlay {
-    _cyAnima(^{
+    _cdAnima(^{
         self.hideControl = NO;
     });
     if ( self.isAutoplay && !self.userClickedPause && !self.suspend ) {
-        if ([self.delegate respondsToSelector:@selector(CDFFmpegPlayerStartAutoPlaying:)])
+        if ([self.delegate respondsToSelector:@selector(cdFFmpegPlayerStartAutoPlaying:)])
         {
-            [self.delegate CDFFmpegPlayerStartAutoPlaying:self];
+            [self.delegate cdFFmpegPlayerStartAutoPlaying:self];
         }
         [self play];
     }
@@ -2886,17 +2495,12 @@ CYAudioManagerDelegate>
     if (currentTime == NSNotFound || isnan(currentTime) || currentTime == MAXFLOAT) {
         return;
     }
-    if (currentTime > duration || duration == NSNotFound || isnan(duration) || duration == MAXFLOAT)
-    {
+    if (currentTime > duration || duration == NSNotFound || isnan(duration) || duration == MAXFLOAT) {
 //        self.controlView.bottomControlView.currentTimeLabel.text = _formatWithSec(currentTime);
 //        self.controlView.bottomControlView.durationTimeLabel.text = @"LIVE?";
-        self.controlView.bottomControlView.currentTimeLabel.text = @"LIVE";
-    }
-    else
-    {
+    } else {
         if (currentTime >= 0 && duration >= 0) {
-            self.controlView.bottomControlView.currentTimeLabel.text = _formatWithSec(currentTime);
-            self.controlView.bottomControlView.durationTimeLabel.text = _formatWithSec(duration);
+            
         }
     }
 }
@@ -2906,7 +2510,6 @@ CYAudioManagerDelegate>
     if (isnan(progress) || progress == NSNotFound || progress == MAXFLOAT) {
         progress = 0.0;
     }
-    self.controlView.bottomProgressSlider.value = self.controlView.bottomControlView.progressSlider.value = progress;
 }
 
 - (void)_refreshingTimeProgressSliderWithLoadedTime:(NSTimeInterval)loadedTime duration:(NSTimeInterval)duration {
@@ -2914,12 +2517,10 @@ CYAudioManagerDelegate>
     if (isnan(progress) || progress == NSNotFound || progress == MAXFLOAT) {
         progress = 0.0;
     }
-    self.controlView.bottomControlView.progressSlider.bufferProgress = progress;
 }
 
 # pragma mark tools
-- (double)getAvailableMemorySize
-{
+- (double)getAvailableMemorySize {
     vm_statistics_data_t vmStats;
     mach_msg_type_number_t infoCount = HOST_VM_INFO_COUNT;
     kern_return_t kernReturn = host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t)&vmStats, &infoCount);
@@ -2931,8 +2532,7 @@ CYAudioManagerDelegate>
     return ((vm_page_size * vmStats.free_count)) / 1024.0 / 1024.0;// + vm_page_size * vmStats.inactive_count
 }
 
-- (double)usedMemory
-{
+- (double)usedMemory {
     task_basic_info_data_t taskInfo;
     mach_msg_type_number_t infoCount =TASK_BASIC_INFO_COUNT;
     kern_return_t kernReturn =task_info(mach_task_self(),
@@ -2946,8 +2546,7 @@ CYAudioManagerDelegate>
     
 }
 
-- (double)memoryUsage
-{
+- (double)memoryUsage {
     vm_size_t memory = m_memory_usage();
     return memory / 1000.0 /1000.0;
 }
@@ -2960,8 +2559,7 @@ vm_size_t m_memory_usage(void) {
     return (kerr == KERN_SUCCESS) ? info.resident_size : 0; // size in bytes
 }
 
-- (double)getMemoryUsedPercent
-{
+- (double)getMemoryUsedPercent {
     
     double result = 1;
     
@@ -2972,200 +2570,16 @@ vm_size_t m_memory_usage(void) {
     return result >= 0 ? result * 100 : 100;
 }
 
-- (double)getTotalMemorySize
-{
+- (double)getTotalMemorySize {
     return [NSProcessInfo processInfo].physicalMemory / 1024.0 / 1024.0;
 }
 
-
-# pragma mark - 代理
-# pragma mark CYSliderDelegate
-- (void)sliderClick:(CYSlider *)slider
-{
-    switch (slider.tag) {
-        case CYVideoPlaySliderTag_Progress: {
-            if (!_decoder || _buffered || _positionUpdating) { return;}
-            if (!_positionUpdating) { _positionUpdating = YES; }
-            
-            NSInteger currentTime = slider.value * _decoder.duration;
-            [self setMoviePosition:currentTime playMode:YES];
-            [self _delayHiddenControl];
-            _cyAnima(^{
-                _cyHiddenViews(@[self.controlView.draggingProgressView]);
-            });
-            
-            
-        }
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)sliderWillBeginDragging:(CYSlider *)slider {
-    switch (slider.tag) {
-        case CYVideoPlaySliderTag_Progress: {
-            if (!_decoder || _buffered || _positionUpdating) { return;}
-            _isDraging = YES;
-//            [self _pause];
-            NSInteger currentTime = slider.value * _decoder.duration;
-            [self _refreshingTimeLabelWithCurrentTime:currentTime duration:_decoder.duration];
-            _cyAnima(^{
-                _cyShowViews(@[self.controlView.draggingProgressView]);
-            });
-            [self _cancelDelayHiddenControl];
-            self.controlView.draggingProgressView.progress = slider.value;
-            if ( self.orentation.fullScreen )
-            {
-                self.controlView.draggingProgressView.hiddenProgressSlider = NO;
-            }
-            else
-            {
-                self.controlView.draggingProgressView.hiddenProgressSlider = YES;
-            }
-        }
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)sliderDidDrag:(CYSlider *)slider {
-    switch (slider.tag) {
-        case CYVideoPlaySliderTag_Progress: {
-            if (!_decoder || _buffered || _positionUpdating) { return;}
-            NSInteger currentTime = slider.value * _decoder.duration;
-            [self _refreshingTimeLabelWithCurrentTime:currentTime duration:_decoder.duration];
-            self.controlView.draggingProgressView.progress = slider.value;
-        }
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)sliderDidEndDragging:(CYSlider *)slider {
-    switch (slider.tag) {
-        case CYVideoPlaySliderTag_Progress: {
-            if (!_decoder || _buffered || _positionUpdating) { return;}
-            if (!_positionUpdating) { _positionUpdating = YES; }
-            
-            NSInteger currentTime = slider.value * _decoder.duration;
-            [self setMoviePosition:currentTime playMode:YES];
-            [self _delayHiddenControl];
-            _cyAnima(^{
-                _cyHiddenViews(@[self.controlView.draggingProgressView]);
-            });
-            [self _buffering];
-        }
-            break;
-            
-        default:
-            break;
-    }
-}
-
-# pragma mark CYVideoPlayerControlViewDelegate
-- (void)controlView:(CYVideoPlayerControlView *)controlView clickedBtnTag:(CYVideoPlayControlViewTag)tag {
-    switch (tag) {
-        case CYVideoPlayControlViewTag_Back: {
-            if ( self.orentation.isFullScreen ) {
-                if ( self.disableRotation ) return;
-                else [self.orentation _changeOrientation];
-            }
-            else {
-                if ( self.clickedBackEvent ) self.clickedBackEvent(self);
-            }
-        }
-            break;
-        case CYVideoPlayControlViewTag_Full: {
-            [self.orentation _changeOrientation];
-        }
-            break;
-            
-        case CYVideoPlayControlViewTag_Play: {
-            [self play];
-            self.userClickedPause = NO;
-        }
-            break;
-        case CYVideoPlayControlViewTag_Pause: {
-            __weak typeof(&*self)weakSelf = self;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf pause];
-                [weakSelf showTitle:@"已暂停"];
-            });
-            self.userClickedPause = YES;
-        }
-            break;
-        case CYVideoPlayControlViewTag_Replay: {
-            _cyAnima(^{
-                if ( !self.isLockedScrren ) self.hideControl = NO;
-            });
-            [self rePlay];
-        }
-            break;
-        case CYVideoPlayControlViewTag_Preview: {
-            [self _cancelDelayHiddenControl];
-            _cyAnima(^{
-//                self.controlView.previewView.hidden = !self.controlView.previewView.isHidden;
-                if (self.controlView.previewView.alpha == 0.00) {
-                    _cyShowViews(@[self.controlView.previewView]);
-                }else{
-                    _cyHiddenViews(@[self.controlView.previewView]);
-                }
-            });
-            
-        }
-            break;
-        case CYVideoPlayControlViewTag_Lock: {
-            // 解锁
-            self.lockScreen = NO;
-        }
-            break;
-        case CYVideoPlayControlViewTag_Unlock: {
-            // 锁屏
-            self.lockScreen = YES;
-            [self showTitle:@"已锁定"];
-        }
-            break;
-        case CYVideoPlayControlViewTag_LoadFailed: {
-            [self replayFromInterruptWithDecoder:_decoder];
-        }
-            break;
-        case CYVideoPlayControlViewTag_More: {
-            if (self.orentation.isFullScreen)
-            {
-                _cyAnima(^{
-                    self.hideControl = YES;
-                });
-            }
-            else
-            {
-                if ([self.delegate respondsToSelector:@selector(CDFFmpegPlayer:onShareBtnCick:)])
-                {
-                    [self.delegate CDFFmpegPlayer:self onShareBtnCick:self.controlView.topControlView.moreBtn];
-                }
-            }
-        }
-            break;
-    }
-}
-
-- (void)replayFromInterruptWithDecoder:(CYPlayerDecoder *)old_decoder
-{
+- (void)replayFromInterruptWithDecoder:(CYPlayerDecoder *)old_decoder {
     
-    if (self.state == CDFFmpegPlayerPlayState_Prepare)
-    {
+    if (self.state == CDFFmpegPlayerPlayState_Prepare) {
         return;
     }
-//    if (!decoder)
-//    {
-//        [self setupPlayerWithPath:_path];
-//        return;
-    //    }
+    
     [self _itemPrepareToPlay];
     NSString * path = _path;
     id<CYAudioManager> audioManager = [CYAudioManager audioManager];
@@ -3179,16 +2593,16 @@ vm_size_t m_memory_usage(void) {
         type = old_decoder.decodeType;
     }
     [decoder setDecodeType:type];
-    __weak __typeof(&*self)weakSelf = self;
+    __weak __typeof(self) weakSelf = self;
     
     _interrupted = NO;
     decoder.interruptCallback = ^BOOL(){
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         return strongSelf ? [strongSelf interruptDecoder] : YES;
     };
     self.autoplay = YES;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        __strong __typeof(&*self)strongSelf = weakSelf;
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
         
         NSError *error = nil;
         [decoder openFile:path error:&error];
@@ -3196,12 +2610,11 @@ vm_size_t m_memory_usage(void) {
         
         if (strongSelf) {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                __strong __typeof(&*self)strongSelf2 = weakSelf;
+                __strong __typeof(weakSelf) strongSelf2 = weakSelf;
                 if (strongSelf2 && !strongSelf.stopped && !error) {
                     [decoder setPosition:old_decoder.position];
                     //关闭原先的解码器
                     //                    [strongSelf.decoder closeFile];
-                    strongSelf2.controlView.decoder = decoder;
                     //播放器连接新的解码器decoder
                     [strongSelf2 setMovieDecoder:decoder withError:error];
                 }
@@ -3217,276 +2630,6 @@ vm_size_t m_memory_usage(void) {
             });
         }
     });
-    
-//    __weak __typeof(&*self)weakSelf = self;
-//    decoder.interruptCallback = ^BOOL(){
-//        __strong __typeof(&*self)strongSelf = weakSelf;
-//        return strongSelf ? [strongSelf interruptDecoder] : YES;
-//    };
-//
-//    //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_global_queue(0, 0), ^{
-//
-//    //    });
-//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//        __strong __typeof(&*self)strongSelf = weakSelf;
-//
-//        __block NSError *error = nil;
-//        [decoder openFile:decoder.path error:&error];
-//
-//        if (strongSelf) {
-//            dispatch_sync(dispatch_get_main_queue(), ^{
-//                __strong __typeof(&*self)strongSelf2 = weakSelf;
-//                if (strongSelf2) {
-//
-//                    LoggerStream(2, @"setMovieDecoder");
-//
-//                    if (!error && decoder) {
-//                        strongSelf2->_decoder        = decoder;
-//                        strongSelf2->_asyncDecodeQueue  = dispatch_queue_create("CYPlayer AsyncDecode", DISPATCH_QUEUE_SERIAL);
-//                        strongSelf2->_videoFrames    = [NSMutableArray array];
-//                        strongSelf2->_audioFrames    = [NSMutableArray array];
-//
-//                        if (strongSelf2->_decoder.subtitleStreamsCount) {
-//                            strongSelf2->_subtitles = [NSMutableArray array];
-//                        }
-//
-//                        if (strongSelf2->_decoder.isNetwork) {
-//
-//                            strongSelf2->_minBufferedDuration = NETWORK_MIN_BUFFERED_DURATION;
-//                            strongSelf2->_maxBufferedDuration = NETWORK_MAX_BUFFERED_DURATION;
-//
-//                        } else {
-//
-//                            strongSelf2->_minBufferedDuration = LOCAL_MIN_BUFFERED_DURATION;
-//                            strongSelf2->_maxBufferedDuration = LOCAL_MAX_BUFFERED_DURATION;
-//                        }
-//
-//                        if (!strongSelf2->_decoder.validVideo)
-//                            strongSelf2->_minBufferedDuration *= 10.0; // increase for audio
-//
-//                        // allow to tweak some parameters at runtime
-//                        if (strongSelf2->_parameters.count) {
-//
-//                            id val;
-//
-//                            val = [strongSelf2->_parameters valueForKey: CDPlayerParameterMinBufferedDuration];
-//                            if ([val isKindOfClass:[NSNumber class]])
-//                                strongSelf2->_minBufferedDuration = [val floatValue];
-//
-//                            val = [strongSelf2->_parameters valueForKey: CDPlayerParameterMaxBufferedDuration];
-//                            if ([val isKindOfClass:[NSNumber class]])
-//                                strongSelf2->_maxBufferedDuration = [val floatValue];
-//
-//                            val = [strongSelf2->_parameters valueForKey: CDPlayerParameterDisableDeinterlacing];
-//                            if ([val isKindOfClass:[NSNumber class]])
-//                                strongSelf2->_decoder.disableDeinterlacing = [val boolValue];
-//
-//                            if (strongSelf2->_maxBufferedDuration < strongSelf2->_minBufferedDuration)
-//                                strongSelf2->_maxBufferedDuration = strongSelf2->_minBufferedDuration * 2;
-//                        }
-//
-//                        LoggerStream(2, @"buffered limit: %.1f - %.1f", strongSelf2->_minBufferedDuration, strongSelf2->_maxBufferedDuration);
-//                        [strongSelf2 updatePosition:weakSelf.decoder.validVideo ? strongSelf->_moviePosition : strongSelf->_audioPosition playMode:YES];
-//                        [strongSelf2 play];
-//
-//
-//                    } else {
-//                        if (!strongSelf2->_interrupted) {
-//                            [strongSelf2 handleDecoderMovieError: error];
-//                            strongSelf2.error = error;
-//                            [strongSelf2 _itemPlayFailed];
-//                        }
-//                    }
-//
-//                }
-//            });
-//        }
-//    });
-}
-
-- (void)controlView:(CYVideoPlayerControlView *)controlView didSelectPreviewFrame:(CYVideoFrame *)frame
-{
-    //    [self _pause];
-    NSInteger currentTime = frame.position;
-    [self setMoviePosition:currentTime];
-    [self _delayHiddenControl];
-    _cyAnima(^{
-        _cyHiddenViews(@[self.controlView.draggingProgressView]);
-    });
-}
-
-- (void)controlViewOnDefinitionBtnClick:(CYVideoPlayerControlView *)controlView
-{
-    __weak typeof(self) _self = self;
-    
-    _cyAnima(^{
-        _cyShowViews(@[self.controlView.selectTableView]);
-        self.hideControl = YES;
-    });
-    
-    //构造视频清晰度数据
-    __block NSMutableArray * definitions = [[NSMutableArray alloc] initWithCapacity:4];
-    if (self.settings.definitionTypes & CYFFmpegPlayerDefinitionLLD) {
-        if (_definitionType == CYFFmpegPlayerDefinitionLLD) {
-            [definitions addObject:@">>流畅"];
-        }else {
-            [definitions addObject:@"流畅"];
-        }
-    }
-    if (self.settings.definitionTypes & CYFFmpegPlayerDefinitionLSD) {
-        if (_definitionType == CYFFmpegPlayerDefinitionLSD) {
-            [definitions addObject:@">>标清"];
-        }else {
-            [definitions addObject:@"标清"];
-        }
-    }
-    if (self.settings.definitionTypes & CYFFmpegPlayerDefinitionLHD) {
-        if (_definitionType == CYFFmpegPlayerDefinitionLHD) {
-            [definitions addObject:@">>高清"];
-        }else {
-            [definitions addObject:@"高清"];
-        }
-    }
-    if (self.settings.definitionTypes & CYFFmpegPlayerDefinitionLUD) {
-        if (_definitionType == CYFFmpegPlayerDefinitionLUD) {
-            [definitions addObject:@">>超清"];
-        }else {
-            [definitions addObject:@"超清"];
-        }
-    }
-    
-    self.controlView.selectTableView.dataArray = definitions;
-    
-    self.controlView.selectTableView.numberOfRowsInSection = ^NSInteger(UITableView * _Nonnull tableView, NSInteger section) {
-        return definitions.count;
-    };
-    
-    self.controlView.selectTableView.cellForRowAtIndexPath = ^UITableViewCell *(UITableView * _Nonnull tableView, NSIndexPath * _Nonnull indexPath) {
-        UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-        cell.backgroundColor = [UIColor clearColor];
-        cell.textLabel.textColor = [UIColor whiteColor];
-        cell.textLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:20];
-        cell.textLabel.textAlignment = NSTextAlignmentCenter;
-        NSString * text = definitions[indexPath.row];
-        cell.textLabel.text = text;
-        if ([text containsString:@">>"])
-        {
-            cell.textLabel.text = [text stringByReplacingOccurrencesOfString:@">>" withString:@""];
-            cell.textLabel.textColor = CYColorWithHEX(0x00c5b5);
-        }
-        return cell;
-    };
-    
-    self.controlView.selectTableView.heightForRowAtIndexPath = ^CGFloat(UITableView * _Nonnull tableView, NSIndexPath * _Nonnull indexPath) {
-        __strong typeof(_self) self = _self;
-        return self.controlView.selectTableView.frame.size.height / definitions.count;
-    };
-    
-    self.controlView.selectTableView.didSelectRowAtIndexPath = ^(UITableView * _Nonnull tableView, NSIndexPath * _Nonnull indexPath) {
-        __strong typeof(_self) self = _self;
-        if ([self.delegate respondsToSelector:@selector(CDFFmpegPlayer:ChangeDefinition:)])
-        {
-            NSString * definitionStr = [definitions objectAtIndex:indexPath.row];
-            CYFFmpegPlayerDefinitionType definiType = 0;
-            if ([definitionStr containsString:@"流畅"])
-            {
-                definiType = CYFFmpegPlayerDefinitionLLD;
-            }
-            else if ([definitionStr containsString:@"标清"])
-            {
-                definiType = CYFFmpegPlayerDefinitionLSD;
-            }
-            else if ([definitionStr containsString:@"高清"])
-            {
-                definiType = CYFFmpegPlayerDefinitionLHD;
-            }
-            else if ([definitionStr containsString:@"超清"])
-            {
-                definiType = CYFFmpegPlayerDefinitionLUD;
-            }
-            if (self->_definitionType != definiType) {
-                self->_definitionType = definiType;
-                [self.delegate CDFFmpegPlayer:self ChangeDefinition:definiType];
-                //切换清晰度的btn界面处理
-                self->_isChangingDefinition = YES;
-            }
-        }
-        _cyAnima(^{
-            _cyHiddenViews(@[self.controlView.selectTableView]);
-        });
-    };
-    
-    [self.controlView.selectTableView reloadTableView];
-}
-
-- (void)controlViewOnSelectionsBtnClick:(CYVideoPlayerControlView *)controlView
-{
-    if (![self.delegate respondsToSelector:@selector(CDFFmpegPlayer:SetSelectionsNumber:)]) {
-        return;
-    }
-    
-    _cyAnima(^{
-        _cyShowViews(@[self.controlView.selectTableView]);
-        self.hideControl = YES;
-    });
-    
-    __weak typeof(self) _self = self;
-    [self.delegate CDFFmpegPlayer:self SetSelectionsNumber:^(NSInteger selectionsNumber) {
-        __strong typeof(_self) self = _self;
-        if (!self) {
-            return;
-        }
-        __block NSInteger selectionsNum = selectionsNumber;
-        self.controlView.selectTableView.numberOfRowsInSection = ^NSInteger(UITableView * _Nonnull tableView, NSInteger section) {
-            return selectionsNum;
-        };
-        
-        if (self.settings.setCurrentSelectionsIndex)
-        {
-            self->_currentSelections = self.settings.setCurrentSelectionsIndex();
-        }
-        
-        self.controlView.selectTableView.cellForRowAtIndexPath = ^UITableViewCell *(UITableView * _Nonnull tableView, NSIndexPath * _Nonnull indexPath) {
-            __strong typeof(_self) self = _self;
-            UITableViewCell * cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-            cell.backgroundColor = [UIColor clearColor];
-            cell.textLabel.textColor = [UIColor whiteColor];
-            cell.textLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:19];
-            cell.textLabel.textAlignment = NSTextAlignmentCenter;
-            cell.textLabel.text = [NSString stringWithFormat:@"第%ld节",(long)indexPath.row + 1];
-            if (self->_currentSelections == indexPath.row) {
-                cell.textLabel.textColor = CYColorWithHEX(0x00c5b5);
-            }
-            return cell;
-        };
-        
-        self.controlView.selectTableView.heightForRowAtIndexPath = ^CGFloat(UITableView * _Nonnull tableView, NSIndexPath * _Nonnull indexPath) {
-            __strong typeof(_self) self = _self;
-            if (selectionsNumber > 4) {
-                return 30.0;
-            }
-            return self.controlView.selectTableView.frame.size.height / selectionsNumber;
-        };
-        
-        self.controlView.selectTableView.didSelectRowAtIndexPath = ^(UITableView * _Nonnull tableView, NSIndexPath * _Nonnull indexPath) {
-            __strong typeof(_self) self = _self;
-            if ([self.delegate respondsToSelector:@selector(CDFFmpegPlayer:changeSelections:)])
-            {
-                if (self->_currentSelections != indexPath.row) {
-                    self->_currentSelections = indexPath.row;
-                    [self.delegate CDFFmpegPlayer:self changeSelections:indexPath.row];
-                    //切换清晰度的btn界面处理
-                    self->_isChangingSelections = YES;
-                }
-            }
-            _cyAnima(^{
-                _cyHiddenViews(@[self.controlView.selectTableView]);
-            });
-        };
-        
-        [self.controlView.selectTableView reloadTableView];
-        [self.controlView.selectTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_currentSelections inSection:0]];
-    }];
 }
 
 @end
@@ -3513,7 +2656,7 @@ vm_size_t m_memory_usage(void) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ( self.state == CDFFmpegPlayerPlayState_Pause ) return;
-        _cyAnima(^{
+        _cdAnima(^{
             self.hideControl = YES;
         });
     }];
@@ -3532,7 +2675,7 @@ vm_size_t m_memory_usage(void) {
     }
     
     [self _cancelDelayHiddenControl];
-    _cyAnima(^{
+    _cdAnima(^{
         if ( lockScreen ) {
             [self _lockScreenState];
         }
@@ -3558,8 +2701,8 @@ vm_size_t m_memory_usage(void) {
     if ( oldValue != hideControl ) {
         objc_setAssociatedObject(self, @selector(isHiddenControl), @(hideControl), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         if ( self.controlViewDisplayStatus ) self.controlViewDisplayStatus(self, !hideControl);
-        if ([self.delegate respondsToSelector:@selector(CDFFmpegPlayer:ControlViewDisplayStatus:)])  {
-            [self.delegate CDFFmpegPlayer:self ControlViewDisplayStatus:!hideControl];
+        if ([self.delegate respondsToSelector:@selector(cdFFmpegPlayer:controlViewDisplayStatus:)])  {
+            [self.delegate cdFFmpegPlayer:self controlViewDisplayStatus:!hideControl];
         }
     }
 }
@@ -3570,56 +2713,15 @@ vm_size_t m_memory_usage(void) {
 
 - (void)_unknownState {
     // hidden
-    _cyHiddenViews(@[self.controlView]);
     self.state = CDFFmpegPlayerPlayState_Unknown;
 }
 
 - (void)_prepareState {
-    // show
-    _cyShowViews(@[self.controlView]);
     
-    // hidden
-//    self.controlView.previewView.alpha = 0;
-//    self.controlView.previewView.hidden = YES;
-    _cyHiddenViews(@[
-        self.controlView.previewView,
-        self.controlView.draggingProgressView,
-        self.controlView.topControlView.previewBtn,
-        //                     self.controlView.leftControlView.lockBtn,
-        self.controlView.centerControlView.failedBtn,
-        self.controlView.centerControlView.replayBtn,
-        self.controlView.bottomControlView.pauseBtn,
-        self.controlView.bottomProgressSlider,
-        self.controlView.draggingProgressView.imageView,
-        self.controlView.selectTableView,
-        
-    ]);
     
     [self _unlockScreenState];
     
-    [self.controlView.topControlView.previewBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(@0);
-    }];
-    
-    if ( self.orentation.fullScreen ) {
-        _cyShowViews(@[self.controlView.topControlView.moreBtn,]);
-        self.hiddenLeftControlView = NO;
-        if ( self.hasBeenGeneratedPreviewImages )
-        {
-            _cyShowViews(@[self.controlView.topControlView.previewBtn]);
-            [self.controlView.topControlView.previewBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.equalTo(@49);
-            }];
-        }
-    }
-    else {
-        self.hiddenLeftControlView = YES;
-        _cyHiddenViews(@[self.controlView.topControlView.moreBtn,
-                         self.controlView.topControlView.previewBtn,]);
-        [self.controlView.topControlView.previewBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.equalTo(@0);
-        }];
-    }
+    self.hiddenLeftControlView = YES;
     
     self.state = CDFFmpegPlayerPlayState_Prepare;
 }
@@ -3631,15 +2733,9 @@ vm_size_t m_memory_usage(void) {
 - (void)_playState {
     
     // show
-    _cyShowViews(@[self.controlView.bottomControlView.pauseBtn]);
     
     // hidden
     // hidden
-    _cyHiddenViews(@[
-                     self.controlView.bottomControlView.playBtn,
-                     self.controlView.centerControlView.replayBtn,
-                     self.controlView.centerControlView.failedBtn
-                     ]);
     
     self.state = CDFFmpegPlayerPlayState_Playing;
 }
@@ -3647,10 +2743,8 @@ vm_size_t m_memory_usage(void) {
 - (void)_pauseState {
     
     // show
-    _cyShowViews(@[self.controlView.bottomControlView.playBtn]);
     
     // hidden
-    _cyHiddenViews(@[self.controlView.bottomControlView.pauseBtn]);
     
     self.state = CDFFmpegPlayerPlayState_Pause;
 }
@@ -3670,11 +2764,8 @@ vm_size_t m_memory_usage(void) {
         
         end: {
             // show
-            _cyShowViews(@[self.controlView.centerControlView.replayBtn,
-                           self.controlView.bottomControlView.playBtn]);
             
             // hidden
-            _cyHiddenViews(@[self.controlView.bottomControlView.pauseBtn]);
             
             
             self.state = CDFFmpegPlayerPlayState_PlayEnd;
@@ -3685,11 +2776,8 @@ vm_size_t m_memory_usage(void) {
 - (void)_playFailedState {
     // show
     [self showBackBtn];
-    _cyShowViews(@[self.controlView.centerControlView,
-                   self.controlView.centerControlView.failedBtn]);
     
     // hidden
-    _cyHiddenViews(@[self.controlView.centerControlView.replayBtn]);
     
     self.state = CDFFmpegPlayerPlayState_PlayFailed;
     self.playing = NO;
@@ -3698,83 +2786,23 @@ vm_size_t m_memory_usage(void) {
 - (void)_lockScreenState {
     
     // show
-    _cyShowViews(@[self.controlView.leftControlView.lockBtn]);
+    
     
     // hidden
-    _cyHiddenViews(@[self.controlView.leftControlView.unlockBtn]);
+    
     self.hideControl = YES;
 }
 
 - (void)_unlockScreenState {
     
-    // show
-    _cyShowViews(@[self.controlView.leftControlView.unlockBtn]);
-    self.hideControl = NO;
-    
-    // hidden
-    _cyHiddenViews(@[self.controlView.leftControlView.lockBtn]);
-    
 }
 
 - (void)_hideControlState {
     
-    // show
-    _cyShowViews(@[self.controlView.bottomProgressSlider]);
-    
-    // hidden
-    _cyHiddenViews(@[
-        self.controlView.previewView,
-//        self.controlView.selectTableView,
-    ]);
-//    self.controlView.previewView.hidden = YES;
-    
-    // transform hidden
-    self.controlView.topControlView.transform = CGAffineTransformMakeTranslation(0, -CYControlTopH);
-    self.controlView.bottomControlView.transform = CGAffineTransformMakeTranslation(0, CYControlBottomH);
-    
-    if ( self.orentation.fullScreen ) {
-        if ( self.isLockedScrren ) self.hiddenLeftControlView = NO;
-        else self.hiddenLeftControlView = YES;
-    }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if ( self.orentation.fullScreen ) {
-                [[UIApplication sharedApplication] setStatusBarHidden:YES animated:YES];
-    }
-    else {
-                [[UIApplication sharedApplication] setStatusBarHidden:NO animated:YES];
-    }
-#pragma clang diagnostic pop
 }
 
 - (void)_showControlState {
     
-    // hidden
-    _cyHiddenViews(@[self.controlView.bottomProgressSlider,
-                     self.controlView.previewView,
-//                     self.controlView.selectTableView,
-    ]);
-//    _cyHiddenViews(@[self.controlView.previewView]);
-//    self.controlView.previewView.hidden = YES;
-    
-    // transform show
-    if (self.orentation.fullScreen ) {
-        self.controlView.topControlView.transform = CGAffineTransformMakeTranslation(0, 0);
-        [[UIApplication sharedApplication] setStatusBarHidden:YES animated:YES];
-    }
-    else {
-        self.controlView.topControlView.transform = CGAffineTransformIdentity;
-        [[UIApplication sharedApplication] setStatusBarHidden:NO animated:YES];
-    }
-    self.controlView.bottomControlView.transform = CGAffineTransformIdentity;
-    
-    self.hiddenLeftControlView = !self.orentation.fullScreen && !self.isLockedScrren;
-    
-    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-//        [[UIApplication sharedApplication] setStatusBarHidden:NO animated:YES];
-#pragma clang diagnostic pop
 }
 
 @end
@@ -3800,7 +2828,7 @@ vm_size_t m_memory_usage(void) {
     if ( !self.decoder ) return;
     self.decoder.rate = rate;
     self.userClickedPause = NO;
-    _cyAnima(^{
+    _cdAnima(^{
         [self _playState];
     });
     
@@ -3825,7 +2853,7 @@ vm_size_t m_memory_usage(void) {
 }
 
 - (void)_clear {
-    _controlView.asset = nil;
+    
 }
 
 - (void)dressSetting:(CYVideoPlayerMoreSetting *)setting {
@@ -3982,12 +3010,12 @@ vm_size_t m_memory_usage(void) {
     //    if ( !self.asset ) return NO;
     self.userClickedPause = NO;
     if ( self.state != CDFFmpegPlayerPlayState_Playing ) {
-        _cyAnima(^{
+        _cdAnima(^{
             [self _playState];
         });
     }
     [self _play];
-    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+//    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     return YES;
 }
 
@@ -3999,7 +3027,7 @@ vm_size_t m_memory_usage(void) {
     
     //    if ( !self.asset ) return NO;
     if ( self.state != CDFFmpegPlayerPlayState_Pause ) {
-        _cyAnima(^{
+        _cdAnima(^{
             [self _pauseState];
             self.hideControl = NO;
         });
@@ -4019,7 +3047,7 @@ vm_size_t m_memory_usage(void) {
     [self _stop];
     //    if ( !self.asset ) return;
     if ( self.state != CDFFmpegPlayerPlayState_Unknown ) {
-        _cyAnima(^{
+        _cdAnima(^{
             [self _unknownState];
         });
     }
@@ -4038,42 +3066,19 @@ vm_size_t m_memory_usage(void) {
 }
 
 - (void)hideBackBtn {
-    _cyHiddenViews(@[
-                     self.controlView.topControlView.previewBtn,
-//                     self.controlView.leftControlView,
-//                     self.controlView.centerControlView,
-//                     self.controlView.bottomControlView,
-                     self.controlView.draggingProgressView,
-                     ]);
+    
     self.hiddenLeftControlView = YES;
-    [self.controlView.topControlView.previewBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(@0);
-    }];
-    _cyAnima(^{
+    
+    _cdAnima(^{
         self.hideControl = YES;
     });
 }
 
 - (void)showBackBtn {
-    _cyShowViews(@[self.controlView,
-//                   self.controlView.bottomControlView,
-                   self.controlView.topControlView,
-                   self.controlView.topControlView.backBtn,
-                   self.controlView.centerControlView,
-                   self.controlView.topControlView.titleBtn]);
-    _cyHiddenViews(@[
-                     self.controlView.topControlView.previewBtn,
-//                     self.controlView.leftControlView,
-//                     self.controlView.centerControlView,
-//                     self.controlView.bottomControlView,
-                     self.controlView.draggingProgressView,
-                     ]);
+
     self.hiddenLeftControlView = YES;
-    [self.controlView.topControlView.previewBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(@0);
-    }];
-    _cyShowViews(@[self.controlView, self.controlView.topControlView, self.controlView.topControlView.backBtn, self.controlView.topControlView.titleBtn]);
-    _cyAnima(^{
+    
+    _cdAnima(^{
         self.hideControl = NO;
     });
 }
@@ -4104,155 +3109,4 @@ vm_size_t m_memory_usage(void) {
     [self.prompt hidden];
 }
 
-# pragma mark - Test
-- (NSString*)localBufferPath
-{
-    NSFileManager * fileManager = [NSFileManager defaultManager];
-    NSArray *Paths=NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES );
-    NSString *MyDocpath=[Paths objectAtIndex:0];
-    MyDocpath = [MyDocpath stringByAppendingPathComponent:@"CYPlayer"];
-    if (self.decoder)
-    {
-        NSString * fileName = [self.decoder.path lastPathComponent];
-        MyDocpath = [MyDocpath stringByAppendingPathComponent:fileName];
-    }
-    BOOL isDir = NO;
-    // fileExistsAtPath 判断一个文件或目录是否有效，isDirectory判断是否一个目录
-    BOOL existed = [fileManager fileExistsAtPath:MyDocpath isDirectory:&isDir];
-    if ( !(isDir == YES && existed == YES) ) {//如果文件夹不存在
-        [fileManager createDirectoryAtPath:MyDocpath withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    
-    return MyDocpath;
-}
-
-
-- (void)archiveFrame:(CYPlayerFrame *)frame
-{
-    //归档
-    NSFileManager * fileManager = [NSFileManager defaultManager];
-    //1:准备路径
-    NSString *path = [self localBufferPath];
-    if (frame.type == CYPlayerFrameTypeAudio) {
-        path = [path stringByAppendingPathComponent:@"audio"];
-        BOOL isDir = NO;
-        // fileExistsAtPath 判断一个文件或目录是否有效，isDirectory判断是否一个目录
-        BOOL existed = [fileManager fileExistsAtPath:path isDirectory:&isDir];
-        if ( !(isDir == YES && existed == YES) ) {//如果文件夹不存在
-            [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-        }
-        NSNumber * posi_tmp = [NSNumber numberWithDouble:frame.position];
-        path = [path stringByAppendingPathComponent:[posi_tmp stringValue]];
-    }else if (frame.type == CYPlayerFrameTypeVideo) {
-        path = [path stringByAppendingPathComponent:@"video"];
-        BOOL isDir = NO;
-        // fileExistsAtPath 判断一个文件或目录是否有效，isDirectory判断是否一个目录
-        BOOL existed = [fileManager fileExistsAtPath:path isDirectory:&isDir];
-        if ( !(isDir == YES && existed == YES) ) {//如果文件夹不存在
-            [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-        }
-        NSNumber * posi_tmp = [NSNumber numberWithDouble:frame.position];
-        path = [path stringByAppendingPathComponent:[posi_tmp stringValue]];
-    }else if (frame.type == CYPlayerFrameTypeArtwork) {
-        path = [path stringByAppendingPathComponent:@"artwork"];
-        BOOL isDir = NO;
-        // fileExistsAtPath 判断一个文件或目录是否有效，isDirectory判断是否一个目录
-        BOOL existed = [fileManager fileExistsAtPath:path isDirectory:&isDir];
-        if ( !(isDir == YES && existed == YES) ) {//如果文件夹不存在
-            [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-        }
-        NSNumber * posi_tmp = [NSNumber numberWithDouble:frame.position];
-        path = [path stringByAppendingPathComponent:[posi_tmp stringValue]];
-    }else if (frame.type == CYPlayerFrameTypeSubtitle) {
-        path = [path stringByAppendingPathComponent:@"subtitle"];
-        BOOL isDir = NO;
-        // fileExistsAtPath 判断一个文件或目录是否有效，isDirectory判断是否一个目录
-        BOOL existed = [fileManager fileExistsAtPath:path isDirectory:&isDir];
-        if ( !(isDir == YES && existed == YES) ) {//如果文件夹不存在
-            [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-        }
-        NSNumber * posi_tmp = [NSNumber numberWithDouble:frame.position];
-        path = [path stringByAppendingPathComponent:[posi_tmp stringValue]];
-    }
-    
-    //2:准备存储数据对象(用可变数组进行接收)
-    NSMutableData *data = [NSMutableData new];
-    //3:创建归档对象
-    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc]initForWritingWithMutableData:data];
-    //4:开始归档
-    [archiver encodeObject:frame forKey:@"frame"];
-    //5:完成归档
-    [archiver finishEncoding];
-    //6:写入文件
-    BOOL result = [data writeToFile:path atomically:YES];
-    if (!result) {
-        NSLog(@"归档失败postion:%f", frame.position);
-    }
-}
-
-- (NSArray *)unarchiveFrameWithPostion:(CGFloat)position type:(CYPlayerFrameType)type
-{
-    NSMutableArray * frames = [[NSMutableArray alloc] initWithCapacity:60];
-    
-    //1:准备路径
-    //    NSString *path = [self localBufferPath];
-    //    if (type == CYPlayerFrameTypeAudio) {
-    //        path = [path stringByAppendingPathComponent:@"audio"];
-    //        path = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%f",frame.position]];
-    //    }else if (frame.type == CYPlayerFrameTypeVideo) {
-    //        path = [path stringByAppendingPathComponent:@"video"];
-    //        path = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%f",frame.position]];
-    //    }
-    
-    return frames;
-}
-
-
-- (void) asyncUnarchiveFrames
-{
-    if (self.unarchiving)
-    {
-        return;
-    }
-    self.unarchiving = YES;
-    
-    __weak CDFFmpegPlayer *weakSelf = self;
-    __weak CYPlayerDecoder *weakDecoder = _decoder;
-    
-    const CGFloat duration = _decoder.isNetwork ? .0f : 0.1f;
-    dispatch_async(_asyncDecodeQueue, ^{
-        __strong CDFFmpegPlayer *strongSelf = weakSelf;
-        if (strongSelf)
-        {
-            if (!weakSelf.playing)
-                return;
-            
-            BOOL good = YES;
-            while (good && !weakSelf.stopped) {
-                CFAbsoluteTime startTime =CFAbsoluteTimeGetCurrent();
-                good = NO;
-                
-                @autoreleasepool {
-                    
-                    if (weakDecoder && (weakDecoder.validVideo || weakDecoder.validAudio)) {
-                        
-                        //                        NSArray *[frames = [weakSelf unarchiveFrameWithPostion:<#(CGFloat)#> type:<#(CYPlayerFrameType)#>
-                        
-                        //                        if (frames.count) {
-                        //
-                        //                            good = [weakSelf addFrames:frames];
-                        //                        }
-                        //                        frames = nil;
-                    }
-                }
-                CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-                //NSLog(@"Linked in %f ms", linkTime *1000.0);
-            }
-            
-            weakSelf.unarchiving = NO;
-        }
-    });
-}
-
 @end
-

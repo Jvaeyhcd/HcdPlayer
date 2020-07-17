@@ -10,13 +10,12 @@
 #import <UIKit/UIKit.h>
 #import "CYPlayerGestureControl.h"
 #import "CYPlayerDecoder.h"
-#import "CYVideoPlayerControlView.h"
 #import "CYVideoPlayerSettings.h"
 #import "CYPlayerGLView.h"
 #import "CYFFmpegMetalView.h"
 
 @class
-//CYPlayerDecoder,
+CYPlayerDecoder,
 CYVideoPlayerSettings,
 CYPrompt,
 CYVideoFrame,
@@ -36,76 +35,72 @@ typedef NS_ENUM(NSUInteger, CDFFmpegPlayerPlayState) {
 };
 
 
-typedef void (^CYPlayerImageGeneratorCompletionHandler)(NSMutableArray<CYVideoFrame *> * frames, NSError * error);
+typedef void (^CYPlayerImageGeneratorCompletionHandler)(NSMutableArray<CYVideoFrame *> * _Nullable frames, NSError * _Nullable error);
 
 typedef void (^CYPlayerSelectionsHandler)(NSInteger selectionsNumber);
 
 
-extern NSString * const CDPlayerParameterMinBufferedDuration;    // Float
-extern NSString * const CDPlayerParameterMaxBufferedDuration;    // Float
-extern NSString * const CDPlayerParameterDisableDeinterlacing;   // BOOL
+extern NSString * _Nullable const CDPlayerParameterMinBufferedDuration;    // Float
+extern NSString * _Nullable const CDPlayerParameterMaxBufferedDuration;    // Float
+extern NSString * _Nullable const CDPlayerParameterDisableDeinterlacing;   // BOOL
 
 # pragma mark - CDFFmpegPlayer
 
 @class CDFFmpegPlayer,
-CYVideoPlayerControlView,
 CYLoadingView,
-CYVolBrigControl,
-CYVideoPlayerMoreSettingsView,
-CYVideoPlayerMoreSettingSecondaryView;
+CYVolBrigControl;
 
 @protocol CDFFmpegPlayerDelegate <NSObject>
 
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player onShareBtnCick:(UIButton *)btn;
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player onShareBtnCick:(UIButton *_Nullable)btn;
 
-- (void)CDFFmpegPlayerStartAutoPlaying:(CDFFmpegPlayer *)player;
+- (void)cdFFmpegPlayerStartAutoPlaying:(CDFFmpegPlayer *_Nullable)player;
 
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player ChangeStatus:(CDFFmpegPlayerPlayState)state;
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player changeStatus:(CDFFmpegPlayerPlayState)state;
 
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player UpdatePosition:(CGFloat)position Duration:(CGFloat)duration isDrag:(BOOL)isdrag;
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player updatePosition:(CGFloat)position duration:(CGFloat)duration isDrag:(BOOL)isdrag;
 
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player ControlViewDisplayStatus:(BOOL)isHidden;
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player controlViewDisplayStatus:(BOOL)isHidden;
 
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player ChangeDefinition:(CYFFmpegPlayerDefinitionType)definition;
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player changeDefinition:(CYFFmpegPlayerDefinitionType)definition;
 
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player SetSelectionsNumber:(CYPlayerSelectionsHandler)setNumHandler;
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player setSelectionsNumber:(CYPlayerSelectionsHandler _Nullable )setNumHandler;
 
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player changeSelections:(NSInteger)selectionsNum;
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player changeSelections:(NSInteger)selectionsNum;
 
 @end
 
 @interface CDFFmpegPlayer : NSObject
 
-+ (instancetype)sharedPlayer;
++ (instancetype _Nullable )sharedPlayer;
 
-+ (id) movieViewWithContentPath: (NSString *) path
-                               parameters: (NSDictionary *) parameters;
++ (id _Nullable ) movieViewWithContentPath: (NSString *_Nullable) path
+                                parameters: (NSDictionary *_Nullable) parameters;
 
-- (void)setupPlayerWithPath:(NSString *)path;
+- (void)setupPlayerWithPath:(NSString *_Nullable)path;
 
-- (void)setupPlayerWithPath:(NSString *)path parameters: (NSDictionary *) parameters;
+- (void)setupPlayerWithPath:(NSString *_Nullable)path parameters: (NSDictionary *_Nullable) parameters;
 
-- (void)changeDefinitionPath:(NSString *)path;
-- (void)changeSelectionsPath:(NSString *)path;
-- (void)changeLiveDefinitionPath:(NSString *)path;
+- (void)changeDefinitionPath:(NSString *_Nullable)path;
+- (void)changeSelectionsPath:(NSString *_Nullable)path;
+- (void)changeLiveDefinitionPath:(NSString *_Nullable)path;
 
 
-@property (nonatomic, strong) CYPlayerDecoder *decoder;
+@property (nonatomic, strong) CYPlayerDecoder * _Nullable decoder;
 
-@property (nonatomic, weak) id<CDFFmpegPlayerDelegate> delegate;
+@property (nonatomic, weak) id<CDFFmpegPlayerDelegate> _Nullable delegate;
 
 /*!
  *  present View. support autoLayout.
  *
  *  播放器视图
  */
-@property (nonatomic, strong) UIView *view;
-@property (nonatomic, strong) UIView * presentView;
-@property (nonatomic, strong) CYPlayerGLView * glView;
-@property (nonatomic, strong) CYFFmpegMetalView * metalView;
-@property (nonatomic, strong) CYVideoPlayerControlView *controlView;
-@property (nonatomic, strong) CYLoadingView *loadingView;
-@property (nonatomic, strong) CYPlayerGestureControl *gestureControl;
+@property (nonatomic, strong) UIView * _Nullable view;
+@property (nonatomic, strong) UIView * _Nullable presentView;
+@property (nonatomic, strong) CYPlayerGLView * _Nullable glView;
+@property (nonatomic, strong) CYFFmpegMetalView * _Nullable metalView;
+@property (nonatomic, strong) CYLoadingView * _Nullable loadingView;
+@property (nonatomic, strong) CYPlayerGestureControl * _Nullable gestureControl;
 
 @property (readonly) BOOL playing;
 
@@ -113,11 +108,27 @@ CYVideoPlayerMoreSettingSecondaryView;
 
 @property (nonatomic, assign, readwrite) BOOL generatPreviewImages;
 
+/// 页面显示
 - (void)viewDidAppear;
+
+/// 页面隐藏
 - (void)viewWillDisappear;
-- (void)generatedPreviewImagesWithCount:(NSInteger)imagesCount completionHandler:(CYPlayerImageGeneratorCompletionHandler)handler;
-- (void) setMoviePosition: (CGFloat) position playMode:(BOOL)playMode;
+
+/// 生成预览图
+/// @param imagesCount 预览图个数
+/// @param handler 生成预览图完成后的回调
+- (void)generatedPreviewImagesWithCount:(NSInteger)imagesCount
+                      completionHandler:(CYPlayerImageGeneratorCompletionHandler _Nullable )handler;
+
+/// 设置播放的位置
+/// @param position 播放的位置
+/// @param playMode 是否立即播放
+- (void)setMoviePosition:(CGFloat)position playMode:(BOOL)playMode;
+
+/// 视频当前播放到的时间
 - (double)currentTime;
+
+/// 视频的总时长
 - (NSTimeInterval)totalTime;
 
 @end
@@ -161,7 +172,7 @@ CYVideoPlayerMoreSettingSecondaryView;
  *
  *  点击返回按钮的回调.
  */
-@property (nonatomic, copy, readwrite) void(^clickedBackEvent)(CDFFmpegPlayer *player);
+@property (nonatomic, copy, readwrite) void(^ _Nullable clickedBackEvent)(CDFFmpegPlayer * _Nullable player);
 
 /*!
  *  Whether screen rotation is disabled. default is NO.
@@ -172,9 +183,9 @@ CYVideoPlayerMoreSettingSecondaryView;
 
 @property (nonatomic, assign, readwrite) float rate; /// 0.5 .. 1.5
 
-@property (nonatomic, copy, readwrite, nullable) void(^rotatedScreen)(CDFFmpegPlayer *player, BOOL isFullScreen);
+@property (nonatomic, copy, readwrite, nullable) void(^rotatedScreen)(CDFFmpegPlayer * _Nullable player, BOOL isFullScreen);
 
-@property (nonatomic, copy, readwrite, nullable) void(^controlViewDisplayStatus)(CDFFmpegPlayer *player, BOOL displayed);
+@property (nonatomic, copy, readwrite, nullable) void(^controlViewDisplayStatus)(CDFFmpegPlayer * _Nullable player, BOOL displayed);
 
 /*!
  *  Call when the rate changes.
@@ -182,14 +193,17 @@ CYVideoPlayerMoreSettingSecondaryView;
  *  调速时调用.
  *  当滑动内部的`rate slider`时候调用. 外部改变`rate`不会调用.
  **/
-@property (nonatomic, copy, readwrite, nullable) void(^internallyChangedRate)(CDFFmpegPlayer *player, float rate);
+@property (nonatomic, copy, readwrite, nullable) void(^internallyChangedRate)(CDFFmpegPlayer * _Nullable player, float rate);
 
 /*!
  *  配置播放器, 注意: 这个`block`在子线程运行.
  **/
-- (void)settingPlayer:(void(^)(CYVideoPlayerSettings *settings))block;
-- (void)resetSetting;// 重置配置
-- (CYVideoPlayerSettings *)settings;
+- (void)settingPlayer:(void(^_Nullable)(CYVideoPlayerSettings * _Nullable settings))block;
+
+/// 重置配置
+- (void)resetSetting;
+
+- (CYVideoPlayerSettings *_Nullable)settings;
 
 
 /*!
@@ -197,7 +211,7 @@ CYVideoPlayerMoreSettingSecondaryView;
  *
  *  调速时调用.
  **/
-@property (nonatomic, copy, readwrite, nullable) void(^rateChanged)(CDFFmpegPlayer *player);
+@property (nonatomic, copy, readwrite, nullable) void(^rateChanged)(CDFFmpegPlayer * _Nullable player);
 
 /*!
  *  default is YES.
@@ -209,7 +223,7 @@ CYVideoPlayerMoreSettingSecondaryView;
 /*!
  *  clicked More button to display items.
  *
- *  点击更多按钮, 弹出来的选项.
+ * _Nullable 点击更多按钮, 弹出来的选项.
  **/
 @property (nonatomic, strong, readwrite, nullable) NSArray<CYVideoPlayerMoreSetting *> *moreSettings;
 
@@ -220,12 +234,30 @@ CYVideoPlayerMoreSettingSecondaryView;
 @protocol CYFFmpegControlDelegate <NSObject>
 
 @optional
-- (BOOL)CDFFmpegPlayer:(CDFFmpegPlayer *)player triggerCondition:(CYPlayerGestureControl *)control gesture:(UIGestureRecognizer *)gesture;
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player singleTapped:(CYPlayerGestureControl *)control;
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player doubleTapped:(CYPlayerGestureControl *)control;
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player beganPan:(CYPlayerGestureControl *)control direction:(CYPanDirection)direction location:(CYPanLocation)location;
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player changedPan:(CYPlayerGestureControl *)control direction:(CYPanDirection)direction location:(CYPanLocation)location;
-- (void)CDFFmpegPlayer:(CDFFmpegPlayer *)player endedPan:(CYPlayerGestureControl *)control direction:(CYPanDirection)direction location:(CYPanLocation)location;
+
+- (BOOL)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
+      triggerCondition:(CYPlayerGestureControl *_Nullable)control
+               gesture:(UIGestureRecognizer *_Nullable)gesture;
+
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
+          singleTapped:(CYPlayerGestureControl *_Nullable)control;
+
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
+          doubleTapped:(CYPlayerGestureControl *_Nullable)control;
+
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
+              beganPan:(CYPlayerGestureControl *_Nullable)control
+             direction:(CYPanDirection)direction location:(CYPanLocation)location;
+
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
+            changedPan:(CYPlayerGestureControl *_Nullable)control
+             direction:(CYPanDirection)direction
+              location:(CYPanLocation)location;
+
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
+              endedPan:(CYPlayerGestureControl *_Nullable)control
+             direction:(CYPanDirection)direction
+              location:(CYPanLocation)location;
 
 @end
 
@@ -245,9 +277,9 @@ CYVideoPlayerMoreSettingSecondaryView;
 
 - (void)showBackBtn;
 
-@property (nonatomic, copy) LockScreen lockscreen;
+@property (nonatomic, copy) LockScreen _Nullable lockscreen;
 
-@property (nonatomic, weak) id<CYFFmpegControlDelegate> control_delegate;
+@property (nonatomic, weak) id<CYFFmpegControlDelegate> _Nullable control_delegate;
 
 @end
 
@@ -255,17 +287,17 @@ CYVideoPlayerMoreSettingSecondaryView;
 
 @interface CDFFmpegPlayer (Prompt)
 
-@property (nonatomic, strong, readonly) CYPrompt *prompt;
+@property (nonatomic, strong, readonly) CYPrompt * _Nullable prompt;
 
 /*!
  *  duration default is 1.0
  */
-- (void)showTitle:(NSString *)title;
+- (void)showTitle:(NSString *_Nullable)title;
 
 /*!
  *  duration if value set -1, promptView will always show.
  */
-- (void)showTitle:(NSString *)title duration:(NSTimeInterval)duration;
+- (void)showTitle:(NSString *_Nullable)title duration:(NSTimeInterval)duration;
 
 - (void)hiddenTitle;
 

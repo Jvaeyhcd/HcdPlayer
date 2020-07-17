@@ -375,9 +375,9 @@ enum {
 	return [CAEAGLLayer class];
 }
 
-- (id) initWithFrame:(CGRect)frame
-             decoder: (CYPlayerDecoder *) decoder
-{
+- (id)initWithFrame:(CGRect)frame
+            decoder:(CYPlayerDecoder *)decoder {
+    
     self = [super initWithFrame:frame];
     if (self) {
         
@@ -602,8 +602,8 @@ enum {
 	_context = nil;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
+    
     glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
     [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.layer];
 	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &_backingWidth);
@@ -620,19 +620,18 @@ enum {
     }
     
     [self updateVertices];
-    [self render: nil];
+    [self render:nil];
 }
 
-- (void)setContentMode:(UIViewContentMode)contentMode
-{
+- (void)setContentMode:(UIViewContentMode)contentMode {
     [super setContentMode:contentMode];
     [self updateVertices];
     if (_renderer.isValid)
         [self render:nil];
 }
 
-- (BOOL)loadShaders
-{
+- (BOOL)loadShaders {
+    
     BOOL result = NO;
     GLuint vertShader = 0, fragShader = 0;
     
@@ -692,13 +691,12 @@ exit:
     return result;
 }
 
-- (void)updateVertices
-{
+- (void)updateVertices {
     const BOOL fit      = (self.contentMode == UIViewContentModeScaleAspectFit);
     const float width   = _decoder.frameWidth;
     const float height  = _decoder.frameHeight;
     const float dH      = (float)_backingHeight / height;
-    const float dW      = (float)_backingWidth	  / width;
+    const float dW      = (float)_backingWidth / width;
     const float dd      = fit ? MIN(dH, dW) : MAX(dH, dW);
     const float h       = (height * dd / (float)_backingHeight);
     const float w       = (width  * dd / (float)_backingWidth );
@@ -713,8 +711,7 @@ exit:
     _vertices[7] =   h;
 }
 
-- (void)render: (CYVideoFrame *) frame
-{
+- (void)render:(CYVideoFrame *)frame {
     dispatch_semaphore_wait(self->_glRenderLock, DISPATCH_TIME_FOREVER);//加锁
     static const GLfloat texCoords[] = {
         0.0f, 1.0f,

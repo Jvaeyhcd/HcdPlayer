@@ -16,8 +16,10 @@
 
 @interface CYPlayerGLView : UIView
 
-- (id) initWithFrame:(CGRect)frame
-             decoder: (CYPlayerDecoder *) decoder;
+@property (nonatomic) CGSize contentSize;
+
+- (id)initWithFrame:(CGRect)frame
+            decoder:(CYPlayerDecoder *)decoder;
 
 - (void)setDecoder:(CYPlayerDecoder *)decoder;
 
