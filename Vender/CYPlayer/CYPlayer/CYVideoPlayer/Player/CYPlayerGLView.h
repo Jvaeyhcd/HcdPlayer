@@ -27,6 +27,6 @@
 
 - (void)updateVertices;
 
-- (void) render: (CYVideoFrame *) frame;
+- (void)render:(CYVideoFrame *)frame;
 
 @end

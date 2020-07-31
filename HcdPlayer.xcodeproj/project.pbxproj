@@ -1900,7 +1900,7 @@
 		B9AA8FC521ED785000F3C70E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = Salvador;
 				TargetAttributes = {
 					B9AA8FCC21ED785000F3C70E = {

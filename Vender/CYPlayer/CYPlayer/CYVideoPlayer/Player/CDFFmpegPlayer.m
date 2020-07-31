@@ -977,7 +977,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
                 _glView.contentMode = UIViewContentModeScaleAspectFill;
             }
             
-            if (!_glView && !_metalView) {
+            if (!_glView) {
                 
                 LoggerVideo(0, @"fallback to use RGB video frame and UIKit");
                 [_decoder setupVideoFrameFormat:CYVideoFrameFormatRGB];
@@ -2007,10 +2007,6 @@ static NSMutableDictionary * gHistory = nil;//播放记录
                 [_glView render:frame];
             }
             
-        } else if (_metalView) {
-            @synchronized (_metalView) {
-                [_metalView renderWithPixelBuffer:((CYVideoFrameYUV *)frame).pixelBuffer];
-            }
         } else {
             
             CYVideoFrameRGB *rgbFrame = (CYVideoFrameRGB *)frame;
