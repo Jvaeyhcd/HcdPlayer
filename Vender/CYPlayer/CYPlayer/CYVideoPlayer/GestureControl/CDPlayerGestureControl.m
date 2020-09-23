@@ -1,19 +1,19 @@
 //
-//  CYPlayerGestureControl.m
-//  CYPlayerGestureControl
+//  CDPlayerGestureControl.m
+//  CDPlayerGestureControl
 //
 //  Created by yellowei on 2017/12/10.
 //  Copyright © 2017年 yellowei. All rights reserved.
 //
 
-#import "CYPlayerGestureControl.h"
+#import "CDPlayerGestureControl.h"
 
-@interface CYPlayerGestureControl ()<UIGestureRecognizerDelegate>
+@interface CDPlayerGestureControl ()<UIGestureRecognizerDelegate>
 
 
 @end
 
-@implementation CYPlayerGestureControl
+@implementation CDPlayerGestureControl
 {
     //Gesture
     BOOL                _gestureHandling;

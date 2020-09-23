@@ -1,6 +1,6 @@
 //
-//  CYPlayerGestureControl.h
-//  CYPlayerGestureControl
+//  CDPlayerGestureControl.h
+//  CDPlayerGestureControl
 //
 //  Created by yellowei on 2017/12/10.
 //  Copyright © 2017年 yellowei. All rights reserved.
@@ -22,7 +22,7 @@ typedef NS_ENUM(NSUInteger, CYPanLocation) {
     CYPanLocation_Right,
 };
 
-@interface CYPlayerGestureControl : NSObject
+@interface CDPlayerGestureControl : NSObject
 
 @property (nonatomic, strong, readonly) UITapGestureRecognizer *singleTap;
 @property (nonatomic, strong, readonly) UITapGestureRecognizer *doubleTap;
@@ -35,13 +35,13 @@ typedef NS_ENUM(NSUInteger, CYPanLocation) {
 
 - (instancetype)initWithTargetView:(__weak UIView *)view;
 
-@property (nonatomic, copy, readwrite, nullable) BOOL(^triggerCondition)(CYPlayerGestureControl *control, UIGestureRecognizer *gesture);
+@property (nonatomic, copy, readwrite, nullable) BOOL(^triggerCondition)(CDPlayerGestureControl *control, UIGestureRecognizer *gesture);
 
-@property (nonatomic, copy, readwrite, nullable) void(^singleTapped)(CYPlayerGestureControl *control);
-@property (nonatomic, copy, readwrite, nullable) void(^doubleTapped)(CYPlayerGestureControl *control);
-@property (nonatomic, copy, readwrite, nullable) void(^beganPan)(CYPlayerGestureControl *control, CYPanDirection direction, CYPanLocation location);
-@property (nonatomic, copy, readwrite, nullable) void(^changedPan)(CYPlayerGestureControl *control, CYPanDirection direction, CYPanLocation location, CGPoint translate);
-@property (nonatomic, copy, readwrite, nullable) void(^endedPan)(CYPlayerGestureControl *control, CYPanDirection direction, CYPanLocation location);
+@property (nonatomic, copy, readwrite, nullable) void(^singleTapped)(CDPlayerGestureControl *control);
+@property (nonatomic, copy, readwrite, nullable) void(^doubleTapped)(CDPlayerGestureControl *control);
+@property (nonatomic, copy, readwrite, nullable) void(^beganPan)(CDPlayerGestureControl *control, CYPanDirection direction, CYPanLocation location);
+@property (nonatomic, copy, readwrite, nullable) void(^changedPan)(CDPlayerGestureControl *control, CYPanDirection direction, CYPanLocation location, CGPoint translate);
+@property (nonatomic, copy, readwrite, nullable) void(^endedPan)(CDPlayerGestureControl *control, CYPanDirection direction, CYPanLocation location);
 
 @end
 
