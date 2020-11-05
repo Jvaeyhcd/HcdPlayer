@@ -41,6 +41,7 @@
     if (seconds < 0) { [ms appendString:@"∞"]; return ms; }
     
     int h = seconds / 3600;
+    if (h < 10) [ms appendString:@"0"];
     [ms appendFormat:@"%d:", h];
     int m = seconds / 60 % 60;
     if (m < 10) [ms appendString:@"0"];

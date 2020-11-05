@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "CYPlayerGestureControl.h"
+#import "CDPlayerGestureControl.h"
 #import "CYPlayerDecoder.h"
 #import "CYVideoPlayerSettings.h"
 #import "CYPlayerGLView.h"
@@ -51,6 +51,7 @@ CYVolBrigControl;
 
 @protocol CDFFmpegPlayerDelegate <NSObject>
 
+@optional
 - (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player onShareBtnCick:(UIButton *_Nullable)btn;
 
 - (void)cdFFmpegPlayerStartAutoPlaying:(CDFFmpegPlayer *_Nullable)player;
@@ -98,7 +99,7 @@ CYVolBrigControl;
 @property (nonatomic, strong) UIView * _Nullable presentView;
 @property (nonatomic, strong) CYPlayerGLView * _Nullable glView;
 @property (nonatomic, strong) CYLoadingView * _Nullable loadingView;
-@property (nonatomic, strong) CYPlayerGestureControl * _Nullable gestureControl;
+@property (nonatomic, strong) CDPlayerGestureControl * _Nullable gestureControl;
 
 @property (readonly) BOOL playing;
 
@@ -229,33 +230,33 @@ CYVolBrigControl;
 
 
 #pragma mark - CYVideoPlayer (Control)
-@protocol CYFFmpegControlDelegate <NSObject>
+@protocol CDFFmpegControlDelegate <NSObject>
 
 @optional
 
 - (BOOL)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
-      triggerCondition:(CYPlayerGestureControl *_Nullable)control
+      triggerCondition:(CDPlayerGestureControl *_Nullable)control
                gesture:(UIGestureRecognizer *_Nullable)gesture;
 
 - (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
-          singleTapped:(CYPlayerGestureControl *_Nullable)control;
+          singleTapped:(CDPlayerGestureControl *_Nullable)control;
 
 - (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
-          doubleTapped:(CYPlayerGestureControl *_Nullable)control;
+          doubleTapped:(CDPlayerGestureControl *_Nullable)control;
 
 - (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
-              beganPan:(CYPlayerGestureControl *_Nullable)control
-             direction:(CYPanDirection)direction location:(CYPanLocation)location;
+              beganPan:(CDPlayerGestureControl *_Nullable)control
+             direction:(CDPanDirection)direction location:(CDPanLocation)location;
 
 - (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
-            changedPan:(CYPlayerGestureControl *_Nullable)control
-             direction:(CYPanDirection)direction
-              location:(CYPanLocation)location;
+            changedPan:(CDPlayerGestureControl *_Nullable)control
+             direction:(CDPanDirection)direction
+              location:(CDPanLocation)location;
 
 - (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
-              endedPan:(CYPlayerGestureControl *_Nullable)control
-             direction:(CYPanDirection)direction
-              location:(CYPanLocation)location;
+              endedPan:(CDPlayerGestureControl *_Nullable)control
+             direction:(CDPanDirection)direction
+              location:(CDPanLocation)location;
 
 @end
 
@@ -277,7 +278,7 @@ CYVolBrigControl;
 
 @property (nonatomic, copy) LockScreen _Nullable lockscreen;
 
-@property (nonatomic, weak) id<CYFFmpegControlDelegate> _Nullable control_delegate;
+@property (nonatomic, weak) id<CDFFmpegControlDelegate> _Nullable control_delegate;
 
 @end
 

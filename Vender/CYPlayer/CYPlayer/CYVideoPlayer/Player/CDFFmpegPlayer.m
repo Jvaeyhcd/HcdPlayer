@@ -21,7 +21,7 @@
 #import "CYVideoPlayerBaseView.h"
 
 //Models
-#import "CYPlayerGestureControl.h"
+#import "CDPlayerGestureControl.h"
 #import "CYTimerControl.h"
 #import "CYVideoPlayerRegistrar.h"
 #import "CYVideoPlayerSettings.h"
@@ -181,7 +181,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
 {
     CYVideoPlayerPresentView *_presentView;
     CYLoadingView *_loadingView;
-    CYPlayerGestureControl *_gestureControl;
+    CDPlayerGestureControl *_gestureControl;
     CYVideoPlayerBaseView *_view;
     dispatch_queue_t _workQueue;
     CYVideoPlayerRegistrar *_registrar;
@@ -2260,10 +2260,10 @@ static NSMutableDictionary * gHistory = nil;//播放记录
 
 - (void)gesturesHandleWithTargetView:(UIView *)targetView {
     
-    _gestureControl = [[CYPlayerGestureControl alloc] initWithTargetView:targetView];
+    _gestureControl = [[CDPlayerGestureControl alloc] initWithTargetView:targetView];
     
     __weak typeof(self) _self = self;
-    _gestureControl.triggerCondition = ^BOOL(CYPlayerGestureControl * _Nonnull control, UIGestureRecognizer *gesture) {
+    _gestureControl.triggerCondition = ^BOOL(CDPlayerGestureControl * _Nonnull control, UIGestureRecognizer *gesture) {
         __strong typeof(_self) self = _self;
         if (!self) {return NO;}
         //        if (self->_buffered) { return NO; }
@@ -2271,14 +2271,14 @@ static NSMutableDictionary * gHistory = nil;//播放记录
             return [self.control_delegate cdFFmpegPlayer:self triggerCondition:control gesture:gesture];
         }
         if ( self.isLockedScrren ) return NO;
-        CGPoint point = [gesture locationInView:gesture.view];
+//        CGPoint point = [gesture locationInView:gesture.view];
         BOOL result = YES;
         
         return result;
     };
     
     
-    _gestureControl.singleTapped = ^(CYPlayerGestureControl * _Nonnull control) {
+    _gestureControl.singleTapped = ^(CDPlayerGestureControl * _Nonnull control) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ([self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:singleTapped:)]) {
@@ -2290,7 +2290,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         });
     };
     
-    _gestureControl.doubleTapped = ^(CYPlayerGestureControl * _Nonnull control) {
+    _gestureControl.doubleTapped = ^(CDPlayerGestureControl * _Nonnull control) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         //        if (self->_buffered) return;
@@ -2323,7 +2323,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         
     };
     
-    _gestureControl.beganPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location) {
+    _gestureControl.beganPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if (self->_buffered) return;
@@ -2332,7 +2332,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
             [self.control_delegate cdFFmpegPlayer:self beganPan:control direction:direction location:location];
         }
         switch (direction) {
-            case CYPanDirection_H: {
+            case CDPanDirection_H: {
                 
                 if (![self settings].enableProgressControl) {
                     return;
@@ -2358,23 +2358,23 @@ static NSMutableDictionary * gHistory = nil;//播放记录
                 self.hideControl = YES;
             }
                 break;
-            case CYPanDirection_V: {
+            case CDPanDirection_V: {
                 switch (location) {
-                    case CYPanLocation_Right: break;
-                    case CYPanLocation_Left: {
+                    case CDPanLocation_Right: break;
+                    case CDPanLocation_Left: {
                         
                     }
                         break;
-                    case CYPanLocation_Unknown: break;
+                    case CDPanLocation_Unknown: break;
                 }
             }
                 break;
-            case CYPanDirection_Unknown:
+            case CDPanDirection_Unknown:
                 break;
         }
     };
     
-    _gestureControl.changedPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location, CGPoint translate) {
+    _gestureControl.changedPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location, CGPoint translate) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ( self->_buffered ) return;
@@ -2383,7 +2383,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
             [self.control_delegate cdFFmpegPlayer:self changedPan:control direction:direction location:location];
         }
         switch (direction) {
-            case CYPanDirection_H: {
+            case CDPanDirection_H: {
                 if (![self settings].enableProgressControl) {
                     return;
                 }
@@ -2395,18 +2395,18 @@ static NSMutableDictionary * gHistory = nil;//播放记录
                 NSLog(@"%f", translate.x * 0.0003);
             }
                 break;
-            case CYPanDirection_V: {
+            case CDPanDirection_V: {
                 switch (location) {
-                    case CYPanLocation_Left: {
+                    case CDPanLocation_Left: {
                         
                     }
                         break;
-                    case CYPanLocation_Right: {
+                    case CDPanLocation_Right: {
                         
                         
                     }
                         break;
-                    case CYPanLocation_Unknown: break;
+                    case CDPanLocation_Unknown: break;
                 }
             }
                 break;
@@ -2415,7 +2415,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         }
     };
     
-    _gestureControl.endedPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location) {
+    _gestureControl.endedPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location) {
         if ([_self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:endedPan:direction:location:)]) {
             [_self.control_delegate cdFFmpegPlayer:_self endedPan:control direction:direction location:location];
         }
@@ -2424,7 +2424,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         if ( self->_buffered ) return;
         if (self->_positionUpdating) { return; }
         switch ( direction ) {
-            case CYPanDirection_H:{
+            case CDPanDirection_H:{
                 if (![self settings].enableProgressControl) {
                     return;
                 }
@@ -2435,13 +2435,13 @@ static NSMutableDictionary * gHistory = nil;//播放记录
                 
             }
                 break;
-            case CYPanDirection_V:{
-                if ( location == CYPanLocation_Left ) {
+            case CDPanDirection_V:{
+                if ( location == CDPanLocation_Left ) {
                     
                 }
             }
                 break;
-            case CYPanDirection_Unknown: break;
+            case CDPanDirection_Unknown: break;
         }
     };
 }
@@ -2987,12 +2987,12 @@ vm_size_t m_memory_usage(void) {
 
 @implementation CDFFmpegPlayer (Control)
 
-- (id<CYFFmpegControlDelegate>)control_delegate
+- (id<CDFFmpegControlDelegate>)control_delegate
 {
     return objc_getAssociatedObject(self, _cmd);
 }
 
-- (void)setControl_delegate:(id<CYFFmpegControlDelegate>)control_delegate
+- (void)setControl_delegate:(id<CDFFmpegControlDelegate>)control_delegate
 {
     objc_setAssociatedObject(self, @selector(control_delegate), control_delegate, OBJC_ASSOCIATION_ASSIGN);
 }

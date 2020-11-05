@@ -194,7 +194,7 @@ $(document).ready(function() {
     pasteZone: null,
     autoUpload: true,
     sequentialUploads: true,
-     limitConcurrentUploads: 2,
+    // limitConcurrentUploads: 2,
     // forceIframeTransport: true,
     
     url: 'upload',
@@ -210,6 +210,7 @@ $(document).ready(function() {
     },
     
     add: function(e, data) {
+      // debugger
       var file = data.files[0];
       data.formData = {
         path: _path

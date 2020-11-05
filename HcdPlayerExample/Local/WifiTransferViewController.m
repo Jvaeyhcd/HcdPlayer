@@ -10,10 +10,11 @@
 #import "WiFiTransferTableViewCell.h"
 #import "FilesListTableViewCell.h"
 #import "UITableView+Hcd.h"
+#import "NewGCDWebUploader.h"
 
 #define kWebServerPort 8011
 
-@interface WifiTransferViewController () {
+@interface WifiTransferViewController ()<NewGCDWebUploaderDelegate> {
     
     UITableView         *_tableView;
     NSString            *_serverURL;
@@ -22,7 +23,7 @@
     NSMutableArray      *_fileList;
 }
 
-@property (nonatomic, retain) GCDWebUploader *webServer;
+@property (nonatomic, retain) NewGCDWebUploader *webServer;
 
 @end
 
@@ -71,7 +72,7 @@
     
     // 获取Documents目录路径
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    _webServer = [[GCDWebUploader alloc] initWithUploadDirectory:documentsPath];
+    _webServer = [[NewGCDWebUploader alloc] initWithUploadDirectory:documentsPath];
     _webServer.delegate = self;
     _webServer.prologue = HcdLocalized(@"PROLOGUE", nil);
     _webServer.epilogue = HcdLocalized(@"EPILOGUE", nil);
@@ -85,6 +86,7 @@
     } else {
         NSLog(@"GCDWebServer not running!");
     };
+    
     if (!_tableView) {
         [self createTableView];
     }
@@ -206,26 +208,26 @@
 
 #pragma mark - GCDWebUploaderDelegate
 
-- (void)webUploader:(GCDWebUploader *)uploader didDeleteItemAtPath:(NSString *)path {
+- (void)webUploader:(NewGCDWebUploader *)uploader didDeleteItemAtPath:(NSString *)path {
     
 }
 
-- (void)webUploader:(GCDWebUploader *)uploader didUploadFileAtPath:(NSString *)path {
+- (void)webUploader:(NewGCDWebUploader *)uploader didUploadFileAtPath:(NSString *)path {
     if (path) {
         [_fileList addObject:path];
     }
     [_tableView reloadData];
 }
 
-- (void)webUploader:(GCDWebUploader *)uploader didDownloadFileAtPath:(NSString *)path {
+- (void)webUploader:(NewGCDWebUploader *)uploader didDownloadFileAtPath:(NSString *)path {
     
 }
 
-- (void)webUploader:(GCDWebUploader *)uploader didMoveItemFromPath:(NSString *)fromPath toPath:(NSString *)toPath {
+- (void)webUploader:(NewGCDWebUploader *)uploader didMoveItemFromPath:(NSString *)fromPath toPath:(NSString *)toPath {
     
 }
 
-- (void)webUploader:(GCDWebUploader *)uploader didCreateDirectoryAtPath:(NSString *)path {
+- (void)webUploader:(NewGCDWebUploader *)uploader didCreateDirectoryAtPath:(NSString *)path {
     
 }
 

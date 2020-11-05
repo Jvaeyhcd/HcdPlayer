@@ -25,7 +25,7 @@
 
 //Models
 #import "CYVolBrigControl.h"
-#import "CYPlayerGestureControl.h"
+#import "CDPlayerGestureControl.h"
 #import "CYOrentationObserver.h"
 #import "CYTimerControl.h"
 #import "CYVideoPlayerRegistrar.h"
@@ -197,7 +197,7 @@ CYAudioManagerDelegate>
     CYMoreSettingsFooterViewModel *_moreSettingFooterViewModel;
     CYVolBrigControl *_volBrigControl;
     CYLoadingView *_loadingView;
-    CYPlayerGestureControl *_gestureControl;
+    CDPlayerGestureControl *_gestureControl;
     CYVideoPlayerBaseView *_view;
     CYOrentationObserver *_orentation;
     dispatch_queue_t _workQueue;
@@ -2750,10 +2750,10 @@ CYAudioManagerDelegate>
 
 - (void)gesturesHandleWithTargetView:(UIView *)targetView {
     
-    _gestureControl = [[CYPlayerGestureControl alloc] initWithTargetView:targetView];
+    _gestureControl = [[CDPlayerGestureControl alloc] initWithTargetView:targetView];
     
     __weak typeof(self) _self = self;
-    _gestureControl.triggerCondition = ^BOOL(CYPlayerGestureControl * _Nonnull control, UIGestureRecognizer *gesture) {
+    _gestureControl.triggerCondition = ^BOOL(CDPlayerGestureControl * _Nonnull control, UIGestureRecognizer *gesture) {
         __strong typeof(_self) self = _self;
         if (!self) {return NO;}
         //        if (self->_buffered) { return NO; }
@@ -2788,7 +2788,7 @@ CYAudioManagerDelegate>
     };
     
     
-    _gestureControl.singleTapped = ^(CYPlayerGestureControl * _Nonnull control) {
+    _gestureControl.singleTapped = ^(CDPlayerGestureControl * _Nonnull control) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ([self.control_delegate respondsToSelector:@selector(CYFFmpegPlayer:singleTapped:)]) {
@@ -2812,7 +2812,7 @@ CYAudioManagerDelegate>
         });
     };
     
-    _gestureControl.doubleTapped = ^(CYPlayerGestureControl * _Nonnull control) {
+    _gestureControl.doubleTapped = ^(CDPlayerGestureControl * _Nonnull control) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         //        if (self->_buffered) return;
@@ -2845,7 +2845,7 @@ CYAudioManagerDelegate>
         
     };
     
-    _gestureControl.beganPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location) {
+    _gestureControl.beganPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if (self->_buffered) return;
@@ -2854,7 +2854,7 @@ CYAudioManagerDelegate>
             [self.control_delegate CYFFmpegPlayer:self beganPan:control direction:direction location:location];
         }
         switch (direction) {
-            case CYPanDirection_H: {
+            case CDPanDirection_H: {
                 
                 if (![self settings].enableProgressControl) {
                     return;
@@ -2894,10 +2894,10 @@ CYAudioManagerDelegate>
                 self.hideControl = YES;
             }
                 break;
-            case CYPanDirection_V: {
+            case CDPanDirection_V: {
                 switch (location) {
-                    case CYPanLocation_Right: break;
-                    case CYPanLocation_Left: {
+                    case CDPanLocation_Right: break;
+                    case CDPanLocation_Left: {
                         [[UIApplication sharedApplication].keyWindow addSubview:self.volBrigControl.brightnessView];
                         [self.volBrigControl.brightnessView mas_remakeConstraints:^(MASConstraintMaker *make) {
                             make.size.mas_offset(CGSizeMake(155, 155));
@@ -2909,16 +2909,16 @@ CYAudioManagerDelegate>
                         });
                     }
                         break;
-                    case CYPanLocation_Unknown: break;
+                    case CDPanLocation_Unknown: break;
                 }
             }
                 break;
-            case CYPanDirection_Unknown:
+            case CDPanDirection_Unknown:
                 break;
         }
     };
     
-    _gestureControl.changedPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location, CGPoint translate) {
+    _gestureControl.changedPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location, CGPoint translate) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ( self->_buffered ) return;
@@ -2927,7 +2927,7 @@ CYAudioManagerDelegate>
             [self.control_delegate CYFFmpegPlayer:self changedPan:control direction:direction location:location];
         }
         switch (direction) {
-            case CYPanDirection_H: {
+            case CDPanDirection_H: {
                 if (![self settings].enableProgressControl) {
                     return;
                 }
@@ -2940,20 +2940,20 @@ CYAudioManagerDelegate>
                 self.controlView.draggingProgressView.progress += translate.x * 0.0003;
             }
                 break;
-            case CYPanDirection_V: {
+            case CDPanDirection_V: {
                 switch (location) {
-                    case CYPanLocation_Left: {
+                    case CDPanLocation_Left: {
                         CGFloat value = self.volBrigControl.brightness - translate.y * 0.006;
                         if ( value < 1.0 / 16 ) value = 1.0 / 16;
                         self.volBrigControl.brightness = value;
                     }
                         break;
-                    case CYPanLocation_Right: {
+                    case CDPanLocation_Right: {
                         CGFloat value = translate.y * 0.006;
                         self.volBrigControl.volume -= value;
                     }
                         break;
-                    case CYPanLocation_Unknown: break;
+                    case CDPanLocation_Unknown: break;
                 }
             }
                 break;
@@ -2962,7 +2962,7 @@ CYAudioManagerDelegate>
         }
     };
     
-    _gestureControl.endedPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location) {
+    _gestureControl.endedPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location) {
         if ([_self.control_delegate respondsToSelector:@selector(CYFFmpegPlayer:endedPan:direction:location:)]) {
             [_self.control_delegate CYFFmpegPlayer:_self endedPan:control direction:direction location:location];
         }
@@ -2971,7 +2971,7 @@ CYAudioManagerDelegate>
         if ( self->_buffered ) return;
         if (self->_positionUpdating) { return; }
         switch ( direction ) {
-            case CYPanDirection_H:{
+            case CDPanDirection_H:{
                 if (![self settings].enableProgressControl) {
                     return;
                 }
@@ -2990,15 +2990,15 @@ CYAudioManagerDelegate>
                 });
             }
                 break;
-            case CYPanDirection_V:{
-                if ( location == CYPanLocation_Left ) {
+            case CDPanDirection_V:{
+                if ( location == CDPanLocation_Left ) {
                     _cyAnima(^{
                         _cyHiddenViews(@[self.volBrigControl.brightnessView]);
                     });
                 }
             }
                 break;
-            case CYPanDirection_Unknown: break;
+            case CDPanDirection_Unknown: break;
         }
     };
 }

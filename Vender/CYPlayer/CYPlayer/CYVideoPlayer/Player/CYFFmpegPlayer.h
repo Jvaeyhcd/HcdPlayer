@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "CYPlayerGestureControl.h"
+#import "CDPlayerGestureControl.h"
 #import "CYPlayerDecoder.h"
 #import "CYVideoPlayerControlView.h"
 #import "CYVideoPlayerSettings.h"
@@ -108,7 +108,7 @@ CYVideoPlayerMoreSettingSecondaryView;
 @property (nonatomic, strong) CYLoadingView *loadingView;
 @property (nonatomic, strong) CYVideoPlayerMoreSettingsView *moreSettingView;
 @property (nonatomic, strong) CYVideoPlayerMoreSettingSecondaryView *moreSecondarySettingView;
-@property (nonatomic, strong) CYPlayerGestureControl *gestureControl;
+@property (nonatomic, strong) CDPlayerGestureControl *gestureControl;
 
 @property (readonly) BOOL playing;
 
@@ -223,12 +223,12 @@ CYVideoPlayerMoreSettingSecondaryView;
 @protocol CYFFmpegControlDelegate <NSObject>
 
 @optional
-- (BOOL)CYFFmpegPlayer:(CYFFmpegPlayer *)player triggerCondition:(CYPlayerGestureControl *)control gesture:(UIGestureRecognizer *)gesture;
-- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player singleTapped:(CYPlayerGestureControl *)control;
-- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player doubleTapped:(CYPlayerGestureControl *)control;
-- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player beganPan:(CYPlayerGestureControl *)control direction:(CYPanDirection)direction location:(CYPanLocation)location;
-- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player changedPan:(CYPlayerGestureControl *)control direction:(CYPanDirection)direction location:(CYPanLocation)location;
-- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player endedPan:(CYPlayerGestureControl *)control direction:(CYPanDirection)direction location:(CYPanLocation)location;
+- (BOOL)CYFFmpegPlayer:(CYFFmpegPlayer *)player triggerCondition:(CDPlayerGestureControl *)control gesture:(UIGestureRecognizer *)gesture;
+- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player singleTapped:(CDPlayerGestureControl *)control;
+- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player doubleTapped:(CDPlayerGestureControl *)control;
+- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player beganPan:(CDPlayerGestureControl *)control direction:(CDPanDirection)direction location:(CDPanLocation)location;
+- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player changedPan:(CDPlayerGestureControl *)control direction:(CDPanDirection)direction location:(CDPanLocation)location;
+- (void)CYFFmpegPlayer:(CYFFmpegPlayer *)player endedPan:(CDPlayerGestureControl *)control direction:(CDPanDirection)direction location:(CDPanLocation)location;
 
 @end
 

@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GCDWebUploader.h"
 #import "Reachability.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WifiTransferViewController : BaseViewController<GCDWebUploaderDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface WifiTransferViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource>
 
 @end
 

@@ -43,7 +43,7 @@
 		B96A5D8B24B8655100000B96 /* CYVideoPlayerRegistrar.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5CF124B8654F00000B96 /* CYVideoPlayerRegistrar.m */; };
 		B96A5D8C24B8655100000B96 /* CYVideoPlayerControlMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5CF624B8654F00000B96 /* CYVideoPlayerControlMaskView.m */; };
 		B96A5D8D24B8655100000B96 /* CYVideoPlayerDraggingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5CF724B8654F00000B96 /* CYVideoPlayerDraggingProgressView.m */; };
-		B96A5D8E24B8655100000B96 /* CYPlayerGestureControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5CFB24B8655000000B96 /* CYPlayerGestureControl.m */; };
+		B96A5D8E24B8655100000B96 /* CDPlayerGestureControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5CFB24B8655000000B96 /* CDPlayerGestureControl.m */; };
 		B96A5D8F24B8655100000B96 /* CYTimerControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5CFE24B8655000000B96 /* CYTimerControl.m */; };
 		B96A5D9024B8655100000B96 /* CYPCMAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5D0124B8655000000B96 /* CYPCMAudioManager.m */; };
 		B96A5D9124B8655100000B96 /* CYOpenALPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5D0224B8655000000B96 /* CYOpenALPlayer.m */; };
@@ -170,8 +170,7 @@
 		B9AA90A121F5612200F3C70E /* UIViewController+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90A021F5612200F3C70E /* UIViewController+Hcd.m */; };
 		B9AA90A421F5631700F3C70E /* NSString+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90A321F5631700F3C70E /* NSString+Hcd.m */; };
 		B9AA90A721F56B4200F3C70E /* WifiTransferViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90A621F56B4200F3C70E /* WifiTransferViewController.m */; };
-		B9AA90AC21F5760F00F3C70E /* GCDWebUploader.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B9AA90A921F5760F00F3C70E /* GCDWebUploader.bundle */; };
-		B9AA90AD21F5760F00F3C70E /* GCDWebUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90AB21F5760F00F3C70E /* GCDWebUploader.m */; };
+		B9AA90AC21F5760F00F3C70E /* NewGCDWebUploader.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B9AA90A921F5760F00F3C70E /* NewGCDWebUploader.bundle */; };
 		B9AA90B021F5AA6400F3C70E /* FinderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90AF21F5AA6400F3C70E /* FinderViewController.m */; };
 		B9AA90B321F5B2C400F3C70E /* HcdFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90B221F5B2C400F3C70E /* HcdFileManager.m */; };
 		B9AA90B621F5EE3700F3C70E /* FilesListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA90B521F5EE3700F3C70E /* FilesListTableViewCell.m */; };
@@ -187,6 +186,7 @@
 		B9BC111B226B64B200145E2B /* VersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC111A226B64B200145E2B /* VersionView.m */; };
 		B9BC111D227D7DC800145E2B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9BC111C227D7DC700145E2B /* MessageUI.framework */; };
 		B9BC1120227DBB6F00145E2B /* SendEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC111F227DBB6F00145E2B /* SendEmailViewController.m */; };
+		B9D691372553D65A0016CE28 /* NewGCDWebUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D691362553D65A0016CE28 /* NewGCDWebUploader.m */; };
 		B9DAF6E2223E54CD00D7A512 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */; };
 		B9DF3EFB2324924400DDA47E /* CLUPnPAVPositionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EE62324924400DDA47E /* CLUPnPAVPositionInfo.m */; };
 		B9DF3EFC2324924400DDA47E /* CLUPnPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EE82324924400DDA47E /* CLUPnPAction.m */; };
@@ -396,8 +396,8 @@
 		B96A5CF624B8654F00000B96 /* CYVideoPlayerControlMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CYVideoPlayerControlMaskView.m; sourceTree = "<group>"; };
 		B96A5CF724B8654F00000B96 /* CYVideoPlayerDraggingProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CYVideoPlayerDraggingProgressView.m; sourceTree = "<group>"; };
 		B96A5CF824B8655000000B96 /* CYPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CYPlayer.h; sourceTree = "<group>"; };
-		B96A5CFA24B8655000000B96 /* CYPlayerGestureControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CYPlayerGestureControl.h; sourceTree = "<group>"; };
-		B96A5CFB24B8655000000B96 /* CYPlayerGestureControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CYPlayerGestureControl.m; sourceTree = "<group>"; };
+		B96A5CFA24B8655000000B96 /* CDPlayerGestureControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPlayerGestureControl.h; sourceTree = "<group>"; };
+		B96A5CFB24B8655000000B96 /* CDPlayerGestureControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDPlayerGestureControl.m; sourceTree = "<group>"; };
 		B96A5CFD24B8655000000B96 /* CYTimerControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CYTimerControl.h; sourceTree = "<group>"; };
 		B96A5CFE24B8655000000B96 /* CYTimerControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CYTimerControl.m; sourceTree = "<group>"; };
 		B96A5D0024B8655000000B96 /* CYVideoPlayerMoreSettingSecondary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CYVideoPlayerMoreSettingSecondary.h; sourceTree = "<group>"; };
@@ -644,9 +644,7 @@
 		B9AA90A321F5631700F3C70E /* NSString+Hcd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Hcd.m"; sourceTree = "<group>"; };
 		B9AA90A521F56B4200F3C70E /* WifiTransferViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WifiTransferViewController.h; sourceTree = "<group>"; };
 		B9AA90A621F56B4200F3C70E /* WifiTransferViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WifiTransferViewController.m; sourceTree = "<group>"; };
-		B9AA90A921F5760F00F3C70E /* GCDWebUploader.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GCDWebUploader.bundle; sourceTree = "<group>"; };
-		B9AA90AA21F5760F00F3C70E /* GCDWebUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebUploader.h; sourceTree = "<group>"; };
-		B9AA90AB21F5760F00F3C70E /* GCDWebUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebUploader.m; sourceTree = "<group>"; };
+		B9AA90A921F5760F00F3C70E /* NewGCDWebUploader.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = NewGCDWebUploader.bundle; sourceTree = "<group>"; };
 		B9AA90AE21F5AA6400F3C70E /* FinderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FinderViewController.h; sourceTree = "<group>"; };
 		B9AA90AF21F5AA6400F3C70E /* FinderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FinderViewController.m; sourceTree = "<group>"; };
 		B9AA90B121F5B2C400F3C70E /* HcdFileManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HcdFileManager.h; sourceTree = "<group>"; };
@@ -674,6 +672,8 @@
 		B9BC111C227D7DC700145E2B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		B9BC111E227DBB6F00145E2B /* SendEmailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendEmailViewController.h; sourceTree = "<group>"; };
 		B9BC111F227DBB6F00145E2B /* SendEmailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SendEmailViewController.m; sourceTree = "<group>"; };
+		B9D691352553D65A0016CE28 /* NewGCDWebUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewGCDWebUploader.h; sourceTree = "<group>"; };
+		B9D691362553D65A0016CE28 /* NewGCDWebUploader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewGCDWebUploader.m; sourceTree = "<group>"; };
 		B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		B9DF3EE62324924400DDA47E /* CLUPnPAVPositionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLUPnPAVPositionInfo.m; sourceTree = "<group>"; };
 		B9DF3EE72324924400DDA47E /* CLUPnPRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUPnPRenderer.h; sourceTree = "<group>"; };
@@ -1239,8 +1239,8 @@
 		B96A5CF924B8655000000B96 /* GestureControl */ = {
 			isa = PBXGroup;
 			children = (
-				B96A5CFA24B8655000000B96 /* CYPlayerGestureControl.h */,
-				B96A5CFB24B8655000000B96 /* CYPlayerGestureControl.m */,
+				B96A5CFA24B8655000000B96 /* CDPlayerGestureControl.h */,
+				B96A5CFB24B8655000000B96 /* CDPlayerGestureControl.m */,
 			);
 			path = GestureControl;
 			sourceTree = "<group>";
@@ -1821,9 +1821,9 @@
 		B9AA90A821F5760F00F3C70E /* GCDWebUploader */ = {
 			isa = PBXGroup;
 			children = (
-				B9AA90A921F5760F00F3C70E /* GCDWebUploader.bundle */,
-				B9AA90AA21F5760F00F3C70E /* GCDWebUploader.h */,
-				B9AA90AB21F5760F00F3C70E /* GCDWebUploader.m */,
+				B9AA90A921F5760F00F3C70E /* NewGCDWebUploader.bundle */,
+				B9D691352553D65A0016CE28 /* NewGCDWebUploader.h */,
+				B9D691362553D65A0016CE28 /* NewGCDWebUploader.m */,
 			);
 			path = GCDWebUploader;
 			sourceTree = "<group>";
@@ -1900,7 +1900,7 @@
 		B9AA8FC521ED785000F3C70E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1160;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = Salvador;
 				TargetAttributes = {
 					B9AA8FCC21ED785000F3C70E = {
@@ -1952,7 +1952,7 @@
 				B98F1C6223B4A7F900C6A2DE /* HCDPlayerYUVFragmentShader.glsl in Resources */,
 				B9DF3F042324924400DDA47E /* Device.xml in Resources */,
 				B96A5D9B24B8655100000B96 /* CYVideoPlayer.bundle in Resources */,
-				B9AA90AC21F5760F00F3C70E /* GCDWebUploader.bundle in Resources */,
+				B9AA90AC21F5760F00F3C70E /* NewGCDWebUploader.bundle in Resources */,
 				B9AA8FDA21ED785100F3C70E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2056,7 +2056,7 @@
 				B96A5DC224B8655100000B96 /* CYLabel.m in Sources */,
 				B96A5DAE24B8655100000B96 /* CYFFmpegPlayer.m in Sources */,
 				B98F1C6A23B4A7F900C6A2DE /* HCDPlayerVideoYUVFrame.m in Sources */,
-				B96A5D8E24B8655100000B96 /* CYPlayerGestureControl.m in Sources */,
+				B96A5D8E24B8655100000B96 /* CDPlayerGestureControl.m in Sources */,
 				B96A5DC124B8655100000B96 /* CYAttributedStringKeys.m in Sources */,
 				B96A5DB424B8655100000B96 /* CYOrentationObserver.m in Sources */,
 				B96A5D8624B8655100000B96 /* CYSlider.m in Sources */,
@@ -2149,7 +2149,7 @@
 				B96C62B323CC5B3100C87F14 /* HDownloadModelDao.m in Sources */,
 				B96A5D9524B8655100000B96 /* CYMoreSettingsFooterViewModel.m in Sources */,
 				B96A5DA524B8655100000B96 /* CYVideoPlayerControlView.m in Sources */,
-				B9AA90AD21F5760F00F3C70E /* GCDWebUploader.m in Sources */,
+				B9D691372553D65A0016CE28 /* NewGCDWebUploader.m in Sources */,
 				B90B955923BED0F8003031DC /* NetworkService.m in Sources */,
 				B96A5DBE24B8655100000B96 /* CYCTData.m in Sources */,
 				B96A5DBC24B8655100000B96 /* NSObject+CYObserverHelper.m in Sources */,
@@ -2232,6 +2232,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2292,6 +2293,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2353,7 +2355,7 @@
 					"${SDKROOT}/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = HcdPlayerExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2409,7 +2411,7 @@
 					"${SDKROOT}/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = HcdPlayerExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

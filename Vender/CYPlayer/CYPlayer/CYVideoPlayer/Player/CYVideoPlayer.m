@@ -23,7 +23,7 @@
 #import "CYTimerControl.h"
 #import "CYVideoPlayerView.h"
 #import "CYLoadingView.h"
-#import "CYPlayerGestureControl.h"
+#import "CDPlayerGestureControl.h"
 
 #define MoreSettingWidth (MAX([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) * 0.382)
 
@@ -76,7 +76,7 @@ inline static NSString *_formatWithSec(NSInteger sec) {
 @property (nonatomic, strong, readonly) CYMoreSettingsFooterViewModel *moreSettingFooterViewModel;
 @property (nonatomic, strong, readonly) CYVideoPlayerRegistrar *registrar;
 @property (nonatomic, strong, readonly) CYVolBrigControl *volBrigControl;
-//@property (nonatomic, strong, readonly) CYPlayerGestureControl *gestureControl;
+//@property (nonatomic, strong, readonly) CDPlayerGestureControl *gestureControl;
 @property (nonatomic, strong, readonly) CYLoadingView *loadingView;
 @property (nonatomic, strong, readonly) dispatch_queue_t workQueue;
 
@@ -356,7 +356,7 @@ inline static NSString *_formatWithSec(NSInteger sec) {
     CYVideoPlayerRegistrar *_registrar;
     CYVolBrigControl *_volBrigControl;
     CYLoadingView *_loadingView;
-    CYPlayerGestureControl *_gestureControl;
+    CDPlayerGestureControl *_gestureControl;
     dispatch_queue_t _workQueue;
     CYVideoPlayerAssetCarrier *_asset;
 }
@@ -803,10 +803,10 @@ inline static NSString *_formatWithSec(NSInteger sec) {
 
 - (void)gesturesHandleWithTargetView:(UIView *)targetView {
     
-    _gestureControl = [[CYPlayerGestureControl alloc] initWithTargetView:targetView];
+    _gestureControl = [[CDPlayerGestureControl alloc] initWithTargetView:targetView];
 
     __weak typeof(self) _self = self;
-    _gestureControl.triggerCondition = ^BOOL(CYPlayerGestureControl * _Nonnull control, UIGestureRecognizer *gesture) {
+    _gestureControl.triggerCondition = ^BOOL(CDPlayerGestureControl * _Nonnull control, UIGestureRecognizer *gesture) {
         __strong typeof(_self) self = _self;
         if ([self.control_delegate respondsToSelector:@selector(CYVideoPlayer:triggerCondition:gesture:)]) {
             return [self.control_delegate CYVideoPlayer:self triggerCondition:control gesture:gesture];
@@ -825,7 +825,7 @@ inline static NSString *_formatWithSec(NSInteger sec) {
         else return YES;
     };
     
-    _gestureControl.singleTapped = ^(CYPlayerGestureControl * _Nonnull control) {
+    _gestureControl.singleTapped = ^(CDPlayerGestureControl * _Nonnull control) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ([self.control_delegate respondsToSelector:@selector(CYVideoPlayer:singleTapped:)]) {
@@ -845,7 +845,7 @@ inline static NSString *_formatWithSec(NSInteger sec) {
         
     };
     
-    _gestureControl.doubleTapped = ^(CYPlayerGestureControl * _Nonnull control) {
+    _gestureControl.doubleTapped = ^(CDPlayerGestureControl * _Nonnull control) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ([self.control_delegate respondsToSelector:@selector(CYVideoPlayer:doubleTapped:)]) {
@@ -872,14 +872,14 @@ inline static NSString *_formatWithSec(NSInteger sec) {
         }
     };
     
-    _gestureControl.beganPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location) {
+    _gestureControl.beganPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ([self.control_delegate respondsToSelector:@selector(CYVideoPlayer:beganPan:direction:location:)]) {
             [self.control_delegate CYVideoPlayer:self beganPan:control direction:direction location:location];
         }
         switch (direction) {
-            case CYPanDirection_H: {
+            case CDPanDirection_H: {
                 [self _pause];
                 _cyAnima(^{
                     _cyShowViews(@[self.controlView.draggingProgressView]);
@@ -897,10 +897,10 @@ inline static NSString *_formatWithSec(NSInteger sec) {
                 self.hideControl = YES;
             }
                 break;
-            case CYPanDirection_V: {
+            case CDPanDirection_V: {
                 switch (location) {
-                    case CYPanLocation_Right: break;
-                    case CYPanLocation_Left: {
+                    case CDPanLocation_Right: break;
+                    case CDPanLocation_Left: {
                         [[UIApplication sharedApplication].keyWindow addSubview:self.volBrigControl.brightnessView];
                         [self.volBrigControl.brightnessView mas_remakeConstraints:^(MASConstraintMaker *make) {
                             make.size.mas_offset(CGSizeMake(155, 155));
@@ -912,41 +912,41 @@ inline static NSString *_formatWithSec(NSInteger sec) {
                         });
                     }
                         break;
-                    case CYPanLocation_Unknown: break;
+                    case CDPanLocation_Unknown: break;
                 }
             }
                 break;
-            case CYPanDirection_Unknown:
+            case CDPanDirection_Unknown:
                 break;
         }
         
     };
     
-    _gestureControl.changedPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location, CGPoint translate) {
+    _gestureControl.changedPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location, CGPoint translate) {
         __strong typeof(_self) self = _self;
         if ( !self ) return;
         if ([self.control_delegate respondsToSelector:@selector(CYVideoPlayer:changedPan:direction:location:)]) {
             [self.control_delegate CYVideoPlayer:self changedPan:control direction:direction location:location];
         }
         switch (direction) {
-            case CYPanDirection_H: {
+            case CDPanDirection_H: {
                 self.controlView.draggingProgressView.progress += translate.x * 0.00003;//进度手势灵敏度
             }
                 break;
-            case CYPanDirection_V: {
+            case CDPanDirection_V: {
                 switch (location) {
-                    case CYPanLocation_Left: {
+                    case CDPanLocation_Left: {
                         CGFloat value = self.volBrigControl.brightness - translate.y * 0.006;
                         if ( value < 1.0 / 16 ) value = 1.0 / 16;
                         self.volBrigControl.brightness = value;
                     }
                         break;
-                    case CYPanLocation_Right: {
+                    case CDPanLocation_Right: {
                         CGFloat value = translate.y * 0.012;
                         self.volBrigControl.volume -= value;
                     }
                         break;
-                    case CYPanLocation_Unknown: break;
+                    case CDPanLocation_Unknown: break;
                 }
             }
                 break;
@@ -956,12 +956,12 @@ inline static NSString *_formatWithSec(NSInteger sec) {
         
     };
     
-    _gestureControl.endedPan = ^(CYPlayerGestureControl * _Nonnull control, CYPanDirection direction, CYPanLocation location) {
+    _gestureControl.endedPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location) {
         if ([_self.control_delegate respondsToSelector:@selector(CYVideoPlayer:endedPan:direction:location:)]) {
             [_self.control_delegate CYVideoPlayer:_self endedPan:control direction:direction location:location];
         }
         switch ( direction ) {
-            case CYPanDirection_H:{
+            case CDPanDirection_H:{
                 _cyAnima(^{
                     _cyHiddenViews(@[_self.controlView.draggingProgressView]);
                 });
@@ -975,8 +975,8 @@ inline static NSString *_formatWithSec(NSInteger sec) {
                 });
             }
                 break;
-            case CYPanDirection_V:{
-                if ( location == CYPanLocation_Left ) {
+            case CDPanDirection_V:{
+                if ( location == CDPanLocation_Left ) {
                     _cyAnima(^{
                         __strong typeof(_self) self = _self;
                         if ( !self ) return;
@@ -985,7 +985,7 @@ inline static NSString *_formatWithSec(NSInteger sec) {
                 }
             }
                 break;
-            case CYPanDirection_Unknown: break;
+            case CDPanDirection_Unknown: break;
         }
         
     };

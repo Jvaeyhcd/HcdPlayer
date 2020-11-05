@@ -24,6 +24,7 @@
 }
 
 - (void)initSubviews {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.frame];
     self.selectedBackgroundView.backgroundColor = kSelectedCellBgColor;
     self.tintColor = kMainColor;
@@ -32,7 +33,7 @@
         _titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(kBasePadding, 0, kScreenWidth / 2 - kBasePadding, 50)];
         _titleLbl.font = [UIFont systemFontOfSize:16];
         _titleLbl.textColor = [UIColor color333];
-        [self addSubview:_titleLbl];
+        [self.contentView addSubview:_titleLbl];
         [_titleLbl mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(50);
             make.left.mas_equalTo(kBasePadding);
@@ -46,7 +47,7 @@
         _inputTF.textColor = [UIColor color333];
         _inputTF.textAlignment = NSTextAlignmentLeft;
         [_inputTF addTarget:self action:@selector(textFieldTextChange:) forControlEvents:UIControlEventEditingChanged];
-        [self addSubview:_inputTF];
+        [self.contentView addSubview:_inputTF];
         [_inputTF mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(50);
             make.left.mas_equalTo(kScreenWidth / 3);

@@ -93,20 +93,20 @@
         case UIGestureRecognizerStateBegan:{
             CGPoint locationPoint = [pan locationInView:pan.view];
             if ( locationPoint.x > _targetView.bounds.size.width / 2 ) {
-                self.panLocation = CYPanLocation_Right;
+                self.panLocation = CDPanLocation_Right;
             }
             else {
-                self.panLocation = CYPanLocation_Left;
+                self.panLocation = CDPanLocation_Left;
             }
             
             CGPoint velocity = [pan velocityInView:pan.view];
             CGFloat x = fabs(velocity.x);
             CGFloat y = fabs(velocity.y);
             if (x > y) {
-                self.panDirection = CYPanDirection_H;
+                self.panDirection = CDPanDirection_H;
             }
             else {
-                self.panDirection = CYPanDirection_V;
+                self.panDirection = CDPanDirection_V;
             }
             
             if ( _beganPan ) _beganPan(self, _panDirection, _panLocation);

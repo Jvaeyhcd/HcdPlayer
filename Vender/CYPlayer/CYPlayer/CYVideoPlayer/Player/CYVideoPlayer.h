@@ -13,7 +13,7 @@
 #import "CYVideoPlayerMoreSettingSecondary.h"
 #import "CYVideoPlayerSettings.h"
 #import "CYPrompt.h"
-#import "CYPlayerGestureControl.h"
+#import "CDPlayerGestureControl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,7 +40,7 @@ typedef void(^LockScreen)(BOOL isLock);
 
 - (instancetype)init;
 
-@property (nonatomic, strong) CYPlayerGestureControl * gestureControl;
+@property (nonatomic, strong) CDPlayerGestureControl * gestureControl;
 
 @property (nonatomic, weak) id<CYVideoPlayerDelegate> delegate;
 /*!
@@ -223,12 +223,12 @@ typedef void(^LockScreen)(BOOL isLock);
 @protocol CYVideoPlayerControlDelegate <NSObject>
 
 @optional
-- (BOOL)CYVideoPlayer:(CYVideoPlayer *)player triggerCondition:(CYPlayerGestureControl *)control gesture:(UIGestureRecognizer *)gesture;
-- (void)CYVideoPlayer:(CYVideoPlayer *)player singleTapped:(CYPlayerGestureControl *)control;
-- (void)CYVideoPlayer:(CYVideoPlayer *)player doubleTapped:(CYPlayerGestureControl *)control;
-- (void)CYVideoPlayer:(CYVideoPlayer *)player beganPan:(CYPlayerGestureControl *)control direction:(CYPanDirection)direction location:(CYPanLocation)location;
-- (void)CYVideoPlayer:(CYVideoPlayer *)player changedPan:(CYPlayerGestureControl *)control direction:(CYPanDirection)direction location:(CYPanLocation)location;
-- (void)CYVideoPlayer:(CYVideoPlayer *)player endedPan:(CYPlayerGestureControl *)control direction:(CYPanDirection)direction location:(CYPanLocation)location;
+- (BOOL)CYVideoPlayer:(CYVideoPlayer *)player triggerCondition:(CDPlayerGestureControl *)control gesture:(UIGestureRecognizer *)gesture;
+- (void)CYVideoPlayer:(CYVideoPlayer *)player singleTapped:(CDPlayerGestureControl *)control;
+- (void)CYVideoPlayer:(CYVideoPlayer *)player doubleTapped:(CDPlayerGestureControl *)control;
+- (void)CYVideoPlayer:(CYVideoPlayer *)player beganPan:(CDPlayerGestureControl *)control direction:(CDPanDirection)direction location:(CDPanLocation)location;
+- (void)CYVideoPlayer:(CYVideoPlayer *)player changedPan:(CDPlayerGestureControl *)control direction:(CDPanDirection)direction location:(CDPanLocation)location;
+- (void)CYVideoPlayer:(CYVideoPlayer *)player endedPan:(CDPlayerGestureControl *)control direction:(CDPanDirection)direction location:(CDPanLocation)location;
 
 @end
 

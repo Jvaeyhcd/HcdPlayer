@@ -7,6 +7,7 @@
 //
 
 #import "BaseViewController.h"
+#import "HcdAppManager.h"
 
 @interface BaseViewController ()
 
@@ -25,6 +26,9 @@
  */
 - (void)setInterfaceOrientation:(UIInterfaceOrientation)orientation {
     if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+        
+        [HcdAppManager sharedInstance].supportedInterfaceOrientationsForWindow = orientation;
+        
         SEL selector = NSSelectorFromString(@"setOrientation:");
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
         [invocation setSelector:selector];
