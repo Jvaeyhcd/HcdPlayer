@@ -251,7 +251,8 @@ CYVolBrigControl;
 - (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
             changedPan:(CDPlayerGestureControl *_Nullable)control
              direction:(CDPanDirection)direction
-              location:(CDPanLocation)location;
+              location:(CDPanLocation)location
+             translate:(CGPoint)translate;
 
 - (void)cdFFmpegPlayer:(CDFFmpegPlayer *_Nullable)player
               endedPan:(CDPlayerGestureControl *_Nullable)control

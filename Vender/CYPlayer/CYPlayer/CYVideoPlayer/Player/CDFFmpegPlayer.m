@@ -2331,47 +2331,6 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         if ([self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:beganPan:direction:location:)]) {
             [self.control_delegate cdFFmpegPlayer:self beganPan:control direction:direction location:location];
         }
-        switch (direction) {
-            case CDPanDirection_H: {
-                
-                if (![self settings].enableProgressControl) {
-                    return;
-                }
-                
-                if (self->_decoder.duration <= 0)//没有进度信息
-                {
-                    return;
-                }
-                
-//                [self _pause];
-                _cdAnima(^{
-                    
-                });
-                
-                if ([self.decoder validVideo]) {
-                    
-                } else if ([self.decoder validAudio]) {
-                    
-                } else {
-                    
-                }
-                self.hideControl = YES;
-            }
-                break;
-            case CDPanDirection_V: {
-                switch (location) {
-                    case CDPanLocation_Right: break;
-                    case CDPanLocation_Left: {
-                        
-                    }
-                        break;
-                    case CDPanLocation_Unknown: break;
-                }
-            }
-                break;
-            case CDPanDirection_Unknown:
-                break;
-        }
     };
     
     _gestureControl.changedPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location, CGPoint translate) {
@@ -2379,69 +2338,14 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         if ( !self ) return;
         if ( self->_buffered ) return;
         if (self->_positionUpdating) { return; }
-        if ([self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:changedPan:direction:location:)]) {
-            [self.control_delegate cdFFmpegPlayer:self changedPan:control direction:direction location:location];
-        }
-        switch (direction) {
-            case CDPanDirection_H: {
-                if (![self settings].enableProgressControl) {
-                    return;
-                }
-                
-                if (self->_decoder.duration <= 0)//没有进度信息
-                {
-                    return;
-                }
-                NSLog(@"%f", translate.x * 0.0003);
-            }
-                break;
-            case CDPanDirection_V: {
-                switch (location) {
-                    case CDPanLocation_Left: {
-                        
-                    }
-                        break;
-                    case CDPanLocation_Right: {
-                        
-                        
-                    }
-                        break;
-                    case CDPanLocation_Unknown: break;
-                }
-            }
-                break;
-            default:
-                break;
+        if ([self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:changedPan:direction:location:translate:)]) {
+            [self.control_delegate cdFFmpegPlayer:self changedPan:control direction:direction location:location translate:translate];
         }
     };
     
     _gestureControl.endedPan = ^(CDPlayerGestureControl * _Nonnull control, CDPanDirection direction, CDPanLocation location) {
         if ([_self.control_delegate respondsToSelector:@selector(cdFFmpegPlayer:endedPan:direction:location:)]) {
             [_self.control_delegate cdFFmpegPlayer:_self endedPan:control direction:direction location:location];
-        }
-        __strong typeof(_self) self = _self;
-        if ( !self ) return;
-        if ( self->_buffered ) return;
-        if (self->_positionUpdating) { return; }
-        switch ( direction ) {
-            case CDPanDirection_H:{
-                if (![self settings].enableProgressControl) {
-                    return;
-                }
-                
-                if (self->_decoder.duration <= 0) { return; }//没有进度信息
-                
-                if (!self->_positionUpdating) { self->_positionUpdating = YES; } //手势互斥
-                
-            }
-                break;
-            case CDPanDirection_V:{
-                if ( location == CDPanLocation_Left ) {
-                    
-                }
-            }
-                break;
-            case CDPanDirection_Unknown: break;
         }
     };
 }

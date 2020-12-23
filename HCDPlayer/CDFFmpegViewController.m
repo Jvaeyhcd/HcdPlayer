@@ -7,6 +7,9 @@
 //
 
 #import "CDFFmpegViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
+#import <QuartzCore/QuartzCore.h>
+#import <AVFoundation/AVFoundation.h>
 #import "HcdAppManager.h"
 #import "HcdFileManager.h"
 #import "HcdPlayerDraggingProgressView.h"
@@ -33,6 +36,14 @@ typedef enum : NSUInteger {
     NSArray *_localMovies;
     NSArray *_remoteMovies;
     
+    //记录触摸开始时的视频播放的时间
+    float _touchBeginValue;
+    //记录触摸开始亮度
+    float _touchBeginLightValue;
+    //记录触摸开始的音量
+    float _touchBeginVoiceValue;
+    //当前播放的进度，手势快进的时候记录当前播放的进度
+    CGFloat _currentProgress;
 }
 
 @property (nonatomic, weak) GadientLayerView *vTopBar;
@@ -72,6 +83,11 @@ typedef enum : NSUInteger {
 
 
 @property (nonatomic, strong) RemoteControlView *dlnaControlView;
+
+@property (nonatomic, strong) MPVolumeView   *volumeView;             //音量控制控件
+@property (nonatomic, strong) UISlider       *volumeSlider;           //用这个来控制音量
+@property (nonatomic, assign) float          outputVolume;            //音量
+
 /**
  * DLNA manager
  */
@@ -108,6 +124,7 @@ typedef enum : NSUInteger {
     // 不自动锁屏
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     [HcdAppManager sharedInstance].isAllowAutorotate = YES;
+    [self registerNotification];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -116,6 +133,8 @@ typedef enum : NSUInteger {
     // 恢复自动锁屏
     [UIApplication sharedApplication].idleTimerDisabled = NO;
     [HcdAppManager sharedInstance].isAllowAutorotate = NO;
+    
+    [self unregisterNotification];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -127,6 +146,42 @@ typedef enum : NSUInteger {
 {
     [self.player stop];
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+}
+
+- (void)registerNotification {
+    
+    NSError *error;
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setActive:YES error:&error];
+    
+    self.outputVolume = audioSession.outputVolume;
+    self.soundProgressView.progress = audioSession.outputVolume;
+    
+    [[AVAudioSession sharedInstance] addObserver:self forKeyPath:@"outputVolume" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:(void *)[AVAudioSession sharedInstance]];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if(context == (__bridge void *)[AVAudioSession sharedInstance]){
+        float newValue = [[change objectForKey:@"new"] floatValue];
+        float oldValue = [[change objectForKey:@"old"] floatValue];
+        NSLog(@"%f-%f", oldValue, newValue);
+        self.outputVolume = newValue;
+        self.soundProgressView.progress = newValue;
+        [self.soundProgressView show];
+    }
+}
+
+- (void)unregisterNotification {
+    [[AVAudioSession sharedInstance] removeObserver:self forKeyPath:@"outputVolume" context:(void *)[AVAudioSession sharedInstance]];
+}
+
+- (void)notifyVolumeChanged:(NSNotification *)notif {
+    float volume = [[[notif userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
+    if (self.outputVolume != volume) {
+        [self.soundProgressView show];
+        self.soundProgressView.progress = volume;
+        self.outputVolume = volume;
+    }
 }
 
 #pragma mark - UI界面的各种初始化
@@ -641,6 +696,107 @@ typedef enum : NSUInteger {
     
 }
 
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *)player
+              beganPan:(CDPlayerGestureControl *)control
+             direction:(CDPanDirection)direction
+              location:(CDPanLocation)location {
+    
+    _touchBeginVoiceValue = self.outputVolume;
+    
+    switch (direction) {
+        case CDPanDirection_H: {
+            _currentProgress = self.player.decoder.position / self.player.decoder.duration;
+            [self hideHUD];
+            break;
+        }
+        case CDPanDirection_V: {
+            break;
+        }
+        case CDPanDirection_Unknown: {
+            break;
+        }
+            
+        default:
+            break;
+    }
+}
+
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *)player
+            changedPan:(CDPlayerGestureControl *)control
+             direction:(CDPanDirection)direction
+              location:(CDPanLocation)location
+             translate:(CGPoint)translate {
+    switch (direction) {
+        case CDPanDirection_H: {
+            // 显示进度
+            if (self.player.decoder.duration <= 0) {
+                return;
+            }
+            NSLog(@"%f", translate.x);
+            [self changePlayingProgress:translate.x * 0.0003];
+            break;
+        }
+        case CDPanDirection_V: {
+            switch (location) {
+                case CDPanLocation_Left: {
+                    // 左边调节声音
+                    self.outputVolume = self.outputVolume - translate.y * 0.004;
+                    //判断控制一下, 不能超出 0~1
+                    if (self.outputVolume < 0) {
+                        self.outputVolume = 0;
+                    } else if (self.outputVolume > 1) {
+                        self.outputVolume = 1;
+                    }
+                    self.volumeSlider.value = self.outputVolume;
+                    self.soundProgressView.progress = self.outputVolume;
+                    [self.soundProgressView show];
+                    break;
+                }
+                case CDPanLocation_Right: {
+                    // 右边调节亮度
+                    CGFloat brightness = [UIScreen mainScreen].brightness - translate.y * 0.004;
+                    [UIScreen mainScreen].brightness = brightness;
+                    
+                    [self.brightnessProgressView show];
+                    self.brightnessProgressView.progress = brightness;
+                    break;
+                }
+                default: break;
+            }
+            break;
+        }
+        case CDPanDirection_Unknown: {
+            break;
+        }
+            
+        default:
+            break;
+    }
+}
+
+- (void)cdFFmpegPlayer:(CDFFmpegPlayer *)player
+              endedPan:(CDPlayerGestureControl *)control
+             direction:(CDPanDirection)direction
+              location:(CDPanLocation)location {
+    switch (direction) {
+        case CDPanDirection_H: {
+            
+            CGFloat position = _currentProgress * self.player.decoder.duration;
+            [self.player setMoviePosition:position playMode:YES];
+            break;
+        }
+        case CDPanDirection_V: {
+            break;
+        }
+        case CDPanDirection_Unknown: {
+            break;
+        }
+            
+        default:
+            break;
+    }
+}
+
 #pragma mark - Show/Hide HUD
 - (void)showHUD {
     if (self.animatingHUD) return;
@@ -756,6 +912,33 @@ typedef enum : NSUInteger {
     [self.player play];
 }
 
+-(void)changePlayingProgress:(float)progress{
+    
+    if (progress > 0) {
+        self.draggingProgressView.directionImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_fast"];
+    } else if (progress < 0) {
+        self.draggingProgressView.directionImageView.image = [UIImage imageNamed:@"hcdplayer.bundle/icon_video_player_forward"];
+    }
+    
+    _currentProgress += progress;
+    if (_currentProgress > 1) {
+        _currentProgress = 1;
+    } else if (_currentProgress < 0) {
+        _currentProgress = 0;
+    }
+    
+    CGFloat value = _currentProgress * self.player.decoder.duration;
+    
+#if DEBUG
+    NSLog(@"_touchBeginValue:%f value:%f", _touchBeginValue, value);
+#endif
+    
+    CGFloat duration = self.player.decoder.duration;
+    self.draggingProgressView.durationTimeLabel.text = [HCDPlayerUtils durationStringFromSeconds:duration];
+    self.draggingProgressView.shiftTimeLabel.text = [HCDPlayerUtils durationStringFromSeconds:value];
+    [self.draggingProgressView show];
+}
+
 #pragma mark - 状态栏颜色
 - (BOOL)prefersStatusBarHidden {
     return NO;
@@ -777,6 +960,7 @@ typedef enum : NSUInteger {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     BOOL isLandscape = size.width > size.height;
 
+    self.landscape = isLandscape;
     if (isLandscape) {
         [self.player.view mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.top.right.bottom.mas_equalTo(0);
@@ -826,6 +1010,35 @@ typedef enum : NSUInteger {
         _player.generatPreviewImages = YES;
     }
     return _player;
+}
+
+#pragma mark - Setter
+- (void)setLandscape:(BOOL)landscape {
+    _landscape = landscape;
+    [self updatePlayerFrame];
+}
+
+#pragma mark - Update Player Frame
+- (void)updatePlayerFrame {
+    if (_landscape) {
+        if (IS_PAD) {
+            [self.btnClose setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_close"] forState:UIControlStateNormal];
+        } else {
+            [self.btnClose setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_back"] forState:UIControlStateNormal];
+        }
+        [self.btnFull setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_fullscreen_exit"] forState:UIControlStateNormal];
+    } else {
+        [self.btnClose setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_close"] forState:UIControlStateNormal];
+        [self.btnFull setImage:[UIImage imageNamed:@"hcdplayer.bundle/icon_fullscreen"] forState:UIControlStateNormal];
+    }
+    
+    // 播放音频不显示AirPlay
+    self.btnAirplay.hidden = _landscape;
+    NSString *path = [[self.path mutableCopy] stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+    FileType fileType = [[HcdFileManager sharedHcdFileManager] getFileTypeByPath:path];
+    if (fileType != FileType_video) {
+        self.btnAirplay.hidden = YES;
+    }
 }
 
 #pragma mark - DLNADelegate
@@ -901,6 +1114,33 @@ typedef enum : NSUInteger {
 
 - (void)cdFFmpegPlayerStartAutoPlaying:(CDFFmpegPlayer * _Nullable)player {
     
+}
+
+#pragma mark - lazy load
+- (MPVolumeView *)volumeView {
+    if (!_volumeView) {
+        _volumeView = [[MPVolumeView alloc] init];
+        _volumeView.hidden = NO;
+        [_volumeView setShowsRouteButton:YES];
+        [_volumeView setFrame:CGRectMake(-100, -100, 40, 40)];
+        [_volumeView setShowsVolumeSlider:YES];
+        for (UIView * view in _volumeView.subviews) {
+            if ([NSStringFromClass(view.class) isEqualToString:@"MPVolumeSlider"]) {
+                self.volumeSlider = (UISlider *)view;
+                break;
+            }
+        }
+        [self.view addSubview:_volumeView];
+    }
+    return _volumeView;
+}
+
+- (RemoteControlView *)dlnaControlView {
+    if (!_dlnaControlView) {
+        _dlnaControlView = [[RemoteControlView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+        _dlnaControlView.delegate = self;
+    }
+    return _dlnaControlView;
 }
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
