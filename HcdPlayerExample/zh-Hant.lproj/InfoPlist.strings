@@ -9,3 +9,4 @@
 CFBundleDisplayName = "hPlayer";
 NSPhotoLibraryUsageDescription = "用於保存圖片到您的相冊中，請允許App獲得該權限！";
 NSCameraUsageDescription = "用於拍攝照片，請允許App獲得該許可權！";
+NSLocalNetworkUsageDescription = "用於訪問局域網中資源檔案，請允許App獲得該許可權！";

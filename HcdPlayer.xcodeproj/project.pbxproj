@@ -18,6 +18,7 @@
 		B925A25923C6BE64000528CA /* HDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B925A25823C6BE64000528CA /* HDownloadManager.m */; };
 		B925A25C23C6D868000528CA /* HDownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B925A25B23C6D868000528CA /* HDownloadModel.m */; };
 		B925A25F23C7032F000528CA /* HDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B925A25E23C7032F000528CA /* HDownloadOperation.m */; };
+		B926D15625EB340C002940E6 /* DNLAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B926D15525EB340C002940E6 /* DNLAViewController.m */; };
 		B93426D624317A7A00C36545 /* UIDevice+Hcd.m in Sources */ = {isa = PBXBuildFile; fileRef = B93426D524317A7A00C36545 /* UIDevice+Hcd.m */; };
 		B948C6C224BA8FBC00FBB9CF /* CDFFmpegPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B948C6C124BA8FBC00FBB9CF /* CDFFmpegPlayer.m */; };
 		B96A5B3724B85FD700000B96 /* CDFFmpegViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B96A5B3624B85FD700000B96 /* CDFFmpegViewController.m */; };
@@ -150,6 +151,13 @@
 		B9A6F2FB221E6D9F0027D017 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A6F2FA221E6D9F0027D017 /* SystemConfiguration.framework */; };
 		B9A92B6322411268002989B2 /* HcdAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A92B6222411268002989B2 /* HcdAppManager.m */; };
 		B9A92B662245C02C002989B2 /* PasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A92B652245C02C002989B2 /* PasscodeViewController.m */; };
+		B9AA7D8B2592EB31003B4232 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AA7D8A2592EB31003B4232 /* WidgetKit.framework */; };
+		B9AA7D8D2592EB31003B4232 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AA7D8C2592EB31003B4232 /* SwiftUI.framework */; };
+		B9AA7D902592EB31003B4232 /* HPlayerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA7D8F2592EB31003B4232 /* HPlayerWidget.swift */; };
+		B9AA7D932592EB35003B4232 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9AA7D922592EB35003B4232 /* Assets.xcassets */; };
+		B9AA7D952592EB35003B4232 /* HPlayerWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = B9AA7D912592EB32003B4232 /* HPlayerWidget.intentdefinition */; };
+		B9AA7D962592EB35003B4232 /* HPlayerWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = B9AA7D912592EB32003B4232 /* HPlayerWidget.intentdefinition */; };
+		B9AA7D992592EB35003B4232 /* HPlayerWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B9AA7D892592EB31003B4232 /* HPlayerWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD121ED785000F3C70E /* AppDelegate.m */; };
 		B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD421ED785000F3C70E /* MainViewController.m */; };
 		B9AA8FDA21ED785100F3C70E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9AA8FD921ED785100F3C70E /* Assets.xcassets */; };
@@ -186,6 +194,7 @@
 		B9BC111B226B64B200145E2B /* VersionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC111A226B64B200145E2B /* VersionView.m */; };
 		B9BC111D227D7DC800145E2B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9BC111C227D7DC700145E2B /* MessageUI.framework */; };
 		B9BC1120227DBB6F00145E2B /* SendEmailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BC111F227DBB6F00145E2B /* SendEmailViewController.m */; };
+		B9CE708625E92B6C00C744A8 /* HCDBrightness.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CE708525E92B6C00C744A8 /* HCDBrightness.m */; };
 		B9D691372553D65A0016CE28 /* NewGCDWebUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D691362553D65A0016CE28 /* NewGCDWebUploader.m */; };
 		B9DAF6E2223E54CD00D7A512 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */; };
 		B9DF3EFB2324924400DDA47E /* CLUPnPAVPositionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DF3EE62324924400DDA47E /* CLUPnPAVPositionInfo.m */; };
@@ -204,6 +213,30 @@
 		B9FD9F102267557900EC8B37 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FD9F0F2267557900EC8B37 /* AboutViewController.m */; };
 		FFBCB2C6A040A2AA5AA1069B /* Pods_HcdPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B9AA7D972592EB35003B4232 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B9AA8FC521ED785000F3C70E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B9AA7D882592EB31003B4232;
+			remoteInfo = HPlayerWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B9AA7D9A2592EB35003B4232 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B9AA7D992592EB35003B4232 /* HPlayerWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HcdPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -231,6 +264,8 @@
 		B925A25B23C6D868000528CA /* HDownloadModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadModel.m; sourceTree = "<group>"; };
 		B925A25D23C7032F000528CA /* HDownloadOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDownloadOperation.h; sourceTree = "<group>"; };
 		B925A25E23C7032F000528CA /* HDownloadOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDownloadOperation.m; sourceTree = "<group>"; };
+		B926D15425EB340C002940E6 /* DNLAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DNLAViewController.h; sourceTree = "<group>"; };
+		B926D15525EB340C002940E6 /* DNLAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DNLAViewController.m; sourceTree = "<group>"; };
 		B93426D424317A7A00C36545 /* UIDevice+Hcd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Hcd.h"; sourceTree = "<group>"; };
 		B93426D524317A7A00C36545 /* UIDevice+Hcd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Hcd.m"; sourceTree = "<group>"; };
 		B948C6C024BA8FBC00FBB9CF /* CDFFmpegPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CDFFmpegPlayer.h; sourceTree = "<group>"; };
@@ -608,13 +643,19 @@
 		B9A92B6222411268002989B2 /* HcdAppManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HcdAppManager.m; sourceTree = "<group>"; };
 		B9A92B642245C02C002989B2 /* PasscodeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PasscodeViewController.h; sourceTree = "<group>"; };
 		B9A92B652245C02C002989B2 /* PasscodeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PasscodeViewController.m; sourceTree = "<group>"; };
+		B9AA7D892592EB31003B4232 /* HPlayerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HPlayerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9AA7D8A2592EB31003B4232 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		B9AA7D8C2592EB31003B4232 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		B9AA7D8F2592EB31003B4232 /* HPlayerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPlayerWidget.swift; sourceTree = "<group>"; };
+		B9AA7D912592EB32003B4232 /* HPlayerWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = HPlayerWidget.intentdefinition; sourceTree = "<group>"; };
+		B9AA7D922592EB35003B4232 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B9AA7D942592EB35003B4232 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HcdPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AA8FD021ED785000F3C70E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9AA8FD121ED785000F3C70E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		B9AA8FD321ED785000F3C70E /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		B9AA8FD421ED785000F3C70E /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		B9AA8FD921ED785100F3C70E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B9AA8FDE21ED785100F3C70E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9AA8FDF21ED785100F3C70E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B9AA905A21ED7AD800F3C70E /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		B9AA905C21ED7AE300F3C70E /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
@@ -672,6 +713,9 @@
 		B9BC111C227D7DC700145E2B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		B9BC111E227DBB6F00145E2B /* SendEmailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendEmailViewController.h; sourceTree = "<group>"; };
 		B9BC111F227DBB6F00145E2B /* SendEmailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SendEmailViewController.m; sourceTree = "<group>"; };
+		B9C5377125B6F9BD00C96F0A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B9CE708425E92B6C00C744A8 /* HCDBrightness.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HCDBrightness.h; sourceTree = "<group>"; };
+		B9CE708525E92B6C00C744A8 /* HCDBrightness.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HCDBrightness.m; sourceTree = "<group>"; };
 		B9D691352553D65A0016CE28 /* NewGCDWebUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewGCDWebUploader.h; sourceTree = "<group>"; };
 		B9D691362553D65A0016CE28 /* NewGCDWebUploader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewGCDWebUploader.m; sourceTree = "<group>"; };
 		B9DAF6E1223E54CD00D7A512 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -705,6 +749,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B9AA7D862592EB31003B4232 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AA7D8D2592EB31003B4232 /* SwiftUI.framework in Frameworks */,
+				B9AA7D8B2592EB31003B4232 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B9AA8FCA21ED785000F3C70E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -762,6 +815,8 @@
 				B9AA905C21ED7AE300F3C70E /* libbz2.tbd */,
 				B9AA905A21ED7AD800F3C70E /* libiconv.tbd */,
 				0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */,
+				B9AA7D8A2592EB31003B4232 /* WidgetKit.framework */,
+				B9AA7D8C2592EB31003B4232 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1601,6 +1656,17 @@
 			path = Reachability;
 			sourceTree = "<group>";
 		};
+		B9AA7D8E2592EB31003B4232 /* HPlayerWidget */ = {
+			isa = PBXGroup;
+			children = (
+				B9AA7D8F2592EB31003B4232 /* HPlayerWidget.swift */,
+				B9AA7D912592EB32003B4232 /* HPlayerWidget.intentdefinition */,
+				B9AA7D922592EB35003B4232 /* Assets.xcassets */,
+				B9AA7D942592EB35003B4232 /* Info.plist */,
+			);
+			path = HPlayerWidget;
+			sourceTree = "<group>";
+		};
 		B9AA8FC421ED785000F3C70E = {
 			isa = PBXGroup;
 			children = (
@@ -1614,6 +1680,7 @@
 				B9AA906021ED7BE800F3C70E /* HCDPlayer */,
 				B9AA906E21ED7E7600F3C70E /* Resource */,
 				B9AA8FCF21ED785000F3C70E /* HcdPlayerExample */,
+				B9AA7D8E2592EB31003B4232 /* HPlayerWidget */,
 				B9AA8FCE21ED785000F3C70E /* Products */,
 				FC28C05C1DFD0F571E15C0F1 /* Pods */,
 				2D328B5F2BEDFD13C59C3EA7 /* Frameworks */,
@@ -1624,6 +1691,7 @@
 			isa = PBXGroup;
 			children = (
 				B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */,
+				B9AA7D892592EB31003B4232 /* HPlayerWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1642,7 +1710,7 @@
 				B9AA8FD421ED785000F3C70E /* MainViewController.m */,
 				B9896DC5237C05BE00A5A2DD /* LaunchScreen.storyboard */,
 				B9AA8FD921ED785100F3C70E /* Assets.xcassets */,
-				B9AA8FDE21ED785100F3C70E /* Info.plist */,
+				B9C5377125B6F9BD00C96F0A /* Info.plist */,
 				B9AA909D21F307AD00F3C70E /* Localizable.strings */,
 				B9AA909721F305CC00F3C70E /* InfoPlist.strings */,
 				B9AA8FDF21ED785100F3C70E /* main.m */,
@@ -1659,6 +1727,8 @@
 				B98F1C4D23B4A7F900C6A2DE /* HCDPlayerViewController.m */,
 				B96A5B3524B85FD700000B96 /* CDFFmpegViewController.h */,
 				B96A5B3624B85FD700000B96 /* CDFFmpegViewController.m */,
+				B926D15425EB340C002940E6 /* DNLAViewController.h */,
+				B926D15525EB340C002940E6 /* DNLAViewController.m */,
 				B98F1C3623B4A7F800C6A2DE /* codec */,
 				B98F1C4923B4A7F900C6A2DE /* common */,
 				B98F1C4F23B4A7F900C6A2DE /* frame */,
@@ -1796,6 +1866,7 @@
 		B9AA908B21F3038700F3C70E /* Vender */ = {
 			isa = PBXGroup;
 			children = (
+				B9CE707B25E92B1F00C744A8 /* HCDBrightness */,
 				B96A5CD324B8654F00000B96 /* CYPlayer */,
 				B96A5CBE24B8647600000B96 /* fdk-aac-ios */,
 				B96A5C3824B8647500000B96 /* FFmpeg-iOS */,
@@ -1826,6 +1897,15 @@
 				B9D691362553D65A0016CE28 /* NewGCDWebUploader.m */,
 			);
 			path = GCDWebUploader;
+			sourceTree = "<group>";
+		};
+		B9CE707B25E92B1F00C744A8 /* HCDBrightness */ = {
+			isa = PBXGroup;
+			children = (
+				B9CE708425E92B6C00C744A8 /* HCDBrightness.h */,
+				B9CE708525E92B6C00C744A8 /* HCDBrightness.m */,
+			);
+			path = HCDBrightness;
 			sourceTree = "<group>";
 		};
 		B9DF3EE52324924400DDA47E /* MRDLNA */ = {
@@ -1875,6 +1955,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B9AA7D882592EB31003B4232 /* HPlayerWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9AA7D9D2592EB35003B4232 /* Build configuration list for PBXNativeTarget "HPlayerWidgetExtension" */;
+			buildPhases = (
+				B9AA7D852592EB31003B4232 /* Sources */,
+				B9AA7D862592EB31003B4232 /* Frameworks */,
+				B9AA7D872592EB31003B4232 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HPlayerWidgetExtension;
+			productName = HPlayerWidgetExtension;
+			productReference = B9AA7D892592EB31003B4232 /* HPlayerWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B9AA8FCC21ED785000F3C70E /* HcdPlayer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B9AA8FE321ED785100F3C70E /* Build configuration list for PBXNativeTarget "HcdPlayer" */;
@@ -1884,10 +1981,12 @@
 				B9AA8FCA21ED785000F3C70E /* Frameworks */,
 				B9AA8FCB21ED785000F3C70E /* Resources */,
 				5093962991FC2CBF83A528E8 /* [CP] Embed Pods Frameworks */,
+				B9AA7D9A2592EB35003B4232 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B9AA7D982592EB35003B4232 /* PBXTargetDependency */,
 			);
 			name = HcdPlayer;
 			productName = HcdPlayer;
@@ -1900,9 +1999,13 @@
 		B9AA8FC521ED785000F3C70E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1230;
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = Salvador;
 				TargetAttributes = {
+					B9AA7D882592EB31003B4232 = {
+						CreatedOnToolsVersion = 12.3;
+					};
 					B9AA8FCC21ED785000F3C70E = {
 						CreatedOnToolsVersion = 10.1;
 						SystemCapabilities = {
@@ -1929,11 +2032,20 @@
 			projectRoot = "";
 			targets = (
 				B9AA8FCC21ED785000F3C70E /* HcdPlayer */,
+				B9AA7D882592EB31003B4232 /* HPlayerWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B9AA7D872592EB31003B4232 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AA7D932592EB35003B4232 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B9AA8FCB21ED785000F3C70E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1998,6 +2110,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B9AA7D852592EB31003B4232 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AA7D952592EB35003B4232 /* HPlayerWidget.intentdefinition in Sources */,
+				B9AA7D902592EB31003B4232 /* HPlayerWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B9AA8FC921ED785000F3C70E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2009,6 +2130,7 @@
 				B96A5D9924B8655100000B96 /* CYVideoPlayerSettings.m in Sources */,
 				B9A6F2F2221C41730027D017 /* UIScrollView+EmptyDataSet.m in Sources */,
 				B96A5DA424B8655100000B96 /* CYVideoPlayerTopControlView.m in Sources */,
+				B9CE708625E92B6C00C744A8 /* HCDBrightness.m in Sources */,
 				B9FCE2DB223BF10800E2B9E4 /* HcdProgressView.m in Sources */,
 				B96A5D9424B8655100000B96 /* CYPlayerDecoder.m in Sources */,
 				B9AA90B921F5F5B800F3C70E /* UIView+Hcd.m in Sources */,
@@ -2018,6 +2140,7 @@
 				B96A5DB024B8655100000B96 /* CYVideoPlayer.m in Sources */,
 				B96A5DC324B8655100000B96 /* CYAttributeWorker.m in Sources */,
 				B988294023CC04E9002696B6 /* HDownloadProgressView.m in Sources */,
+				B926D15625EB340C002940E6 /* DNLAViewController.m in Sources */,
 				B9BB461721F8B96F00682DD5 /* MoveViewController.m in Sources */,
 				B9DF3EFE2324924400DDA47E /* GDataXMLNode.m in Sources */,
 				B96A5DC524B8655100000B96 /* CYBorderlineView.m in Sources */,
@@ -2148,6 +2271,7 @@
 				B9DF3EFC2324924400DDA47E /* CLUPnPAction.m in Sources */,
 				B96C62B323CC5B3100C87F14 /* HDownloadModelDao.m in Sources */,
 				B96A5D9524B8655100000B96 /* CYMoreSettingsFooterViewModel.m in Sources */,
+				B9AA7D962592EB35003B4232 /* HPlayerWidget.intentdefinition in Sources */,
 				B96A5DA524B8655100000B96 /* CYVideoPlayerControlView.m in Sources */,
 				B9D691372553D65A0016CE28 /* NewGCDWebUploader.m in Sources */,
 				B90B955923BED0F8003031DC /* NetworkService.m in Sources */,
@@ -2159,6 +2283,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B9AA7D982592EB35003B4232 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B9AA7D882592EB31003B4232 /* HPlayerWidgetExtension */;
+			targetProxy = B9AA7D972592EB35003B4232 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		B9896DC5237C05BE00A5A2DD /* LaunchScreen.storyboard */ = {
@@ -2205,6 +2337,56 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		B9AA7D9B2592EB35003B4232 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NLP5PZS8U3;
+				INFOPLIST_FILE = HPlayerWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B9AA7D9C2592EB35003B4232 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NLP5PZS8U3;
+				INFOPLIST_FILE = HPlayerWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		B9AA8FE121ED785100F3C70E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2331,7 +2513,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2354,6 +2536,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/NSLogger\"",
 					"${SDKROOT}/usr/include/libxml2",
 				);
+				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
 				INFOPLIST_FILE = HcdPlayerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2368,7 +2551,7 @@
 					"$(PROJECT_DIR)/Vender/x264-iOS/lib",
 					"$(PROJECT_DIR)/Vender/fdk-aac-ios/lib",
 				);
-				MARKETING_VERSION = 1.7.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2387,7 +2570,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2410,6 +2593,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/NSLogger\"",
 					"${SDKROOT}/usr/include/libxml2",
 				);
+				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
 				INFOPLIST_FILE = HcdPlayerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2424,7 +2608,7 @@
 					"$(PROJECT_DIR)/Vender/x264-iOS/lib",
 					"$(PROJECT_DIR)/Vender/fdk-aac-ios/lib",
 				);
-				MARKETING_VERSION = 1.7.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2436,6 +2620,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B9AA7D9D2592EB35003B4232 /* Build configuration list for PBXNativeTarget "HPlayerWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9AA7D9B2592EB35003B4232 /* Debug */,
+				B9AA7D9C2592EB35003B4232 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B9AA8FC821ED785000F3C70E /* Build configuration list for PBXProject "HcdPlayer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

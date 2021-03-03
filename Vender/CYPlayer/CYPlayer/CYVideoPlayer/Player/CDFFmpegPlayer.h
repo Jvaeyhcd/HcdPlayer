@@ -130,6 +130,8 @@ CYVolBrigControl;
 /// 视频的总时长
 - (NSTimeInterval)totalTime;
 
+- (void)clickedPause:(BOOL)pause;
+
 @end
 
 # pragma mark -

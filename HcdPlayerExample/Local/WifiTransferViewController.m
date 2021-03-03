@@ -79,7 +79,11 @@
     _webServer.htmlTemplate = HcdLocalized(@"html_template_name", nil);
     _webServer.footer = @"Crafted by Jvaeyhcd";
     _webServer.allowHiddenItems = YES;
-    if ([_webServer startWithPort:kWebServerPort bonjourName:@""]) {
+    
+    NSMutableDictionary* options = [NSMutableDictionary dictionary];
+    [options setObject:@NO forKey:GCDWebServerOption_AutomaticallySuspendInBackground];
+    [options setObject:@kWebServerPort forKey:GCDWebServerOption_Port];
+    if ([_webServer startWithOptions:options error:nil]) {
         NSLog(@"GCDWebServer running locally on port %lu", (unsigned long)_webServer.serverURL);
         _serverURL = [_webServer.serverURL absoluteString];
         [_tableView reloadData];

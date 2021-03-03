@@ -7,9 +7,9 @@ target 'HcdPlayer' do
     # objective-c
     pod 'NSLogger', '~> 1.5.1'
     pod 'Masonry', '~> 1.1.0'
-    pod "GCDWebServer", "~> 3.0"
-    pod "GCDWebServer/WebUploader", "~> 3.0"
-    pod "GCDWebServer/WebDAV", "~> 3.0"
+    pod "GCDWebServer", "~> 3.5.4"
+    pod "GCDWebServer/WebUploader", "~> 3.5.4"
+    pod "GCDWebServer/WebDAV", "~> 3.5.4"
     pod 'CocoaAsyncSocket'
     pod 'FDFullscreenPopGesture', '~> 1.1'
 #    pod 'HcdActionSheet', :path => '../HcdActionSheet'

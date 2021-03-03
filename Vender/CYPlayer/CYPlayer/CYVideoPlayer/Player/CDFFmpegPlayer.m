@@ -2243,6 +2243,15 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     }
 }
 
+- (void)clickedPause:(BOOL)pause {
+    self.userClickedPause = pause;
+    if (pause) {
+        [self pause];
+    } else {
+        [self play];
+    }
+}
+
 - (dispatch_queue_t)workQueue {
     if ( _workQueue ) return _workQueue;
     _workQueue = dispatch_queue_create("com.CYVideoPlayer.workQueue", DISPATCH_QUEUE_SERIAL);

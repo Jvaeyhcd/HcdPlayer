@@ -48,7 +48,13 @@
 #define IS_PAD [[UIDevice currentDevice].model isEqualToString:@"iPad"]
 
 #define scaleFromiPhoneXDesign(x) (IS_PAD ? x : floor(x * (kScreenWidth / 375)))
-#define iPhoneX ((kScreenHeight == 812.f || kScreenWidth == 812.f || kScreenWidth == 896.f || kScreenHeight == 896.f) && !IS_PAD ? YES : NO)
+
+#define iPhoneX \
+({BOOL isPhoneX = NO;\
+if (@available(iOS 11.0, *)) {\
+isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom > 0.0;\
+}\
+(isPhoneX);})
 
 // 适配刘海屏状态栏高度
 #define kStatusBarHeight [UIDevice statusBarHeight]

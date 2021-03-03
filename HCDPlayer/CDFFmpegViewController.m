@@ -23,6 +23,7 @@
 #import "RemoteControlView.h"
 #import "GadientLayerView.h"
 #import "HCDPlayerUtils.h"
+#import "DNLAViewController.h"
 
 typedef enum : NSUInteger {
     HCDPlayerControlTypeNone,
@@ -31,7 +32,7 @@ typedef enum : NSUInteger {
     HCDPlayerControlTypeLight,
 } HCDPlayerControlType;
 
-@interface CDFFmpegViewController ()<CDFFmpegPlayerDelegate, CDFFmpegControlDelegate, DLNADelegate, GCDWebDAVServerDelegate, RemoteControlViewDelegate>
+@interface CDFFmpegViewController ()<CDFFmpegPlayerDelegate, CDFFmpegControlDelegate, DLNADelegate, GCDWebDAVServerDelegate>
 {
     NSArray *_localMovies;
     NSArray *_remoteMovies;
@@ -80,9 +81,6 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) BOOL isDraggingSlider;
 
 @property (nonatomic, strong) UIView * contentView;
-
-
-@property (nonatomic, strong) RemoteControlView *dlnaControlView;
 
 @property (nonatomic, strong) MPVolumeView   *volumeView;             //音量控制控件
 @property (nonatomic, strong) UISlider       *volumeSlider;           //用这个来控制音量
@@ -135,6 +133,11 @@ typedef enum : NSUInteger {
     [HcdAppManager sharedInstance].isAllowAutorotate = NO;
     
     [self unregisterNotification];
+    [self pause];
+}
+
+- (BOOL)prefersHomeIndicatorAutoHidden {
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -142,10 +145,14 @@ typedef enum : NSUInteger {
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc
-{
-    [self.player stop];
+- (void)dealloc {
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    [self pause];
+    
+    [self.davServer stop];
+    self.davServer = nil;
+    
+    [self.dlnaManager endDLNA];
 }
 
 - (void)registerNotification {
@@ -240,7 +247,9 @@ typedef enum : NSUInteger {
         GCDWebServerFileResponse *res = [GCDWebServerFileResponse responseWithFile:path byteRange:request.byteRange];
         completionBlock(res);
     }];
-    [self.davServer start];
+    NSMutableDictionary* options = [NSMutableDictionary dictionary];
+    [options setObject:@NO forKey:GCDWebServerOption_AutomaticallySuspendInBackground];
+    [self.davServer startWithOptions:options error:nil];
 }
 
 - (void)initLock {
@@ -633,8 +642,8 @@ typedef enum : NSUInteger {
  */
 - (void)onAirplayButtonTapped {
     
-    // 锁屏
-    self.locked = YES;
+    // 不锁屏
+    self.locked = NO;
     [self setDevivceLocked:self.locked];
     
     // 暂停播放
@@ -652,19 +661,20 @@ typedef enum : NSUInteger {
     HcdPopSelectView *selectDeviceView = [[HcdPopSelectView alloc] initWithDataArray:deviceNameArr title:@"请选择要投屏的设备"];
 
     selectDeviceView.seletedIndex = ^(NSInteger index) {
-        
         CLUPnPDevice *device = [self.deviceArr objectAtIndex:index];
-        self.dlnaControlView.deviceLbl.text = device.friendlyName;
-        [self.dlnaManager endDLNA];
-        self.dlnaManager.device = device;
-        self.dlnaManager.playUrl = [NSString stringWithFormat:@"%@video.mov", self.davServer.serverURL.absoluteString];
-        [self.dlnaManager startDLNA];
+        DNLAViewController *dnlaViewController = [[DNLAViewController alloc] init];
+        dnlaViewController.device = device;
+        dnlaViewController.playUrl = [NSString stringWithFormat:@"%@video.mov", self.davServer.serverURL.absoluteString];
+        BaseNavigationController *dnlaNav = [[BaseNavigationController alloc] initWithRootViewController: dnlaViewController];
+        dnlaNav.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self.player clickedPause:YES];
+        [self presentViewController:dnlaNav animated:YES completion:nil];
     };
 
     [[UIApplication sharedApplication].keyWindow addSubview:selectDeviceView];
     [selectDeviceView show];
     
-    [self hideHUD];
+//    [self hideHUD];
 }
 
 - (void)onSliderStartSlide:(id)sender {
@@ -739,6 +749,7 @@ typedef enum : NSUInteger {
         case CDPanDirection_V: {
             switch (location) {
                 case CDPanLocation_Left: {
+                    self.volumeView.frame = CGRectMake(-1000, -100, 100, 100);
                     // 左边调节声音
                     self.outputVolume = self.outputVolume - translate.y * 0.004;
                     //判断控制一下, 不能超出 0~1
@@ -1049,11 +1060,6 @@ typedef enum : NSUInteger {
 
 - (void)dlnaStartPlay {
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // dlna开始播放了回调
-        [self.dlnaControlView show];
-    });
-    
 }
 
 # pragma mark - CDFFmpegPlayerDelegate
@@ -1133,14 +1139,6 @@ typedef enum : NSUInteger {
         [self.view addSubview:_volumeView];
     }
     return _volumeView;
-}
-
-- (RemoteControlView *)dlnaControlView {
-    if (!_dlnaControlView) {
-        _dlnaControlView = [[RemoteControlView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-        _dlnaControlView.delegate = self;
-    }
-    return _dlnaControlView;
 }
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {

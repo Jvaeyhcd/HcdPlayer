@@ -1,0 +1,148 @@
+/* 
+  Localizable.strings
+  HcdPlayer
+
+  Created by Salvador on 2019/1/19.
+  Copyright © 2019 Salvador. All rights reserved.
+*/
+"local"="Local";
+"nearby"="Nearby";
+"network"="Network";
+"browser"="Browser";
+"setting"="Setting";
+"wifi_transfer"="Wi-Fi Transfer";
+"done"="Done";
+"more"="More";
+"delete"="Delete";
+"share"="Share";
+"edit"="Edit";
+"select"="Select";
+"download"="Download";
+"sort"="Sort";
+"import"="Import";
+"new_folder"="New Folder";
+"new_folder_placeholder"="Please input folder name";
+"cancel"="Cancel";
+"save"="Save";
+"open"="Open";
+"move"="Move";
+"rename"="Rename";
+"lock"="Lock";
+"unlock"="Unlock";
+"name"="Name";
+"extension"="Extension";
+"size"="Size";
+"date"="Date";
+"order"="Order";
+"ascending"="Ascending";
+"descending"="Descending";
+"general"="General";
+"language"="Language";
+"gesture"="Gesture";
+"oneFingerGesture"="One Finger Gesture";
+"twoFingerGesture"="Two Finger Gesture";
+"singleTap"="Single Tap";
+"doubleTap"="Double Tap";
+"dragLeftRight"="Drag Left/Right";
+"dragUpDownLeftSide"="Drag Up/Down on Left Side of Screen";
+"dragUpDownRightSide"="Drag Up/Down on Right Side of Screen";
+"other"="Other";
+"about"="About";
+"version"="Version";
+"contactUs"="Contact Us";
+"legalNotices"="Legal Notices";
+"default"="Default";
+"english"="English";
+"chineseSimple"="Chinese,Simple";
+"chineseTraditional"="Chinese,Traditional";
+"listEmptyTips"="There is no file";
+"import_file_tips"="Please import files from iCloud or WiFi transfer";
+"wifiTransferTips"="Just enter IP address into your web browser (Safari, Chrome, etc) to upload new files";
+"transferStatus"="Uploaded Files";
+"noWiFi"="WiFi not connected";
+"close"="Close";
+"ok"="OK";
+"sureDelete"="Are you sure to delete this %@ file or folder?";
+"sure_delete_network"="Are you sure to delete this %@ network server?";
+"sure_delete_play_history"="Are you sure to delete this %@ play history?";
+"sure_delete_download_history"="Are you sure to delete this %@ download history?";
+"select_all"="Select all";
+"sure_delete_selected"="Are you sure to delete the selected item(s)?";
+"import_tips"="Please select import way";
+"photos"="Photos";
+"icloud"="iCloud";
+"replay"="Replay";
+"passcode-lock"="Passcode Lock";
+"enter-passcode"="Enter passcode";
+"enter-passcode-tip"="Please enter your passcode";
+"set-passcode-tip"="Please set your passcode";
+"repeat-passcode-tip"="Please repeat passcode";
+"n-times-failed-passcode"="%d Failed Passcode Attempts";
+"playlist"="Playlist";
+"copyright"="Copyright";
+"contact_us"="Contact Us";
+"praise"="Praise";
+"update_version"="New version";
+"please_select_device"="Please select the device to project";
+"playlist_empty_tips"="There is no playlist";
+"select_a_video_to_play"="Please select a video to play in local folder";
+"network_empty_tips"="There is no network service";
+"add_network_service"="Please tap + button to add a network service";
+"select_a_device"="Select Device";
+"switch_device"="Switch TV";
+"quit"="Quit";
+"is_playing"="Playing";
+"clear"="Clear";
+
+"html_template_name" = "index";
+"confirm_clear_playlist" = "Are you sure to clear the playlist?";
+"confirm_clear_all_download_list" = "Are you sure to clear the download history?";
+
+"PROLOGUE" = "<p style='color: #EEEEEE;'>Drag &amp; drop files on this window or use the \"Upload Files&hellip;\" button to upload new files.</p>";
+"EPILOGUE" = "";
+"FOOTER_FORMAT" = "%@ %@";
+
+"server_http" = "Direct URL";
+"server_smb" = "SMB/CIFS";
+"server_ftp" = "FTP";
+"server_sftp" = "SFTP";
+"server_webdav" = "WebDAV";
+
+"smb_devices" = "SMB Devices";
+"user_name" = "User Name";
+"password" = "Password";
+"host" = "Host";
+"title" = "Title";
+"path" = "Path";
+"port" = "Port";
+"optional" = "Optional";
+"required" = "Required";
+"smb_information" = "SMB Device Information";
+"nearby_smb_devices" = "Nearby SMB Devices";
+
+"toast_no_host"="The host can't be empty";
+"file"="File";
+"size"="Size";
+"directory"="Directory";
+
+/*空数据页面提示*/
+"filelist_empty_tips"="There is no file";
+"filelist_empty_tips_2"="Ops this is a empty directory!";
+"download_empty_tips"="There is no download";
+"download_empty_tips_2"="There is no download";
+
+"download_failed"="Failed";
+"download_ing"="Downloading";
+"download_wait"="Waiting...";
+"download_done"="Done";
+"download_suspended"="Suspended";
+"add_download_success"="Joined download queue success";
+
+/*placeholder*/
+"placeholder_please_input_a_url"="Please input to direct URL";
+
+/*smb*/
+"smb_unknown_error"="Unknown error";
+"smb_not_on_wifi"="Not on WiFi";
+"smb_unable_address"="Unable to resolve address";
+"smb_unable_connect"="Unable to connect";
