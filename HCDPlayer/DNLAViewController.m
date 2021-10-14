@@ -42,6 +42,13 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     self.navigationController.navigationBarHidden = YES;
+    // 不自动锁屏
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    // 不自动锁屏
+    [UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
 #pragma mark - Getter

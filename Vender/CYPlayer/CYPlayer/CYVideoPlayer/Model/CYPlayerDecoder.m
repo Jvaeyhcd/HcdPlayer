@@ -1110,9 +1110,9 @@ static int interrupt_callback(void *ctx);
     av_dict_set(&_options, "timeout", "3000000", 0);//设置超时3秒
     av_dict_set(&_options, "re", "25", 0);
     av_dict_set(&_options, "r", "25", 0);
-//    av_dict_set_int(&_options, "video_track_timescale", 25, 0);
-//    av_dict_set_int(&_options, "fpsprobesize", 25, 0);
-//    av_dict_set_int(&_options, "skip-calc-frame-rate", 25, 0);
+    av_dict_set_int(&_options, "video_track_timescale", 25, 0);
+    av_dict_set_int(&_options, "fpsprobesize", 25, 0);
+    av_dict_set_int(&_options, "skip-calc-frame-rate", 25, 0);
     
     if ([self.path hasPrefix:@"rtsp"] || [self.path hasPrefix:@"rtmp"] || [[self.path lastPathComponent] containsString:@"m3u8"]) {
         // There is total different meaning for 'timeout' option in rtmp

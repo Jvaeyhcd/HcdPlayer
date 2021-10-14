@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showBarButtonItemWithImage:(UIImage *)image position:(NSInteger)position;
 
+- (void)setNavigationBarBackgroundColor:(UIColor *)color
+                             titleColor:(UIColor *)titleColor;
+
 @end
 
 NS_ASSUME_NONNULL_END

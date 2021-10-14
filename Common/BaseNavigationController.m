@@ -19,11 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-//    self.navigationBar.translucent = NO;
-    [UINavigationBar appearance].tintColor = kNavBgColor;
-    [UINavigationBar appearance].barTintColor = kNavBgColor;
-    [UINavigationBar appearance].backgroundColor = kNavBgColor;
-    [UINavigationBar appearance].titleTextAttributes = @{NSForegroundColorAttributeName: kNavTitleColor};
+    [self setNavigationBarBackgroundColor:kNavBgColor titleColor:kNavTitleColor];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

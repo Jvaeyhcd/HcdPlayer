@@ -60,4 +60,23 @@
     
 }
 
+- (void)setNavigationBarBackgroundColor:(UIColor *)color
+                             titleColor:(UIColor *)titleColor {
+    // Do any additional setup after loading the view.
+    [UINavigationBar appearance].tintColor = color;
+    [UINavigationBar appearance].barTintColor = color;
+    [UINavigationBar appearance].backgroundColor = color;
+    [UINavigationBar appearance].titleTextAttributes = @{NSForegroundColorAttributeName: titleColor};
+    
+    // iOS15 相关新特性的设置适配
+    if (@available(iOS 15.0, *)) {
+        [UITableView appearance].sectionHeaderTopPadding = 0;
+        UINavigationBarAppearance *barApp = [UINavigationBarAppearance new];
+        barApp.titleTextAttributes = @{NSForegroundColorAttributeName: titleColor};
+        barApp.backgroundColor = color;
+        self.navigationController.navigationBar.scrollEdgeAppearance = barApp;
+        self.navigationController.navigationBar.standardAppearance = barApp;
+    }
+}
+
 @end

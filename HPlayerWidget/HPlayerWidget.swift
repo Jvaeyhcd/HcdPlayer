@@ -66,7 +66,7 @@ struct HPlayerWidget: Widget {
     let kind: String = "HPlayerWidget"
 
     var body: some WidgetConfiguration {
-        IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
+        IntentConfiguration(kind: kind, intent: Config urationIntent.self, provider: Provider()) { entry in
             HPlayerWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("Clock Widget")

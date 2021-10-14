@@ -111,8 +111,7 @@ typedef enum : NSUInteger {
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    [UINavigationBar appearance].barTintColor = kNavBgColor;
-    [UINavigationBar appearance].backgroundColor = kNavBgColor;
+    [self setNavigationBarBackgroundColor:kNavBgColor titleColor:kNavTitleColor];
 }
 
 - (void)initData {
@@ -602,9 +601,9 @@ typedef enum : NSUInteger {
 }
 
 - (void)showiCloudDocumentPicker {
-    [UINavigationBar appearance].tintColor = [UIColor systemBlueColor];
-    [UINavigationBar appearance].barTintColor = [UIColor whiteColor];
-    [UINavigationBar appearance].backgroundColor = [UIColor whiteColor];
+    
+    [self setNavigationBarBackgroundColor:[UIColor whiteColor] titleColor:[UIColor blackColor]];
+    
     NSArray *documentTypes = @[@"public.content", @"public.text", @"public.source-code ", @"public.image", @"public.audiovisual-content", @"com.adobe.pdf", @"com.apple.keynote.key", @"com.microsoft.word.doc", @"com.microsoft.excel.xls", @"com.microsoft.powerpoint.ppt", @"public.avi", @"public.3gpp", @"public.mpeg-4", @"public.jpeg", @"public.png"];
     UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
     picker.delegate = self;
@@ -843,8 +842,7 @@ typedef enum : NSUInteger {
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url {
     [self saveFileByURL:url];
     
-    [UINavigationBar appearance].barTintColor = kNavBgColor;
-    [UINavigationBar appearance].backgroundColor = kNavBgColor;
+    [self setNavigationBarBackgroundColor:kNavBgColor titleColor:kNavTitleColor];
 }
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
@@ -854,14 +852,12 @@ typedef enum : NSUInteger {
         }
     }
     
-    [UINavigationBar appearance].barTintColor = kNavBgColor;
-    [UINavigationBar appearance].backgroundColor = kNavBgColor;
+    [self setNavigationBarBackgroundColor:kNavBgColor titleColor:kNavTitleColor];
 }
 
 - (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
     
-    [UINavigationBar appearance].barTintColor = kNavBgColor;
-    [UINavigationBar appearance].backgroundColor = kNavBgColor;
+    [self setNavigationBarBackgroundColor:kNavBgColor titleColor:kNavTitleColor];
 }
 
 - (void)saveFileByURL:(NSURL *)url {
