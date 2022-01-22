@@ -113,6 +113,12 @@ typedef enum : NSUInteger {
     
     [self initAll];
 
+    // 添加到播放记录中
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *relativePath = [self.path mutableCopy];
+    relativePath = [relativePath  stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+    relativePath = [relativePath stringByReplacingOccurrencesOfString:documentPath withString:@""];
+    [[HcdAppManager sharedInstance] addPathToPlaylist:relativePath];
 }
 
 

@@ -12,6 +12,7 @@
 #import "HcdAppManager.h"
 #import "HCDPlayerViewController.h"
 #import "HcdActionSheet.h"
+#import "CDFFmpegViewController.h"
 
 @interface PlaylistViewController ()<UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
@@ -118,12 +119,14 @@
     NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *path = [[HcdAppManager sharedInstance].playList objectAtIndex:indexPath.row];
     
-    HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
+    CDFFmpegViewController *vc = [[CDFFmpegViewController alloc] init];
+    vc.path = [NSString stringWithFormat:@"file://%@", path];
     if ([path isHttpRequestUrl]) {
-        vc.url = path;
+        vc.path = path;
     } else {
-        vc.url = [NSString stringWithFormat:@"file://%@%@", documentPath, path];
+        vc.path = [NSString stringWithFormat:@"file://%@%@", documentPath, path];
     }
+    
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:nil];
 }
