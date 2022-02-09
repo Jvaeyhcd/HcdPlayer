@@ -326,7 +326,8 @@ typedef enum : NSUInteger {
                 }
                 case 2: {
 //                    [weakSelf showiCloudDocumentPicker];
-                    [weakSelf showImportActionSheet];
+//                    [weakSelf showImportActionSheet];
+                    [weakSelf showWiFiTransferViewController];
                     break;
                 }
                 case 3: {
