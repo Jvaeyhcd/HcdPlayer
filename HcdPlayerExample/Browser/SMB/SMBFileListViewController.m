@@ -144,7 +144,7 @@ typedef enum : NSUInteger {
             __weak typeof(self) weakSelf = self;
             [self.session requestContentsOfDirectoryAtFilePath:file.filePath success:^(NSArray *files) {
                 
-                NSLog(@"");
+                DLog(@"");
                 SMBFileListViewController *controller = [[SMBFileListViewController alloc] initWithSession:self.session title:file.name];
                 controller.files = files;
                 [weakSelf.navigationController pushViewController:controller animated:YES];

@@ -223,7 +223,7 @@
                     
                     if(![db executeUpdate:sql]){
 #if DEBUG
-                        NSLog(@"inster or update data failed!");
+                        DLog(@"inster or update data failed!");
 #endif
                     }
                 } obj:obj];
@@ -251,7 +251,7 @@
     NSMutableArray *valueArray = [NSMutableArray array];
     
     NSArray *all_p = [self getAllProperty:[obj class]];
-    NSLog(@"%ld", all_p.count);
+    DLog(@"%ld", all_p.count);
     
     NSUInteger propsCount = all_p.count;
     for(int i = 0;i < propsCount; i++) {

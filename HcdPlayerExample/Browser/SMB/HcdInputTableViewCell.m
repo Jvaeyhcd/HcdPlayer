@@ -58,7 +58,7 @@
 }
 
 -(void)textFieldTextChange:(UITextField *)textField{
-    NSLog(@"textField1 - 输入框内容改变,当前内容为: %@", textField.text);
+    DLog(@"textField1 - 输入框内容改变,当前内容为: %@", textField.text);
     NSString *text = textField.text;
     if (self.textChanged) {
         self.textChanged(text);

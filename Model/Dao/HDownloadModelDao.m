@@ -19,9 +19,7 @@ SingletonM(HDownloadModelDao)
     
     [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
         if (![db open]) {
-#if DEBUG
-            NSLog(@"open db failed!");
-#endif
+            DLog(@"open db failed!");
             return ;
         };
         NSMutableString *sql = [[NSMutableString alloc]init];

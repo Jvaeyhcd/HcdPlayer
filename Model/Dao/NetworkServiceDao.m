@@ -20,7 +20,7 @@ SingletonM(NetworkServiceDao)
     [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
         if (![db open]) {
 #if DEBUG
-            NSLog(@"open db failed!");
+            DLog(@"open db failed!");
 #endif
             return ;
         };
