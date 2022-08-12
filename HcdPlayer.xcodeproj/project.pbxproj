@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38265EAD28A23779008EE276 /* PlaylistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 38265EAC28A23779008EE276 /* PlaylistModel.m */; };
+		38265EB028A2396D008EE276 /* PlaylistModelDao.m in Sources */ = {isa = PBXBuildFile; fileRef = 38265EAF28A2396D008EE276 /* PlaylistModelDao.m */; };
 		B902F411222EB79E0049A626 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B902F410222EB79E0049A626 /* BaseViewController.m */; };
 		B9085F2A2258331000AF8DC5 /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9085F292258331000AF8DC5 /* DocumentViewController.m */; };
 		B90B955923BED0F8003031DC /* NetworkService.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B955823BED0F8003031DC /* NetworkService.m */; };
@@ -240,6 +242,10 @@
 
 /* Begin PBXFileReference section */
 		0F7370568AFBD55AB6FC7B88 /* Pods_HcdPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HcdPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		38265EAB28A23779008EE276 /* PlaylistModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaylistModel.h; sourceTree = "<group>"; };
+		38265EAC28A23779008EE276 /* PlaylistModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlaylistModel.m; sourceTree = "<group>"; };
+		38265EAE28A2396D008EE276 /* PlaylistModelDao.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaylistModelDao.h; sourceTree = "<group>"; };
+		38265EAF28A2396D008EE276 /* PlaylistModelDao.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlaylistModelDao.m; sourceTree = "<group>"; };
 		742CF5F37E96FB453579A47A /* Pods-HcdPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		B7312D76511DB2F0072839EE /* Pods-HcdPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		B902F40F222EB79E0049A626 /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
@@ -839,6 +845,8 @@
 				B90B955E23BEDA66003031DC /* NetworkServiceDao.m */,
 				B96C62B123CC5B3100C87F14 /* HDownloadModelDao.h */,
 				B96C62B223CC5B3100C87F14 /* HDownloadModelDao.m */,
+				38265EAE28A2396D008EE276 /* PlaylistModelDao.h */,
+				38265EAF28A2396D008EE276 /* PlaylistModelDao.m */,
 			);
 			path = Dao;
 			sourceTree = "<group>";
@@ -850,6 +858,8 @@
 				B90B955823BED0F8003031DC /* NetworkService.m */,
 				B96C62B423CC624B00C87F14 /* DownloadModel.h */,
 				B96C62B523CC624B00C87F14 /* DownloadModel.m */,
+				38265EAB28A23779008EE276 /* PlaylistModel.h */,
+				38265EAC28A23779008EE276 /* PlaylistModel.m */,
 			);
 			path = Bean;
 			sourceTree = "<group>";
@@ -2139,6 +2149,7 @@
 				B98F1A1523B2FA5A00C6A2DE /* UIImage+Hcd.m in Sources */,
 				B96A5DC024B8655100000B96 /* CYCTImageData.m in Sources */,
 				B96A5DB024B8655100000B96 /* CYVideoPlayer.m in Sources */,
+				38265EAD28A23779008EE276 /* PlaylistModel.m in Sources */,
 				B96A5DC324B8655100000B96 /* CYAttributeWorker.m in Sources */,
 				B988294023CC04E9002696B6 /* HDownloadProgressView.m in Sources */,
 				B926D15625EB340C002940E6 /* DNLAViewController.m in Sources */,
@@ -2262,6 +2273,7 @@
 				B96A5D9724B8655100000B96 /* CYVideoPlayerMoreSettingSecondary.m in Sources */,
 				B96A5D9C24B8655100000B96 /* CYVideoPlayerMoreSettingsFooterSlidersView.m in Sources */,
 				B96A5D8C24B8655100000B96 /* CYVideoPlayerControlMaskView.m in Sources */,
+				38265EB028A2396D008EE276 /* PlaylistModelDao.m in Sources */,
 				B9872C2223B9A4A400D8C107 /* RemoteControlView.m in Sources */,
 				B99C189B21FBFF4E002D4136 /* HcdValueTableViewCell.m in Sources */,
 				B98F1D1323B8D5A000C6A2DE /* HcdPlayerDraggingProgressView.m in Sources */,
@@ -2515,7 +2527,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2553,7 +2565,7 @@
 					"$(PROJECT_DIR)/Vender/x264-iOS/lib",
 					"$(PROJECT_DIR)/Vender/fdk-aac-ios/lib",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2576,7 +2588,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2614,7 +2626,7 @@
 					"$(PROJECT_DIR)/Vender/x264-iOS/lib",
 					"$(PROJECT_DIR)/Vender/fdk-aac-ios/lib",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jvaeyhcd.hcdPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

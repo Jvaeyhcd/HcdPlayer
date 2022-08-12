@@ -22,7 +22,7 @@
 - (void)initLanguage{
     NSString *language=[self currentLanguageStr];
     if (language.length>0) {
-        NSLog(@"自设置语言:%@",language);
+        DLog(@"自设置语言:%@",language);
     }else{
         [self systemLanguage];
     }
@@ -69,7 +69,7 @@
 
 - (void)systemLanguage{
     NSString *languageCode = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"][0];
-    NSLog(@"系统语言:%@",languageCode);
+    DLog(@"系统语言:%@",languageCode);
     if([languageCode hasPrefix:@"zh-Hant"]){
         languageCode = @"zh-Hant";//繁体中文
         [YBIBCopywriter sharedCopywriter].type = YBIBCopywriterTypeSimplifiedChinese;

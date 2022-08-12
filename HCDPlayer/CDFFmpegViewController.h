@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "CDFFmpegPlayer.h"
+#import "PlaylistModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CDFFmpegViewController : BaseViewController
 
-@property (nonatomic, copy) NSString * path;
+@property (nonatomic, copy) NSString *path;
+
+@property (nonatomic, strong) PlaylistModel *playlistModel;
 
 @end
 

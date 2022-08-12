@@ -64,7 +64,7 @@
 -(void)dismiss:(UITapGestureRecognizer *)tap{
     
     if( CGRectContainsPoint(self.frame, [tap locationInView:self.dialogView])) {
-        NSLog(@"tap");
+        DLog(@"tap");
     } else{
         
         [self dismissBlock:^(BOOL complete) {

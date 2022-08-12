@@ -123,9 +123,9 @@ typedef enum : NSUInteger {
     self.selectedArr = [[NSMutableArray alloc] init];
 #if DEBUG
     for (NSString *str in self.pathChidren) {
-        NSLog(@"%@", str);
+        DLog(@"%@", str);
         float size = [[HcdFileManager sharedHcdFileManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", _currentPath, str]];
-        NSLog(@"%lf", size);
+        DLog(@"%lf", size);
     }
 #endif
     [self loadDataWithSelected:NO];
@@ -750,7 +750,7 @@ typedef enum : NSUInteger {
             case FileType_img:
             {
                 NSMutableArray *array = [[HcdFileManager sharedHcdFileManager] getAllImagesInPathArray:self.pathChidren withPath:_currentPath];
-                NSLog(@"%@", array);
+                DLog(@"%@", array);
                 NSMutableArray *dataSourceArray = [NSMutableArray array];
                 NSInteger currentPage = 0;
                 if (array && [array count] > 0) {
@@ -876,7 +876,7 @@ typedef enum : NSUInteger {
         }];
     } else {
         // 文件已经存在
-        NSLog(@"文件已经存在");
+        DLog(@"文件已经存在");
     }
 }
 

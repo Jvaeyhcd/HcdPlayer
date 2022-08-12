@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
 typedef enum : NSUInteger {
     PasscodeTypeSet,
@@ -17,7 +18,7 @@ typedef enum : NSUInteger {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PasscodeViewController : UIViewController
+@interface PasscodeViewController : BaseViewController
 
 @property (nonatomic, assign) PasscodeType type;
 

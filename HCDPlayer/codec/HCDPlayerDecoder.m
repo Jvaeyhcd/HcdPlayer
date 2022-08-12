@@ -60,7 +60,7 @@ static int interruptCallback(void *context) {
 @implementation HCDPlayerDecoder
 
 - (void)dealloc {
-    NSLog(@"HCDPlayerDecoder dealloc");
+    DLog(@"HCDPlayerDecoder dealloc");
 }
 
 - (BOOL)open:(NSString *)url error:(NSError **)error {
@@ -387,7 +387,7 @@ static int interruptCallback(void *context) {
         if (ret < 0) {
             if (ret == AVERROR_EOF) self.isEOF = YES;
             char *e = av_err2str(ret);
-            NSLog(@"read frame error: %s", e);
+            DLog(@"read frame error: %s", e);
             break;
         }
         
@@ -461,15 +461,19 @@ static int interruptCallback(void *context) {
     return frames;
 }
 
-- (NSArray<HCDPlayerVideoFrame *> *)handleVideoPacket:(AVPacket *)packet byContext:(AVCodecContext *)context andFrame:(AVFrame *)frame andSwsContext:(struct SwsContext *)swsctx andSwsFrame:(AVFrame *)swsframe {
+- (NSArray<HCDPlayerVideoFrame *> *)handleVideoPacket:(AVPacket *)packet
+                                            byContext:(AVCodecContext *)context
+                                             andFrame:(AVFrame *)frame
+                                        andSwsContext:(struct SwsContext *)swsctx
+                                          andSwsFrame:(AVFrame *)swsframe {
     int ret = avcodec_send_packet(context, packet);
-    if (ret != 0) { NSLog(@"avcodec_send_packet: %d", ret); return nil; }
+    if (ret != 0) { DLog(@"avcodec_send_packet: %d", ret); return nil; }
     
     NSMutableArray<HCDPlayerVideoFrame *> *frames = [NSMutableArray array];
     do {
         ret = avcodec_receive_frame(context, frame);
         if (ret == AVERROR_EOF || ret == AVERROR(EAGAIN)) { break; }
-        else if (ret < 0) { NSLog(@"avcodec_receive_frame: %d", ret); break; }
+        else if (ret < 0) { DLog(@"avcodec_receive_frame: %d", ret); break; }
         
         HCDPlayerVideoFrame *f = nil;
         const int width = context->width;
@@ -523,13 +527,13 @@ static int interruptCallback(void *context) {
 
 - (NSArray<HCDPlayerAudioFrame *> *)handleAudioPacket:(AVPacket *)packet byContext:(AVCodecContext *)context andFrame:(AVFrame *)frame andSwrContext:(SwrContext *)swrctx andSwrBuffer:(void **)swrbuf andSwrBufferSize:(int *)swrbufsize {
     int ret = avcodec_send_packet(context, packet);
-    if (ret != 0) { NSLog(@"avcodec_send_packet: %d", ret); return nil; }
+    if (ret != 0) { DLog(@"avcodec_send_packet: %d", ret); return nil; }
     
     NSMutableArray<HCDPlayerAudioFrame *> *frames = [NSMutableArray array];
     do {
         ret = avcodec_receive_frame(context, frame);
         if (ret == AVERROR_EOF || ret == AVERROR(EAGAIN)) { break; }
-        else if (ret < 0) { NSLog(@"avcodec_receive_frame: %d", ret); break; }
+        else if (ret < 0) { DLog(@"avcodec_receive_frame: %d", ret); break; }
         if (frame->data[0] == NULL) continue;
         
         const float sampleRate = _audioSampleRate;
@@ -555,14 +559,14 @@ static int interruptCallback(void *context) {
             Byte *o[2] = { *swrbuf, 0 };
             samplesPerChannel = swr_convert(swrctx, o, samples, (const uint8_t **)frame->data, frame->nb_samples);
             if (samplesPerChannel < 0) {
-                NSLog(@"failed to resample audio");
+                DLog(@"failed to resample audio");
                 return nil;
             }
             
             data = *swrbuf;
         } else {
             if (context->sample_fmt != AV_SAMPLE_FMT_S16) {
-                NSLog(@"invalid audio format");
+                DLog(@"invalid audio format");
                 return nil;
             }
             
@@ -602,7 +606,7 @@ static int interruptCallback(void *context) {
         avcodec_flush_buffers(m_pVideoCodecContext);
         NSTimeInterval end = [NSDate timeIntervalSinceReferenceDate];
         NSTimeInterval dt = end - start;
-        NSLog(@"seek video: %.4f, start: %.4f, end: %.4f", dt, start, end);
+        DLog(@"seek video: %.4f, start: %.4f, end: %.4f", dt, start, end);
     } else if (_hasAudio) {
         NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
         int64_t ts = (int64_t)(position / _audioTimebase);
@@ -610,7 +614,7 @@ static int interruptCallback(void *context) {
         avcodec_flush_buffers(m_pAudioCodecContext);
         NSTimeInterval end = [NSDate timeIntervalSinceReferenceDate];
         NSTimeInterval dt = end - start;
-        NSLog(@"seek audio: %.4f, start: %.4f, end: %.4f", dt, start, end);
+        DLog(@"seek audio: %.4f, start: %.4f, end: %.4f", dt, start, end);
     }
 }
 

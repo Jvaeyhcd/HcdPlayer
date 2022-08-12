@@ -7,7 +7,7 @@
 //
 
 #import "HcdFileManager.h"
-#import "HCDPlayerViewController.h"
+#import "CDFFmpegViewController.h"
 #import "DocumentViewController.h"
 #import "YBImageBrowser.h"
 #import "MoveViewController.h"
@@ -65,7 +65,7 @@ SingletonM(HcdFileManager)
     
     res = [self.fileManager copyItemAtPath:path toPath:toPath error:&error];
     if (error) {
-        NSLog(@"copy失败：%@", [error localizedDescription]);
+        DLog(@"copy失败：%@", [error localizedDescription]);
     }
     return res;
 }
@@ -76,7 +76,7 @@ SingletonM(HcdFileManager)
     
     res = [self.fileManager moveItemAtPath:path toPath:toPath error:&error];
     if (error) {
-        NSLog(@"cut失败：%@", [error localizedDescription]);
+        DLog(@"cut失败：%@", [error localizedDescription]);
     }
     return res;
 }
@@ -171,7 +171,7 @@ SingletonM(HcdFileManager)
     
     res = [self.fileManager moveItemAtPath:[NSString stringWithFormat:@"%@/%@", path, oldName] toPath:[NSString stringWithFormat:@"%@/%@", path, newName] error:&error];
     if (error) {
-        NSLog(@"rename失败：%@", [error localizedDescription]);
+        DLog(@"rename失败：%@", [error localizedDescription]);
     }
     return res;
 }
@@ -344,8 +344,8 @@ SingletonM(HcdFileManager)
     switch (fileType) {
         case FileType_music:
         case FileType_video: {
-            HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
-            vc.url = filePath;
+            CDFFmpegViewController *vc = [[CDFFmpegViewController alloc] init];
+            vc.path = filePath;
             vc.modalPresentationStyle = UIModalPresentationFullScreen;
             [[self getCurrentVC] presentViewController:vc animated:YES completion:nil];
             break;

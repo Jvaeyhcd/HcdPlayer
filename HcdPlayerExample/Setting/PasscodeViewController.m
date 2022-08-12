@@ -60,6 +60,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [self.specialField becomeFirstResponder];
+    [HcdAppManager sharedInstance].passcodeViewShow = NO;
 }
 
 - (HcdSpecialField *)specialField {
@@ -138,7 +139,6 @@
                 _failedTimes = 0;
                 self.failedTipsLabel.hidden = YES;
                 [[NSNotificationCenter defaultCenter] postNotificationName:DISSMISS_PASSCODE_NOTIFICATION object:nil];
-                [HcdAppManager sharedInstance].passcodeViewShow = NO;
                 [self dismissViewControllerAnimated:YES completion:^{
                     
                 }];

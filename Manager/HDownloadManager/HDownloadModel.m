@@ -18,7 +18,7 @@
         if (self.onProgressChanged) {
             self.onProgressChanged(self);
         } else {
-            NSLog(@"progress changed block is empty");
+            DLog(@"progress changed block is empty");
         }
     }
 }

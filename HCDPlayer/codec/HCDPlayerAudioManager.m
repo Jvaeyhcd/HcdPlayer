@@ -65,7 +65,7 @@ static OSStatus audioUnitRenderCallback(void *inRefCon,
 }
 
 - (void)dealloc {
-    NSLog(@"HCDPlayerAudioManager dealloc");
+    DLog(@"HCDPlayerAudioManager dealloc");
     if (_audioData != NULL) {
         free(_audioData);
         _audioData = NULL;
@@ -90,12 +90,12 @@ static OSStatus audioUnitRenderCallback(void *inRefCon,
     
     NSTimeInterval prefferedIOBufferDuration = PREFERRED_BUFFER_DURATION;
     if (![session setPreferredIOBufferDuration:prefferedIOBufferDuration error:&rawError]) {
-        NSLog(@"setPreferredIOBufferDuration: %.4f, error: %@", prefferedIOBufferDuration, rawError);
+        DLog(@"setPreferredIOBufferDuration: %.4f, error: %@", prefferedIOBufferDuration, rawError);
     }
     
     double prefferedSampleRate = PREFERRED_SAMPLE_RATE;
     if (![session setPreferredSampleRate:prefferedSampleRate error:&rawError]) {
-        NSLog(@"setPreferredSampleRate: %.4f, error: %@", prefferedSampleRate, rawError);
+        DLog(@"setPreferredSampleRate: %.4f, error: %@", prefferedSampleRate, rawError);
     }
     
     if (![session setActive:YES error:&rawError]) {
@@ -194,7 +194,7 @@ static OSStatus audioUnitRenderCallback(void *inRefCon,
     status = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input,
                                   0, &streamDescr, size);
     if (status != noErr) {
-        NSLog(@"FAILED to set audio sample rate: %f, error: %d", sampleRate, (int)status);
+        DLog(@"FAILED to set audio sample rate: %f, error: %d", sampleRate, (int)status);
     }
     
     _bitsPerChannel = streamDescr.mBitsPerChannel;

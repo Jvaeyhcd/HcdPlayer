@@ -5,7 +5,7 @@
 //  Created by Salvador on 2019/1/21.
 //  Copyright © 2019 Salvador. All rights reserved.
 //
-
+          
 #import "FilesListTableViewCell.h"
 #import "HcdFileManager.h"
 //#import "HcdMovieDecoder.h"
@@ -74,6 +74,7 @@
 }
 
 - (void)setFilePath:(NSString *)path {
+    path = [path stringByReplacingOccurrencesOfString:@"file://" withString:@""];
     NSString *fileName = [[path stringByDeletingPathExtension] lastPathComponent];
     NSString *suffix = [path pathExtension];
     

@@ -26,6 +26,7 @@
 #import "DocumentViewController.h"
 #import <StoreKit/StoreKit.h>
 #import <YBImageBrowser/YBImageBrowser.h>
+#import "PlaylistModelDao.h"
 
 #define kEditBottomViewHeight 50
 
@@ -145,9 +146,9 @@ typedef enum : NSUInteger {
     self.selectedArr = [[NSMutableArray alloc] init];
 #if DEBUG
     for (NSString *str in self.pathChidren) {
-        NSLog(@"%@", str);
+        DLog(@"%@", str);
         float size = [[HcdFileManager sharedHcdFileManager] sizeOfPath:[NSString stringWithFormat:@"%@/%@", _currentPath, str]];
-        NSLog(@"%lf", size);
+        DLog(@"%lf", size);
     }
 #endif
     [self loadDataWithSelected:NO];
@@ -768,23 +769,12 @@ typedef enum : NSUInteger {
             }
             case FileType_music:
             case FileType_video: {
-//                NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-//                if ([path.pathExtension isEqualToString:@"wmv"]) {
-//                    parameters[HcdMovieParameterMinBufferedDuration] = @(5.0);
-//                }
-//                if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-//                    parameters[HcdMovieParameterDisableDeinterlacing] = @(YES);
-//                }
-//                HcdMovieViewController *movieVc = [HcdMovieViewController movieViewControllerWithContentPath:path parameters:parameters];
-//                movieVc.modalPresentationStyle = UIModalPresentationFullScreen;
-//                [self presentViewController:movieVc animated:YES completion:nil];
-//                HCDPlayerViewController *vc = [[HCDPlayerViewController alloc] init];
-//                vc.url = [NSString stringWithFormat:@"file://%@", path];
-//                vc.modalPresentationStyle = UIModalPresentationFullScreen;
-//                [self presentViewController:vc animated:YES completion:nil];
-                
                 CDFFmpegViewController *vc = [[CDFFmpegViewController alloc] init];
                 vc.path = [NSString stringWithFormat:@"file://%@", path];
+                PlaylistModel *playlistModel = [[PlaylistModelDao sharedPlaylistModelDao] findPlaylistByPath:vc.path];
+                if (playlistModel) {
+                    vc.playlistModel = playlistModel;
+                }
                 vc.modalPresentationStyle = UIModalPresentationFullScreen;
                 [self presentViewController:vc animated:YES completion:nil];
                 break;
@@ -805,7 +795,7 @@ typedef enum : NSUInteger {
             case FileType_img:
             {
                 NSMutableArray *array = [[HcdFileManager sharedHcdFileManager] getAllImagesInPathArray:self.pathChidren withPath:_currentPath];
-                NSLog(@"%@", array);
+                DLog(@"%@", array);
                 NSMutableArray *dataSourceArray = [NSMutableArray array];
                 NSInteger currentPage = 0;
                 if (array && [array count] > 0) {
@@ -928,7 +918,7 @@ typedef enum : NSUInteger {
         }];
     } else {
         // 文件已经存在
-        NSLog(@"文件已经存在");
+        DLog(@"文件已经存在");
     }
 }
 

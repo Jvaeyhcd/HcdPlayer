@@ -22,7 +22,7 @@
         return YES;
     }
     
-    NSLog(@"iCloud 不可用");
+    DLog(@"iCloud 不可用");
     return NO;
 }
 
@@ -33,7 +33,7 @@
     [iCloudDoc openWithCompletionHandler:^(BOOL success) {
         if (success) {
             [iCloudDoc closeWithCompletionHandler:^(BOOL success) {
-                NSLog(@"关闭成功");
+                DLog(@"关闭成功");
             }];
             
             if (block) {

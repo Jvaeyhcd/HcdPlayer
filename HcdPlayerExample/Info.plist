@@ -59,10 +59,6 @@
 	<string>NSLocalNetworkUsageDescription</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>NSPhotoLibraryUsageDescription</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>audio</string>
-	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

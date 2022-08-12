@@ -82,7 +82,7 @@ BLOCK(); \
 - (void)downloadTask:(TOSMBSessionDownloadTask *)downloadTask didWriteBytes:(uint64_t)bytesWritten totalBytesReceived:(uint64_t)totalBytesReceived totalBytesExpectedToReceive:(int64_t)totalBytesToReceive
 {
     CGFloat progress = totalBytesReceived / (float)totalBytesToReceive;
-    NSLog(@"download progress:%.2f", progress);
+    DLog(@"download progress:%.2f", progress);
     self.model.progress = progress;
     self.model.size = (float)totalBytesToReceive;
     self.model.status = HCDDownloadStatusRunning;

@@ -230,7 +230,7 @@
     [self.session requestContentsOfDirectoryAtFilePath:@"/" success:^(NSArray *files) {
         
         [HHUDUtil hideLoading];
-        NSLog(@"");
+        DLog(@"");
         SMBFileListViewController *vc = [[SMBFileListViewController alloc] initWithSession:self.session title:service.title];
         vc.files = files;
         vc.hidesBottomBarWhenPushed = YES;

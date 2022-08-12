@@ -24,6 +24,7 @@
 #import "GadientLayerView.h"
 #import "HCDPlayerUtils.h"
 #import "DNLAViewController.h"
+#import "PlaylistModelDao.h"
 
 typedef enum : NSUInteger {
     HCDPlayerControlTypeNone,
@@ -112,13 +113,12 @@ typedef enum : NSUInteger {
     _remoteMovies = @[];
     
     [self initAll];
-
-    // 添加到播放记录中
-    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *relativePath = [self.path mutableCopy];
-    relativePath = [relativePath  stringByReplacingOccurrencesOfString:@"file://" withString:@""];
-    relativePath = [relativePath stringByReplacingOccurrencesOfString:documentPath withString:@""];
-    [[HcdAppManager sharedInstance] addPathToPlaylist:relativePath];
+    
+    self.playlistModel.path = self.path;
+    
+    if (self.playlistModel.position > 0) {
+        [self.player setMoviePosition:self.playlistModel.position playMode:NO];
+    }
 }
 
 
@@ -140,6 +140,8 @@ typedef enum : NSUInteger {
     
     [self unregisterNotification];
     [self pause];
+    
+    [[PlaylistModelDao sharedPlaylistModelDao] insertOrUpdateData:self.playlistModel];
 }
 
 - (BOOL)prefersHomeIndicatorAutoHidden {
@@ -177,7 +179,7 @@ typedef enum : NSUInteger {
     if(context == (__bridge void *)[AVAudioSession sharedInstance]){
         float newValue = [[change objectForKey:@"new"] floatValue];
         float oldValue = [[change objectForKey:@"old"] floatValue];
-        NSLog(@"%f-%f", oldValue, newValue);
+        DLog(@"%f-%f", oldValue, newValue);
         self.outputVolume = newValue;
         self.soundProgressView.progress = newValue;
         [self.soundProgressView show];
@@ -748,7 +750,7 @@ typedef enum : NSUInteger {
             if (self.player.decoder.duration <= 0) {
                 return;
             }
-            NSLog(@"%f", translate.x);
+            DLog(@"%f", translate.x);
             [self changePlayingProgress:translate.x * 0.0003];
             break;
         }
@@ -947,7 +949,7 @@ typedef enum : NSUInteger {
     CGFloat value = _currentProgress * self.player.decoder.duration;
     
 #if DEBUG
-    NSLog(@"_touchBeginValue:%f value:%f", _touchBeginValue, value);
+    DLog(@"_touchBeginValue:%f value:%f", _touchBeginValue, value);
 #endif
     
     CGFloat duration = self.player.decoder.duration;
@@ -1010,15 +1012,17 @@ typedef enum : NSUInteger {
         NSString *path;
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         
-        path = self.path.length > 0 ? self.path :  _remoteMovies[6];
+        path = self.path.length > 0 ? self.path : _remoteMovies[6];
         
         // increase buffering for .wmv, it solves problem with delaying audio frames
-        if ([path.pathExtension isEqualToString:@"wmv"])
+        if ([path.pathExtension isEqualToString:@"wmv"]) {
             parameters[CDPlayerParameterMinBufferedDuration] = @(5.0);
+        }
         
         // disable deinterlacing for iPhone, because it's complex operation can cause stuttering
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
             parameters[CDPlayerParameterDisableDeinterlacing] = @(YES);
+        }
         
         _player = [CDFFmpegPlayer movieViewWithContentPath:path parameters:parameters];
         _player.rate = 2.0;
@@ -1109,6 +1113,8 @@ typedef enum : NSUInteger {
 
 
 - (void)cdFFmpegPlayer:(CDFFmpegPlayer * _Nullable)player updatePosition:(CGFloat)position duration:(CGFloat)duration isDrag:(BOOL)isdrag {
+    
+    self.playlistModel.position = position;
     // 播放的进度
     dispatch_async(dispatch_get_main_queue(), ^{
         self.lblPosition.text = [HCDPlayerUtils durationStringFromSeconds:position];
@@ -1147,8 +1153,11 @@ typedef enum : NSUInteger {
     return _volumeView;
 }
 
-- (void)encodeWithCoder:(nonnull NSCoder *)coder {
-    
+- (PlaylistModel *)playlistModel {
+    if (!_playlistModel) {
+        _playlistModel = [[PlaylistModel alloc] init];
+    }
+    return _playlistModel;
 }
 
 @end

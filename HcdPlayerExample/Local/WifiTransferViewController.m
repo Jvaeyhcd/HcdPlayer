@@ -84,11 +84,11 @@
     [options setObject:@NO forKey:GCDWebServerOption_AutomaticallySuspendInBackground];
     [options setObject:@kWebServerPort forKey:GCDWebServerOption_Port];
     if ([_webServer startWithOptions:options error:nil]) {
-        NSLog(@"GCDWebServer running locally on port %lu", (unsigned long)_webServer.serverURL);
+        DLog(@"GCDWebServer running locally on port %lu", (unsigned long)_webServer.serverURL);
         _serverURL = [_webServer.serverURL absoluteString];
         [_tableView reloadData];
     } else {
-        NSLog(@"GCDWebServer not running!");
+        DLog(@"GCDWebServer not running!");
     };
     
     if (!_tableView) {

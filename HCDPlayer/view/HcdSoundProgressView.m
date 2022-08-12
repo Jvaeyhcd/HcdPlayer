@@ -46,7 +46,7 @@
 }
 
 - (void)layoutSubviews {
-    NSLog(@"layoutSubviews");
+    DLog(@"layoutSubviews");
     [super layoutSubviews];
     self.progressView.progress = _progress;
 }

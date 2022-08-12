@@ -9,15 +9,16 @@
 #import "PlaylistViewController.h"
 #import "FilesListTableViewCell.h"
 #import "UITableView+Hcd.h"
-#import "HcdAppManager.h"
 #import "HCDPlayerViewController.h"
 #import "HcdActionSheet.h"
 #import "CDFFmpegViewController.h"
+#import "playlistModelDao.h"
 
 @interface PlaylistViewController ()<UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (nonatomic, strong) UITableView    *tableView;
 @property (nonatomic, assign) NSInteger      selectedIndex;
+@property (nonatomic, strong) NSMutableArray *playlistArray;
 
 @end
 
@@ -41,12 +42,15 @@
 }
 
 - (void)updateButtonItem {
-    NSArray *playList = [HcdAppManager sharedInstance].playList;
-    if (playList && [playList count] > 0) {
+    if ([self.playlistArray count] > 0) {
         [self showBarButtonItemWithStr:HcdLocalized(@"clear", nil) position:RIGHT];
     } else {
         self.navigationItem.rightBarButtonItem = nil;
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self getPlaylistArray];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -82,6 +86,13 @@
     return _tableView;
 }
 
+- (NSMutableArray *)playlistArray {
+    if (!_playlistArray) {
+        _playlistArray = [NSMutableArray array];
+    }
+    return _playlistArray;
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -89,21 +100,16 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[HcdAppManager sharedInstance].playList count];
+    return [self.playlistArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FilesListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdFilesList forIndexPath:indexPath];
     [tableView addLineforPlainCell:cell forRowAtIndexPath:indexPath withLeftSpace:kBasePadding];
     
-    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *path = [[HcdAppManager sharedInstance].playList objectAtIndex:indexPath.row];
-    if (path) {
-        if ([path isHttpRequestUrl]) {
-            [cell setFileUrlPath:path];
-        } else {
-            [cell setFilePath:[NSString stringWithFormat:@"%@%@", documentPath, path]];
-        }
+    PlaylistModel *playlist = [self.playlistArray objectAtIndex:indexPath.row];
+    if (playlist.path) {
+        [cell setFilePath:playlist.path];
     }
     
     return cell;
@@ -116,16 +122,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *path = [[HcdAppManager sharedInstance].playList objectAtIndex:indexPath.row];
+    PlaylistModel *playlist = [self.playlistArray objectAtIndex:indexPath.row];
     
     CDFFmpegViewController *vc = [[CDFFmpegViewController alloc] init];
-    vc.path = [NSString stringWithFormat:@"file://%@", path];
-    if ([path isHttpRequestUrl]) {
-        vc.path = path;
-    } else {
-        vc.path = [NSString stringWithFormat:@"file://%@%@", documentPath, path];
-    }
+    vc.path = [playlist.path stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+    vc.playlistModel = playlist;
     
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:nil];
@@ -164,22 +165,26 @@
  * 显示删除按钮
  */
 - (void)showDeleteActionSheet {
-    NSString *fileNmae = [[HcdAppManager sharedInstance].playList objectAtIndex:_selectedIndex];
+    PlaylistModel *playlistModel = [self.playlistArray objectAtIndex:_selectedIndex];
     
-    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:[NSString stringWithFormat:HcdLocalized(@"sure_delete_play_history", nil), fileNmae]];
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:[NSString stringWithFormat:HcdLocalized(@"sure_delete_play_history", nil), [playlistModel.path lastPathComponent]]];
     
     __weak PlaylistViewController *weakSelf = self;
     deleteSheet.seletedButtonIndex = ^(NSInteger index) {
         switch (index) {
             case 1:
             {
-                NSMutableArray *playlist = [[NSMutableArray alloc] initWithArray:[HcdAppManager sharedInstance].playList];
-                if (weakSelf.selectedIndex < [playlist count]) {
-                    [playlist removeObjectAtIndex:weakSelf.selectedIndex];
+                if (weakSelf.selectedIndex < [weakSelf.playlistArray count]) {
+                    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                        [[PlaylistModelDao sharedPlaylistModelDao] deleteData:[weakSelf.playlistArray objectAtIndex:weakSelf.selectedIndex]];
+                        dispatch_sync(dispatch_get_main_queue(), ^{
+                            [weakSelf.playlistArray removeObjectAtIndex:weakSelf.selectedIndex];
+                            [weakSelf.tableView reloadData];
+                            [weakSelf updateButtonItem];
+                        });
+                    });
                 }
-                [HcdAppManager sharedInstance].playList = playlist;
-                [weakSelf.tableView reloadData];
-                [weakSelf updateButtonItem];
+                
                 break;
             }
             default:
@@ -192,17 +197,18 @@
 
 - (void)showClearActionSheet {
     
-    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil) otherButtonTitles:@[HcdLocalized(@"ok", nil)] attachTitle:HcdLocalized(@"confirm_clear_playlist", nil)];
+    HcdActionSheet *deleteSheet = [[HcdActionSheet alloc] initWithCancelStr:HcdLocalized(@"cancel", nil)
+                                                          otherButtonTitles:@[HcdLocalized(@"ok", nil)]
+                                                                attachTitle:HcdLocalized(@"confirm_clear_playlist", nil)];
     
     __weak PlaylistViewController *weakSelf = self;
     deleteSheet.seletedButtonIndex = ^(NSInteger index) {
         switch (index) {
-            case 1:
-            {
-                NSMutableArray *playlist = [[NSMutableArray alloc] initWithArray:[HcdAppManager sharedInstance].playList];
-                [playlist removeAllObjects];
-                [HcdAppManager sharedInstance].playList = playlist;
+            case 1: {
+                [[PlaylistModelDao sharedPlaylistModelDao] clearAll];
+                [weakSelf.playlistArray removeAllObjects];
                 [weakSelf.tableView reloadData];
+                [weakSelf updateButtonItem];
                 break;
             }
             default:
@@ -229,6 +235,20 @@
     return [[NSAttributedString alloc]initWithString:HcdLocalized(@"playlist_empty_tips", nil) attributes:attributes];
 }
 
+#pragma mark - private
+
+- (void)getPlaylistArray {
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSArray *playlistArray = [[PlaylistModelDao sharedPlaylistModelDao] queryAll];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            weakSelf.playlistArray = [NSMutableArray arrayWithArray:playlistArray];
+            [weakSelf.tableView reloadData];
+            [weakSelf updateButtonItem];
+        });
+    });
+}
 
 /*
 #pragma mark - Navigation

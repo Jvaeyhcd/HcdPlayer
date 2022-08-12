@@ -196,7 +196,7 @@
             NSString *fileName = [file lastPathComponent];
             BOOL res = [[HcdFileManager sharedHcdFileManager] cutFile:file toPath:[NSString stringWithFormat:@"%@/%@", _currentPath, fileName]];
             if (res) {
-                NSLog(@"-------------------移动成功");
+                DLog(@"-------------------移动成功");
             }
         }
     }

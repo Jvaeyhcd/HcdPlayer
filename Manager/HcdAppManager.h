@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isAllowAutorotate;
 
 /**
- * 视频界面是否是显示状态
+ * 是否显示解锁密码界面
  */
 @property (nonatomic, assign) BOOL passcodeViewShow;
 

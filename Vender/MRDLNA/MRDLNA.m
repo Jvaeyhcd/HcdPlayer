@@ -173,7 +173,7 @@ static dispatch_once_t once;
 #pragma mark -- 搜索协议CLUPnPDeviceDelegate回调
 - (void)upnpSearchChangeWithResults:(NSArray<CLUPnPDevice *> *)devices{
     NSMutableArray *deviceMarr = [NSMutableArray array];
-    NSLog(@"devices-->%@",devices);
+    DLog(@"devices-->%@",devices);
     for (CLUPnPDevice *device in devices) {
         // 只返回匹配到视频播放的设备
         if ([device.uuid containsString:serviceType_AVTransport]) {
@@ -187,7 +187,7 @@ static dispatch_once_t once;
 }
 
 - (void)upnpSearchErrorWithError:(NSError *)error{
-//    NSLog(@"DLNA_Error======>%@", error);
+//    DLog(@"DLNA_Error======>%@", error);
 }
 
 -(void)didEndSearch{
@@ -202,7 +202,7 @@ static dispatch_once_t once;
 }
 
 - (void)upnpGetTransportInfoResponse:(CLUPnPTransportInfo *)info{
-//    NSLog(@"%@ === %@", info.currentTransportState, info.currentTransportStatus);
+//    DLog(@"%@ === %@", info.currentTransportState, info.currentTransportStatus);
     if (!([info.currentTransportState isEqualToString:@"PLAYING"] || [info.currentTransportState isEqualToString:@"TRANSITIONING"])) {
         [self.render play];
     }
@@ -232,7 +232,7 @@ static dispatch_once_t once;
 
 //errorDomain报错
 -(void)upnpErrorDomain:(NSError *)error{
-    NSLog(@"网络发生错误啦");
+    DLog(@"网络发生错误啦");
 //    [SVProgressHUD showInfoWithStatus:@"投屏失败，请确保有网或者要在同一个局域网内哟"];
 }
 

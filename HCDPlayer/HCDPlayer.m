@@ -52,7 +52,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"HCDPlayer dealloc");
+    DLog(@"HCDPlayer dealloc");
 }
 
 - (void)initAll {
@@ -239,7 +239,7 @@
 }
 
 - (void)runFrameReader {
-    NSLog(@"%@", [NSThread currentThread]);
+    DLog(@"%@", [NSThread currentThread]);
     @autoreleasepool {
         while (self.playing) {
             [self readFrame];
@@ -249,7 +249,7 @@
                 [NSThread sleepForTimeInterval:1.0];
             }
 #if DEBUG
-            NSLog(@"current time:%@", [NSDate date]);
+            DLog(@"current time:%@", [NSDate date]);
 #endif
         }
         self.frameReaderThread = nil;
@@ -264,12 +264,11 @@
     double tempDuration = 0;
     dispatch_time_t t = dispatch_time(DISPATCH_TIME_NOW, 0.02 * NSEC_PER_SEC);
     
-    while (self.playing && !self.decoder.isEOF && !self.requestSeek
-           && (self.bufferedDuration + tempDuration) < self.maxBufferDuration) {
+    while (self.playing && !self.decoder.isEOF && !self.requestSeek && (self.bufferedDuration + tempDuration) < self.maxBufferDuration) {
         @autoreleasepool {
             NSArray *fs = [self.decoder readFrames];
 #if DEBUG
-            NSLog(@"read frames count:%@, video frames count:%@, audio frames count:%@", @([fs count]), @([fs count]), @([self.aframes count]));
+            DLog(@"read frames count:%@, video frames count:%@, audio frames count:%@", @([fs count]), @([fs count]), @([self.aframes count]));
 #endif
             if (fs == nil) { break; }
             if (fs.count == 0) { continue; }
