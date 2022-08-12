@@ -26,7 +26,7 @@
 
         CVReturn ret = CVMetalTextureCacheCreate(kCFAllocatorDefault, nil, device, nil, &_textCache);
         if (ret != kCVReturnSuccess) {
-            NSLog(@"Unable to allocate texture cache");
+            DLog(@"Unable to allocate texture cache");
             return nil;
         }
 
@@ -45,11 +45,11 @@
     size_t y_height = CVPixelBufferGetHeightOfPlane(buffer, 0);
     CVReturn ret = CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault, _textCache, buffer, nil, MTLPixelFormatR8Unorm, y_width, y_height, 0, &y_texture);
     if (ret != kCVReturnSuccess) {
-        NSLog(@"fail to create texture");
+        DLog(@"fail to create texture");
     }
     id<MTLTexture> y_inputTexture = CVMetalTextureGetTexture(y_texture);
     if (y_inputTexture == nil) {
-        NSLog(@"failed to create metal texture");
+        DLog(@"failed to create metal texture");
     }
 
     CVMetalTextureRef uv_texture ;
@@ -58,11 +58,11 @@
     size_t uv_height = CVPixelBufferGetHeightOfPlane(buffer, 1);
     ret = CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault, _textCache, buffer, nil, MTLPixelFormatRG8Unorm, uv_width, uv_height, 1, &uv_texture);
     if (ret != kCVReturnSuccess) {
-        NSLog(@"fail to create texture");
+        DLog(@"fail to create texture");
     }
     id<MTLTexture> uv_inputTexture = CVMetalTextureGetTexture(uv_texture);
     if (uv_inputTexture == nil) {
-        NSLog(@"failed to create metal texture");
+        DLog(@"failed to create metal texture");
     }
 
     CVPixelBufferRelease(buffer);

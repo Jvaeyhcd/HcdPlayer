@@ -113,7 +113,7 @@
         
         pixelBufferRef = NULL;
         [self infalteStartCodeWithNalunitData:&nalUnit];
-        NSLog(@"NALUint Type: %d.", nalUnit.type);
+        DLog(@"NALUint Type: %d.", nalUnit.type);
         
         switch (nalUnit.type) {
             case NALUTypeIFrame://IFrame
@@ -121,7 +121,7 @@
                 {
                     if([self initH264Decoder]){
                         pixelBufferRef = [self decompressWithAVPacket:packet];
-                        NSLog(@"NALUint I Frame size:%d", nalUnit.size);
+                        DLog(@"NALUint I Frame size:%d", nalUnit.size);
                         
                         free(_sps);
                         free(_pps);
@@ -139,7 +139,7 @@
                 
                 _sps = (uint8_t*)malloc(_spsSize);
                 memcpy(_sps, nalUnit.data + 4, _spsSize);
-                NSLog(@"NALUint SPS size:%d", nalUnit.size - 4);
+                DLog(@"NALUint SPS size:%d", nalUnit.size - 4);
                 break;
             case NALUTypePPS://PPS
                 _ppsSize = nalUnit.size - 4;
@@ -149,11 +149,11 @@
                 
                 _pps = (uint8_t*)malloc(_ppsSize);
                 memcpy(_pps, nalUnit.data + 4, _ppsSize);
-                NSLog(@"NALUint PPS size:%d", nalUnit.size - 4);
+                DLog(@"NALUint PPS size:%d", nalUnit.size - 4);
                 break;
             case NALUTypeBPFrame://B/P Frame
                 pixelBufferRef = [self decompressWithAVPacket:packet];
-                NSLog(@"NALUint B/P Frame size:%d", nalUnit.size);
+                DLog(@"NALUint B/P Frame size:%d", nalUnit.size);
                 return pixelBufferRef;
             default:
                 break;
@@ -165,7 +165,7 @@
         }
     }
     
-    NSLog(@"The AVFrame data size:%d", offset);
+    DLog(@"The AVFrame data size:%d", offset);
     return NULL;
 }
 
@@ -257,7 +257,7 @@
             return false;
         }
     }else{
-        NSLog(@"Error code %d:Creates a format description for a video media stream described by H.264 parameter set NAL units.", (int)status);
+        DLog(@"Error code %d:Creates a format description for a video media stream described by H.264 parameter set NAL units.", (int)status);
         return false;
     }
     
@@ -677,7 +677,7 @@ static void decompressionOutputCallbackRecord(void * CM_NULLABLE decompressionOu
             return false;
         }
     }else{
-        NSLog(@"Error code %d:Creates a format description for a video media stream described by H.264 parameter set NAL units.", (int)status);
+        DLog(@"Error code %d:Creates a format description for a video media stream described by H.264 parameter set NAL units.", (int)status);
         return false;
     }
     

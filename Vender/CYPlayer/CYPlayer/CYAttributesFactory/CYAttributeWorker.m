@@ -786,7 +786,7 @@ inline static BOOL _rangeContains(NSRange range, NSRange range2) {
 }
 
 inline static void _errorLog(NSString *msg, NSString *target) {
-    NSLog(@"\n__Error__: %@\nTarget: %@", msg, target);
+    DLog(@"\n__Error__: %@\nTarget: %@", msg, target);
 }
 
 - (NSMutableParagraphStyle *)style {

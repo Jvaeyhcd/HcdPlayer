@@ -329,7 +329,7 @@ LoggerAudio(3, @"%@", dump); \
         [[AVAudioSession sharedInstance] setActive:NO error:&error];
         if (error)
         {
-            NSLog(@"Couldn't deactivate the audio session");
+            DLog(@"Couldn't deactivate the audio session");
         }
         
         

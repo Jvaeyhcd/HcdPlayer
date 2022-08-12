@@ -83,7 +83,7 @@
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     if ( _drawData ) {
-//        NSLog(@"%zd - %s - %@", __LINE__, __func__, NSStringFromCGSize(rect.size));
+//        DLog(@"%zd - %s - %@", __LINE__, __func__, NSStringFromCGSize(rect.size));
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGContextSetTextMatrix(context, CGAffineTransformIdentity);
         CGContextTranslateCTM(context, 0, _drawData.height_t);

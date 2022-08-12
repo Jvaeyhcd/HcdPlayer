@@ -47,7 +47,7 @@
 #define CYColorWithHEX(hex) [UIColor colorWithRed:(float)((hex & 0xFF0000) >> 16)/255.0 green:(float)((hex & 0xFF00) >> 8)/255.0 blue:(float)(hex & 0xFF)/255.0 alpha:1.0]
 
 inline static void _cdErrorLog(id msg) {
-    NSLog(@"__error__: %@", msg);
+    DLog(@"__error__: %@", msg);
 }
 
 inline static void _cdHiddenViews(NSArray<UIView *> *views) {
@@ -123,13 +123,13 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     NSUInteger          _tickCounter;
     
     //生成预览图
-    CYPlayerDecoder      *_generatedPreviewImagesDecoder;
+    CYPlayerDecoder     *_generatedPreviewImagesDecoder;
     dispatch_queue_t    _generatedPreviewImagesDispatchQueue;
     NSMutableArray      *_generatedPreviewImagesVideoFrames;
     BOOL                _generatedPreviewImageInterrupted;
     
     //UI
-//    CYPlayerGLView       *_glView;
+    CYPlayerGLView      *_glView;
     UIImageView         *_imageView;
     
     //Gesture
@@ -196,13 +196,9 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     return _instance;
 }
 
-+ (void)initialize
-{
-    if (!gHistory)
-    {
++ (void)initialize {
+    if (!gHistory) {
         gHistory = [[NSMutableDictionary alloc] initWithCapacity:20];
-        
-        NSLog(@"%@", gHistory);
     }
 }
 
@@ -250,18 +246,15 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     [self _itemPrepareToPlay];
     
     if (!_progressQueue) {
-        //        _progressQueue = dispatch_queue_create("CYPlayer Progress", DISPATCH_QUEUE_SERIAL);
         _progressQueue  = dispatch_get_main_queue();
     }
     
     if (!_videoQueue) {
-        //        _videoQueue = dispatch_queue_create("CYPlayer Video", DISPATCH_QUEUE_SERIAL);
-        _videoQueue  = dispatch_get_main_queue();
+        _videoQueue = dispatch_queue_create("CYPlayer Video", DISPATCH_QUEUE_SERIAL);
     }
     
     if (!_audioQueue) {
         _audioQueue = dispatch_queue_create("CYPlayer Audio", DISPATCH_QUEUE_SERIAL);
-        //        _audioQueue  = dispatch_get_main_queue();
     }
     
     _moviePosition = 0;
@@ -455,8 +448,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     while ((_decoder.validVideo ? _videoFrames.count : 0) + (_decoder.validAudio ? _audioFrames.count : 0) > 0) {
         
         @synchronized(_videoFrames) {
-            if (_videoFrames.count > 0)
-            {
+            if (_videoFrames.count > 0) {
                 [_videoFrames removeObjectAtIndex:0];
             }
         }
@@ -464,8 +456,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
 //        const CGFloat duration = _decoder.isNetwork ? .0f : 0.1f;
 //        [_decoder decodeFrames:duration];
         @synchronized(_audioFrames) {
-            if (_audioFrames.count > 0)
-            {
+            if (_audioFrames.count > 0) {
                 [_audioFrames removeObjectAtIndex:0];
             }
         }
@@ -476,26 +467,18 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     if (_asyncDecodeQueue) {
-        // Not needed as of ARC.
-        //        dispatch_release(_asyncDecodeQueue);
         _asyncDecodeQueue = NULL;
     }
     
     if (_progressQueue) {
-        // Not needed as of ARC.
-        //        dispatch_release(_asyncDecodeQueue);
         _progressQueue = NULL;
     }
     
     if (_videoQueue) {
-        // Not needed as of ARC.
-        //        dispatch_release(_asyncDecodeQueue);
         _videoQueue = NULL;
     }
     
     if (_audioQueue) {
-        // Not needed as of ARC.
-        //        dispatch_release(_asyncDecodeQueue);
         _audioQueue = NULL;
     }
     
@@ -641,9 +624,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     if (self.playing)
         return;
     
-    if (!_decoder.validVideo &&
-        !_decoder.validAudio) {
-        
+    if (!_decoder.validVideo && !_decoder.validAudio) {
         return;
     }
     
@@ -659,7 +640,6 @@ static NSMutableDictionary * gHistory = nil;//播放记录
 #ifdef DEBUG
     _debugStartTime = -1;
 #endif
-    
 
     //    [self asyncDecodeFrames];
     [self concurrentAsyncDecodeFrames];
@@ -674,19 +654,15 @@ static NSMutableDictionary * gHistory = nil;//播放记录
             [weakSelf enableAudioTick:YES];
         }
         
-        if (weakSelf.decoder.validVideo)
-        {
+        if (weakSelf.decoder.validVideo) {
             [weakSelf videoTick];
         }
     });
     
-    
-    
     LoggerStream(1, @"play movie");
 }
 
-- (void) _pause
-{
+- (void)_pause {
     if (!self.playing)
         return;
     
@@ -1127,7 +1103,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
                     }
                 }
                 CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-                NSLog(@"Linked asyncDecodeFrames in %f ms", linkTime * 1000.0);
+                DLog(@"Linked asyncDecodeFrames in %f ms", linkTime * 1000.0);
             }
             
             weakSelf.decoding = NO;
@@ -1157,20 +1133,18 @@ static NSMutableDictionary * gHistory = nil;//播放记录
                 
                 if (weakDecoder && (weakDecoder.validVideo || weakDecoder.validAudio)) {
                     
-                    if (strongSelf->_positionUpdating)//正在跳播
-                    {
+                    if (strongSelf->_positionUpdating) {
+                        //正在跳播
                         [weakDecoder asyncDecodeFrames:duration targetPosition:strongSelf->_targetPosition compeletionHandler:^(NSArray<CYPlayerFrame *> *frames, BOOL compeleted) {
                             [weakSelf insertFrames:frames];
-                            if (compeleted)
-                            {
+                            if (compeleted) {
                                 weakSelf.decoding = NO;
                             }
                         }];
                     } else {
                         [weakDecoder concurrentDecodeFrames:duration compeletionHandler:^(NSArray<CYPlayerFrame *> *frames, BOOL compeleted) {
                             [weakSelf insertFrames:frames];
-                            if (compeleted)
-                            {
+                            if (compeleted) {
                                 weakSelf.decoding = NO;
                             }
                         }];
@@ -1178,7 +1152,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
                 }
             }
             CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-            NSLog(@"Linked asyncDecodeFrames in %f ms", linkTime * 1000.0);
+            DLog(@"Linked asyncDecodeFrames in %f ms", linkTime * 1000.0);
         }
     });
 }
@@ -1365,16 +1339,12 @@ static NSMutableDictionary * gHistory = nil;//播放记录
             
             for (CYPlayerFrame *frame in frames) {
                 if (frame.type == CYPlayerFrameTypeVideo) {
-                    if (_positionUpdating)
-                    {
-                        if (frame.position >= _targetPosition)
-                        {
+                    if (_positionUpdating) {
+                        if (frame.position >= _targetPosition) {
                             [_videoFrames addObject:frame];
                             _videoBufferedDuration += frame.duration;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         [_videoFrames addObject:frame];
                         _videoBufferedDuration += frame.duration;
                     }
@@ -1389,19 +1359,13 @@ static NSMutableDictionary * gHistory = nil;//播放记录
             
             for (CYPlayerFrame *frame in frames) {
                 if (frame.type == CYPlayerFrameTypeAudio) {
-                    if (_positionUpdating)
-                    {
-                        if (frame.position >= _targetPosition)
-                        {
+                    if (_positionUpdating) {
+                        if (frame.position >= _targetPosition) {
                             [_audioFrames addObject:frame];
-                            //                    if (!_decoder.validVideo)
                             _audioBufferedDuration += frame.duration;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         [_audioFrames addObject:frame];
-                        //                    if (!_decoder.validVideo)
                         _audioBufferedDuration += frame.duration;
                     }
                 }
@@ -1458,14 +1422,8 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         (_decoder.validVideo ? _videoFrames.count : 0) +
         (_decoder.validAudio ? _audioFrames.count : 0);
         
-        if ([self getMemoryUsedPercent] <= MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT && HAS_PLENTY_OF_MEMORY)
-        {
-            if (!leftFrames ||
-                (_videoBufferedDuration < _maxBufferedDuration)
-//                ||
-//                !(_audioBufferedDuration > _maxBufferedDuration)
-                )
-            {
+        if ([self getMemoryUsedPercent] <= MAX_BUFFERED_DURATION_MEMORY_USED_PERCENT && HAS_PLENTY_OF_MEMORY) {
+            if (!leftFrames || (_videoBufferedDuration < _maxBufferedDuration) || !(_audioBufferedDuration > _maxBufferedDuration)) {
                 //            [self asyncDecodeFrames];
                 [self concurrentAsyncDecodeFrames];
             }
@@ -1593,10 +1551,10 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         audioManager.delegate = self;
         
         audioManager.outputBlock = ^(float *outData, UInt32 numFrames, UInt32 numChannels) {
-//            CFAbsoluteTime startTime =CFAbsoluteTimeGetCurrent();
+//            CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
             [self audioCallbackFillData: outData numFrames:numFrames numChannels:numChannels];
 //            CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-//            NSLog(@"Linked audioCallbackFillData in %f ms", linkTime *1000.0);
+//            DLog(@"Linked audioCallbackFillData in %f ms", linkTime * 1000.0);
         };
         
         [audioManager play];
@@ -1629,7 +1587,6 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         }
         interval = [self presentAudioFrame];
     } else {
-        //        const int bufSize = 100;
         int bufSize = av_samples_get_buffer_size(NULL,
                                                  (int)audioManager.avcodecContextNumOutputChannels,
                                                  audioManager.audioCtx->frame_size,
@@ -1640,7 +1597,6 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         memset(empty_audio_data, 0, bufSize);
         NSData * empty_audio = [NSData dataWithBytes:empty_audio_data length:bufSize];
         [audioManager setData:empty_audio];//播放
-        //        interval = delta;
     }
     
     if (self.playing) {
@@ -1803,8 +1759,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     [self refreshProgressViews];
 }
 
-- (void)refreshProgressViews
-{
+- (void)refreshProgressViews {
     __weak typeof(self) weakSelf = self;
     dispatch_async(_progressQueue, ^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -1812,8 +1767,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         {
             const CGFloat duration = strongSelf->_decoder.duration;
             CGFloat position = strongSelf->_audioPosition - strongSelf->_decoder.startTime;
-            if (weakSelf.decoder.validVideo)
-            {
+            if (weakSelf.decoder.validVideo) {
                 position = strongSelf->_moviePosition - strongSelf->_decoder.startTime;
             }
             if ((strongSelf->_tickCounter++ % 3) == 0 && strongSelf->_isDraging == NO) {
@@ -1850,8 +1804,7 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     });
 }
 
-- (CGFloat) tickCorrection
-{
+- (CGFloat)tickCorrection {
     if (_buffered)
         return 0;
     
@@ -1881,44 +1834,36 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     return correction;
 }
 
-- (CGFloat) presentAudioFrame
-{
+- (CGFloat)presentAudioFrame {
 #ifdef USE_OPENAL
     CGFloat interval = 0;
     
     CYPCMAudioManager * audioManager = [CYPCMAudioManager audioManager];
     audioManager.delegate = self;
     
-    @synchronized(_audioFrames)
-    {
+    @synchronized(_audioFrames) {
         NSUInteger count = _audioFrames.count;
         CYAudioFrame * audioFrame = [_audioFrames firstObject];
-        if ([audioFrame isKindOfClass: NSClassFromString(@"CYAudioFrame")] &&
-            count > 0)
-        {
-            if (_decoder.validAudio)
-            {
+        if ([audioFrame isKindOfClass: NSClassFromString(@"CYAudioFrame")] && count > 0) {
+            if (_decoder.validAudio) {
                 _audioPosition = audioFrame.position;
                 CGFloat delta = _audioPosition - _moviePosition;
                 CGFloat limit_val = 0.1;
                 //                if (limit_val < 1) { limit_val = 1; }
-                if (delta <= limit_val && delta >= -(limit_val))//音视频处于同步
-                {
-                    
+                if (delta <= limit_val && delta >= -(limit_val)) {
+                    //音视频处于同步
                     [_audioFrames removeObjectAtIndex:0];
                     _audioBufferedDuration -= audioFrame.duration;
                     [audioManager setData:audioFrame.samples];//播放
                     interval = audioFrame.duration;
-                }
-                else if (delta > limit_val)//音频快了
-                {
+                } else if (delta > limit_val) {
+                    //音频快了
                     [_audioFrames removeObjectAtIndex:0];
                     _audioBufferedDuration -= audioFrame.duration;
                     [audioManager setData:audioFrame.samples];//播放
                     interval = audioFrame.duration;
-                }
-                else//音频慢了
-                {
+                } else {
+                    //音频慢了
                     [_audioFrames removeObjectAtIndex:0];
                     _audioBufferedDuration -= audioFrame.duration;
                     [audioManager setData:audioFrame.samples];//播放
@@ -1952,22 +1897,19 @@ static NSMutableDictionary * gHistory = nil;//播放记录
                 CGFloat delta = _moviePosition - _audioPosition;
                 CGFloat limit_val = 0.1;
                 //                if (limit_val < 1) { limit_val = 1; }
-                if (delta <= limit_val && delta >= -(limit_val))//音视频处于同步
-                {
-                    
+                if (delta <= limit_val && delta >= -(limit_val)) {
+                    //音视频处于同步
                     [_videoFrames removeObjectAtIndex:0];
                     _videoBufferedDuration -= frame.duration;
                     interval = [self presentVideoFrame:frame];//呈现视频
-                }
-                else if (delta > limit_val)//视频快了
-                {
+                } else if (delta > limit_val) {
+                    //视频快了
                     [_videoFrames removeObjectAtIndex:0];
                     _videoBufferedDuration -= frame.duration;
                     interval = [self presentVideoFrame:frame];//呈现视频
                     //                    interval = delta;
-                }
-                else//视频慢了
-                {
+                } else {
+                    //视频慢了
                     [_videoFrames removeObjectAtIndex:0];
                     _videoBufferedDuration -= frame.duration;
                     interval = [self presentVideoFrame:frame];//呈现视频
@@ -1987,12 +1929,14 @@ static NSMutableDictionary * gHistory = nil;//播放记录
         }
     }
     
-    if (_decoder.validSubtitles)
+    if (_decoder.validSubtitles) {
         [self presentSubtitles];
+    }
     
 #ifdef DEBUG
-    if (self.playing && _debugStartTime < 0)
+    if (self.playing && _debugStartTime < 0) {
         _debugStartTime = [NSDate timeIntervalSinceReferenceDate] - _moviePosition;
+    }
 #endif
     
     return interval;
@@ -2109,6 +2053,9 @@ static NSMutableDictionary * gHistory = nil;//播放记录
     position = MAX(position, 0);
     _targetPosition = position;
     
+    if (!_asyncDecodeQueue) {
+        _asyncDecodeQueue  = dispatch_queue_create("CYPlayer AsyncDecode", DISPATCH_QUEUE_SERIAL);
+    }
     if (playMode) {
         dispatch_async(_asyncDecodeQueue, ^{
             {
@@ -2924,7 +2871,8 @@ vm_size_t m_memory_usage(void) {
         });
     }
     [self _play];
-//    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    
+    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     return YES;
 }
 
@@ -2934,7 +2882,6 @@ vm_size_t m_memory_usage(void) {
     
     self.suspend = YES;
     
-    //    if ( !self.asset ) return NO;
     if ( self.state != CDFFmpegPlayerPlayState_Pause ) {
         _cdAnima(^{
             [self _pauseState];
@@ -2942,11 +2889,8 @@ vm_size_t m_memory_usage(void) {
         });
     }
     [self _pause];
+    
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-    //    if ( self.orentation.fullScreen )
-    //    {
-    //        [self showTitle:@"已暂停"];
-    //    }
     return YES;
 }
 

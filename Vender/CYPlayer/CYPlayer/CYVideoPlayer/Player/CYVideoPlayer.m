@@ -30,7 +30,7 @@
 #define CYColorWithHEX(hex) [UIColor colorWithRed:(float)((hex & 0xFF0000) >> 16)/255.0 green:(float)((hex & 0xFF00) >> 8)/255.0 blue:(float)(hex & 0xFF)/255.0 alpha:1.0]
 
 inline static void _cyErrorLog(id msg) {
-    NSLog(@"__error__: %@", msg);
+    DLog(@"__error__: %@", msg);
 }
 
 inline static void _cyHiddenViews(NSArray<UIView *> *views) {
@@ -410,7 +410,7 @@ inline static NSString *_formatWithSec(NSInteger sec) {
 - (void)dealloc {
     self.state = CYVideoPlayerPlayState_Unknown;
     [self stop];
-    NSLog(@"%s - %zd", __func__, __LINE__);
+    DLog(@"%s - %zd", __func__, __LINE__);
 }
 
 - (UIImage *)screenshot {

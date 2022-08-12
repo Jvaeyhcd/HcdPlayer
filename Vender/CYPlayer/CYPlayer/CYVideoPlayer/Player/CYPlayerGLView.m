@@ -765,7 +765,7 @@ exit:
     // 1. Create shader
     GLuint shader = glCreateShader(type);
     if (shader == 0) {
-        NSLog(@"FAILED to create shader.");
+        DLog(@"FAILED to create shader.");
         return 0;
     }
     
@@ -786,7 +786,7 @@ exit:
         if (length > 1) {
             char *log = malloc(sizeof(char) * length);
             glGetShaderInfoLog(shader, length, NULL, log);
-            NSLog(@"FAILED to compile shader, error: %s", log);
+            DLog(@"FAILED to compile shader, error: %s", log);
             free(log);
         }
         glDeleteShader(shader);
@@ -800,7 +800,7 @@ exit:
     NSError *error = nil;
     NSString *shaderString = [NSString stringWithContentsOfFile:shaderFile encoding:NSUTF8StringEncoding error:&error];
     if (shaderString == nil) {
-        NSLog(@"FAILED to load shader file: %@, Error: %@", shaderFile, error);
+        DLog(@"FAILED to load shader file: %@, Error: %@", shaderFile, error);
         return 0;
     }
     

@@ -1609,7 +1609,7 @@ static int interrupt_callback(void *ctx);
         
         
         
-        NSLog(@"%@",@"文件不存在");
+        DLog(@"%@",@"文件不存在");
         
         NSString *s = [NSString stringWithFormat:@"开始了:\r"];
         
@@ -1633,7 +1633,7 @@ static int interrupt_callback(void *ctx);
         
     {
         
-        NSLog(@"Open of file for writing failed");
+        DLog(@"Open of file for writing failed");
         
     }
     
@@ -1885,19 +1885,19 @@ void get_video_scale_max_size(AVCodecContext *videoCodecCtx, int * width, int * 
         [attributes setObject:[NSDictionary dictionary] forKey:(NSString*)kCVPixelBufferIOSurfacePropertiesKey];
         theError = CVPixelBufferPoolCreate(kCFAllocatorDefault, NULL, (__bridge CFDictionaryRef) attributes, &self->_pixelBufferPool);
         if (theError != kCVReturnSuccess){
-            NSLog(@"CVPixelBufferPoolCreate Failed");
+            DLog(@"CVPixelBufferPoolCreate Failed");
         }
     }
     
     CVPixelBufferRef pixelBuffer = nil;
     theError = CVPixelBufferPoolCreatePixelBuffer(NULL, self->_pixelBufferPool, &pixelBuffer);
     if(theError != kCVReturnSuccess){
-        NSLog(@"CVPixelBufferPoolCreatePixelBuffer Failed");
+        DLog(@"CVPixelBufferPoolCreatePixelBuffer Failed");
     }
 
     theError = CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     if (theError != kCVReturnSuccess) {
-        NSLog(@"lock error");
+        DLog(@"lock error");
     }
     /*
      PixelBuffer中Y数据存放在Plane0中，UV数据存放在Plane1中，数据格式如下
@@ -1976,7 +1976,7 @@ void get_video_scale_max_size(AVCodecContext *videoCodecCtx, int * width, int * 
                 frame.position = position;
                 frame.duration = duration;
 //                CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-                //NSLog(@"Linked handleVideoFrame in %f ms", linkTime *1000.0);
+                //DLog(@"Linked handleVideoFrame in %f ms", linkTime *1000.0);
             }
                 return nil;
                 
@@ -1986,7 +1986,7 @@ void get_video_scale_max_size(AVCodecContext *videoCodecCtx, int * width, int * 
                 frame.position = position;
                 frame.duration = duration;
 //                CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-                //NSLog(@"Linked handleVideoFrame in %f ms", linkTime *1000.0);
+                //DLog(@"Linked handleVideoFrame in %f ms", linkTime *1000.0);
             }
                 return nil;;
         }
@@ -2157,7 +2157,7 @@ void get_video_scale_max_size(AVCodecContext *videoCodecCtx, int * width, int * 
     frame.position = position;
     frame.duration = duration;
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-    //NSLog(@"Linked handleVideoFrame in %f ms", linkTime *1000.0);
+    //DLog(@"Linked handleVideoFrame in %f ms", linkTime *1000.0);
 #if 0
     LoggerVideo(2, @"VFD: %.4f %.4f | %lld ",
                 frame.position,
@@ -2165,7 +2165,7 @@ void get_video_scale_max_size(AVCodecContext *videoCodecCtx, int * width, int * 
                 av_frame_get_pkt_pos(videoFrame));
     
 //    CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-    //NSLog(@"Linked in %f ms", linkTime *1000.0);
+    //DLog(@"Linked in %f ms", linkTime *1000.0);
 #endif
     
     return frame;
@@ -2422,7 +2422,7 @@ void audio_swr_resampling_audio_destory(SwrContext **swr_ctx){
                 frame.samples.length / (8.0 * 44100.0));
 #endif
     CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-    //NSLog(@"Linked handleAudioFrame in %f ms", linkTime *1000.0);
+    //DLog(@"Linked handleAudioFrame in %f ms", linkTime *1000.0);
     return frame;
 }
 
@@ -2442,7 +2442,7 @@ void audio_swr_resampling_audio_destory(SwrContext **swr_ctx){
         BOOL finished = NO;
         CGFloat curr_targetPos = weakSelf.targetPosition;
         while (!finished && strongSelf->_formatCtx && curr_targetPos == weakSelf.targetPosition) {
-//            NSLog(@"%f", curr_targetPos);
+//            DLog(@"%f", curr_targetPos);
             CFAbsoluteTime startTime =CFAbsoluteTimeGetCurrent();
             ///读取下一帧开始
             dispatch_semaphore_wait(strongSelf->_avReadFrameLock, DISPATCH_TIME_FOREVER);//加锁
@@ -2455,7 +2455,7 @@ void audio_swr_resampling_audio_destory(SwrContext **swr_ctx){
             dispatch_semaphore_signal(strongSelf->_avReadFrameLock);//放行
             ///读取下一帧结束
             CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-            //NSLog(@"Linked av_read_frame in %f ms", linkTime *1000.0);
+            //DLog(@"Linked av_read_frame in %f ms", linkTime *1000.0);
             
             CYPlayerFrame * frame = [weakSelf handlePacket:packet audioFrame:audioFrame videoFrame:videoFrame picture:picture isPictureValid:isPictureValid];
             if (frame)
@@ -2496,7 +2496,7 @@ void audio_swr_resampling_audio_destory(SwrContext **swr_ctx){
         }
         else
         {
-            NSLog(@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            DLog(@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             compeletion(nil);
         }
         
@@ -2509,7 +2509,7 @@ void audio_swr_resampling_audio_destory(SwrContext **swr_ctx){
 //    AVHWAccel *hwaccel=NULL;
 //
 //    while((hwaccel= av_hwaccel_next(hwaccel))){
-//        NSLog(@"name:%s type:%d id:%u pix:%d",hwaccel->name,hwaccel->type,hwaccel->id,hwaccel->pix_fmt);
+//        DLog(@"name:%s type:%d id:%u pix:%d",hwaccel->name,hwaccel->type,hwaccel->id,hwaccel->pix_fmt);
 //        if (   hwaccel->id      == codec_id
 //            && hwaccel->pix_fmt == pix_fmt)
 //            return hwaccel;
@@ -3487,7 +3487,7 @@ error:
             break;
         }
         CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-        //NSLog(@"Linked av_read_frame in %f ms", linkTime *1000.0);
+        //DLog(@"Linked av_read_frame in %f ms", linkTime *1000.0);
         
         if (packet.stream_index ==_videoStream && self.decodeType & CYVideoDecodeTypeVideo) {
             
@@ -3651,7 +3651,7 @@ error:
         }
         dispatch_semaphore_signal(_avReadFrameLock);//放行
         CFAbsoluteTime linkTime = (CFAbsoluteTimeGetCurrent() - startTime);
-        //NSLog(@"Linked av_read_frame in %f ms", linkTime *1000.0);
+        //DLog(@"Linked av_read_frame in %f ms", linkTime *1000.0);
         
         CYPlayerFrame * frame = [self handlePacket:packet audioFrame:_audioFrame videoFrame:_videoFrame picture:&_picture isPictureValid:&_pictureValid];
         if (frame)

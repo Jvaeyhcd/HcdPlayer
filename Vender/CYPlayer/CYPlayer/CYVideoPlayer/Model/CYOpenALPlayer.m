@@ -97,7 +97,7 @@
 
 - (void)openAudioFromQueue:(unsigned char *)dataBuffer withLength:(int)length
 {
-    //NSLog(@"Update Audio data and play--------------->/n");
+    //DLog(@"Update Audio data and play--------------->/n");
     
     NSCondition* ticketCondition= [[NSCondition alloc] init];
     [ticketCondition lock];
@@ -153,7 +153,7 @@
 
 -(void)stopSound
 {
-    NSLog(@"alSourceStop");
+    DLog(@"alSourceStop");
     alSourceStop(outSourceID);
 }
 
@@ -161,7 +161,7 @@
 {
     int processed = 0;
     int queued = 0;
-    NSLog(@"alGetSourcei");
+    DLog(@"alGetSourcei");
     alGetSourcei(outSourceID,AL_BUFFERS_PROCESSED, &processed);
     alGetSourcei(outSourceID,AL_BUFFERS_QUEUED, &queued);
     while(processed > 0 && processed--) {
@@ -173,29 +173,29 @@
         alDeleteBuffers(1, &buff);
     }
     
-    NSLog(@"alDeleteSources");
+    DLog(@"alDeleteSources");
     alDeleteSources(1, &outSourceID);
     
     if (mContext)
     {
         alcMakeContextCurrent(NULL);
-        NSLog(@"alcDestroyContext");
+        DLog(@"alcDestroyContext");
         alcDestroyContext(mContext);
         mContext = NULL;
     }
-    NSLog(@"alcCloseDevice");
+    DLog(@"alcCloseDevice");
     alcCloseDevice(mDevice);
     mDevice = NULL;
-    NSLog(@"alcCloseDevice ---");
+    DLog(@"alcCloseDevice ---");
     /*
     alcMakeContextCurrent(NULL);
     
-    NSLog(@"alcDestroyContext");
+    DLog(@"alcDestroyContext");
     alcDestroyContext(mContext);
     
-    NSLog(@"alcCloseDevice");
+    DLog(@"alcCloseDevice");
     alcCloseDevice(mDevice);
-    NSLog(@"alcCloseDevice ---");
+    DLog(@"alcCloseDevice ---");
     */
 }
 
@@ -269,7 +269,7 @@
     OSStatus result = AudioFileOpenURL((__bridge CFURLRef)afUrl, fsRdPerm,0, &outAFID);
 #endif
     if (result !=0)
-        NSLog(@"cannot openf file: %@",filePath);
+        DLog(@"cannot openf file: %@",filePath);
     
     return outAFID;
 }
@@ -283,7 +283,7 @@
     UInt32 thePropSize =sizeof(UInt64);
     OSStatus result =AudioFileGetProperty(fileDescriptor,kAudioFilePropertyAudioDataByteCount, &thePropSize, &outDataSize);
     if(result !=0)
-        NSLog(@"cannot find file size");
+        DLog(@"cannot find file size");
     
     return (UInt32)outDataSize;
 }
@@ -291,7 +291,7 @@
 
 -(void)dealloc
 {
-    // NSLog(@"openal sound dealloc");
+    // DLog(@"openal sound dealloc");
 //    [soundDictionary release];
 //    [bufferStorageArray release];
 //    [super dealloc];
