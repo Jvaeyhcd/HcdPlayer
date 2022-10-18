@@ -146,3 +146,6 @@
 "smb_not_on_wifi"="Not on WiFi";
 "smb_unable_address"="Unable to resolve address";
 "smb_unable_connect"="Unable to connect";
+
+"clock_widget"="Clock Widget";
+"clock_widget_desc"="A Widget that displays the current time and refreshes every minute";

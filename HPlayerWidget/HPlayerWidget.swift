@@ -185,8 +185,8 @@ struct HPlayerWidget: Widget {
         IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
             HPlayerWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("Clock Widget")
-        .description("A Widget that displays the current time (in various formats) and refreshes every minute.")
+        .configurationDisplayName(LocalizedStringKey("clock_widget"))
+        .description(LocalizedStringKey("clock_widget_desc"))
         .supportedFamilies([.systemSmall])
     }
 }

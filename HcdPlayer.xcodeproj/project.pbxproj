@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		38265EAD28A23779008EE276 /* PlaylistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 38265EAC28A23779008EE276 /* PlaylistModel.m */; };
 		38265EB028A2396D008EE276 /* PlaylistModelDao.m in Sources */ = {isa = PBXBuildFile; fileRef = 38265EAF28A2396D008EE276 /* PlaylistModelDao.m */; };
+		3885373128A670D900F90E5C /* HPlayerWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 3885373428A670D900F90E5C /* HPlayerWidget.intentdefinition */; };
+		3885373228A670D900F90E5C /* HPlayerWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 3885373428A670D900F90E5C /* HPlayerWidget.intentdefinition */; };
+		3885373B28A69B4500F90E5C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9AA909721F305CC00F3C70E /* InfoPlist.strings */; };
+		3885373C28A69B4E00F90E5C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9AA909D21F307AD00F3C70E /* Localizable.strings */; };
 		B902F411222EB79E0049A626 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B902F410222EB79E0049A626 /* BaseViewController.m */; };
 		B9085F2A2258331000AF8DC5 /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9085F292258331000AF8DC5 /* DocumentViewController.m */; };
 		B90B955923BED0F8003031DC /* NetworkService.m in Sources */ = {isa = PBXBuildFile; fileRef = B90B955823BED0F8003031DC /* NetworkService.m */; };
@@ -157,8 +161,6 @@
 		B9AA7D8D2592EB31003B4232 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AA7D8C2592EB31003B4232 /* SwiftUI.framework */; };
 		B9AA7D902592EB31003B4232 /* HPlayerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AA7D8F2592EB31003B4232 /* HPlayerWidget.swift */; };
 		B9AA7D932592EB35003B4232 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9AA7D922592EB35003B4232 /* Assets.xcassets */; };
-		B9AA7D952592EB35003B4232 /* HPlayerWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = B9AA7D912592EB32003B4232 /* HPlayerWidget.intentdefinition */; };
-		B9AA7D962592EB35003B4232 /* HPlayerWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = B9AA7D912592EB32003B4232 /* HPlayerWidget.intentdefinition */; };
 		B9AA7D992592EB35003B4232 /* HPlayerWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B9AA7D892592EB31003B4232 /* HPlayerWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B9AA8FD221ED785000F3C70E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD121ED785000F3C70E /* AppDelegate.m */; };
 		B9AA8FD521ED785000F3C70E /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AA8FD421ED785000F3C70E /* MainViewController.m */; };
@@ -246,6 +248,10 @@
 		38265EAC28A23779008EE276 /* PlaylistModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlaylistModel.m; sourceTree = "<group>"; };
 		38265EAE28A2396D008EE276 /* PlaylistModelDao.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaylistModelDao.h; sourceTree = "<group>"; };
 		38265EAF28A2396D008EE276 /* PlaylistModelDao.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlaylistModelDao.m; sourceTree = "<group>"; };
+		3885373328A670D900F90E5C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/HPlayerWidget.intentdefinition; sourceTree = "<group>"; };
+		3885373628A670DC00F90E5C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HPlayerWidget.strings; sourceTree = "<group>"; };
+		3885373828A670DD00F90E5C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/HPlayerWidget.strings"; sourceTree = "<group>"; };
+		3885373A28A670DE00F90E5C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/HPlayerWidget.strings"; sourceTree = "<group>"; };
 		742CF5F37E96FB453579A47A /* Pods-HcdPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		B7312D76511DB2F0072839EE /* Pods-HcdPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HcdPlayer.release.xcconfig"; path = "Pods/Target Support Files/Pods-HcdPlayer/Pods-HcdPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		B902F40F222EB79E0049A626 /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
@@ -653,7 +659,6 @@
 		B9AA7D8A2592EB31003B4232 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		B9AA7D8C2592EB31003B4232 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		B9AA7D8F2592EB31003B4232 /* HPlayerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPlayerWidget.swift; sourceTree = "<group>"; };
-		B9AA7D912592EB32003B4232 /* HPlayerWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = HPlayerWidget.intentdefinition; sourceTree = "<group>"; };
 		B9AA7D922592EB35003B4232 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B9AA7D942592EB35003B4232 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9AA8FCD21ED785000F3C70E /* HcdPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HcdPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1670,7 +1675,7 @@
 			isa = PBXGroup;
 			children = (
 				B9AA7D8F2592EB31003B4232 /* HPlayerWidget.swift */,
-				B9AA7D912592EB32003B4232 /* HPlayerWidget.intentdefinition */,
+				3885373428A670D900F90E5C /* HPlayerWidget.intentdefinition */,
 				B9AA7D922592EB35003B4232 /* Assets.xcassets */,
 				B9AA7D942592EB35003B4232 /* Info.plist */,
 			);
@@ -2054,6 +2059,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9AA7D932592EB35003B4232 /* Assets.xcassets in Resources */,
+				3885373C28A69B4E00F90E5C /* Localizable.strings in Resources */,
+				3885373B28A69B4500F90E5C /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2125,7 +2132,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9AA7D952592EB35003B4232 /* HPlayerWidget.intentdefinition in Sources */,
+				3885373228A670D900F90E5C /* HPlayerWidget.intentdefinition in Sources */,
 				B9AA7D902592EB31003B4232 /* HPlayerWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2284,7 +2291,7 @@
 				B9DF3EFC2324924400DDA47E /* CLUPnPAction.m in Sources */,
 				B96C62B323CC5B3100C87F14 /* HDownloadModelDao.m in Sources */,
 				B96A5D9524B8655100000B96 /* CYMoreSettingsFooterViewModel.m in Sources */,
-				B9AA7D962592EB35003B4232 /* HPlayerWidget.intentdefinition in Sources */,
+				3885373128A670D900F90E5C /* HPlayerWidget.intentdefinition in Sources */,
 				B96A5DA524B8655100000B96 /* CYVideoPlayerControlView.m in Sources */,
 				B9D691372553D65A0016CE28 /* NewGCDWebUploader.m in Sources */,
 				B90B955923BED0F8003031DC /* NetworkService.m in Sources */,
@@ -2306,6 +2313,17 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		3885373428A670D900F90E5C /* HPlayerWidget.intentdefinition */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3885373328A670D900F90E5C /* Base */,
+				3885373628A670DC00F90E5C /* en */,
+				3885373828A670DD00F90E5C /* zh-Hans */,
+				3885373A28A670DE00F90E5C /* zh-Hant */,
+			);
+			name = HPlayerWidget.intentdefinition;
+			sourceTree = "<group>";
+		};
 		B9896DC5237C05BE00A5A2DD /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2527,7 +2545,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2588,7 +2606,7 @@
 				CODE_SIGN_ENTITLEMENTS = HcdPlayer/HcdPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = NLP5PZS8U3;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

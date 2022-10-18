@@ -146,3 +146,6 @@
 "smb_not_on_wifi"="沒有使用WiFi";
 "smb_unable_address"="地址不可解析";
 "smb_unable_connect"="無法連接";
+
+"clock_widget"="時鐘";
+"clock_widget_desc"="為您顯示當前時間";
